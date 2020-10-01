@@ -1,8 +1,0 @@
-[2020-07-24 14:23:25] production.ERROR: Allowed memory size of 33554432 bytes exhausted (tried to allocate 20480 bytes) {"userId":3,"exception":"[object] (Symfony\\Component\\Debug\\Exception\\FatalErrorException(code: 1): Allowed memory size of 33554432 bytes exhausted (tried to allocate 20480 bytes) at /home/lesprod1/public_html/inscriptions/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Concerns/HasAttributes.php:183)
-[stacktrace]
-#0 {main}
-"} 
-[2020-07-24 14:23:29] production.ERROR: Allowed memory size of 33554432 bytes exhausted (tried to allocate 20480 bytes) {"userId":3,"exception":"[object] (Symfony\\Component\\Debug\\Exception\\FatalErrorException(code: 1): Allowed memory size of 33554432 bytes exhausted (tried to allocate 20480 bytes) at /home/lesprod1/public_html/inscriptions/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Concerns/HasAttributes.php:868)
-[stacktrace]
-#0 {main}
-"} 

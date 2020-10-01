@@ -16,33 +16,30 @@ use Carbon\Carbon;
 use Helper;
 use DB;
 
-
 class SpaController extends Controller
 {
-   
     public function index(Request $request)
     {
         $locale = $request->segment(1);
-
         
-        if (array_key_exists($locale, Config::get('languages'))) { 
+        if (array_key_exists($locale, Config::get('languages'))) {
             app()->setLocale($locale);
         }
 
         return view('spa');
     }
 
-    public function getLastModification() {
-        $organizations = $organizations = Organization::orderBy('name')->whereHas('subscriptions', function ($query) { 
+    public function getLastModification()
+    {
+        $organizations = $organizations = Organization::orderBy('name')->whereHas('subscriptions', function ($query) {
             $query->where('subscriptions.event_id', 1);
             // if(count($filters) > 0) {
             //     $query->whereIn('subscriptions.status_id', $filters);
             // }
-            
         })
         ->where('id', 105)
         ->with([
-            'subscriptions.routines' => function($query) {
+            'subscriptions.routines' => function ($query) {
                 $query->where('routines.updated_at', '>=', '2020-01-06 16:00:00');
             },
             'subscriptions.routines.category',
@@ -55,17 +52,17 @@ class SpaController extends Controller
         //     foreach($routines as $routine) {
 
         //     }
-        foreach($organizations as $organization) {
-            if(count($organization->subscriptions[0]->routines)) {
+        foreach ($organizations as $organization) {
+            if (count($organization->subscriptions[0]->routines)) {
                 echo $organization->name;
-            echo '<br>';
-            foreach($organization->subscriptions[0]->routines as $routine){
-                echo $routine->id . ' | ' . $routine->name . ' | ' . $routine->classification->name . ' | ' . $routine->category->name . ' | ' . $routine->level->name . ' | ' . $routine->style->name . ' | ' . count($routine->dancers);
+                echo '<br>';
+                foreach ($organization->subscriptions[0]->routines as $routine) {
+                    echo $routine->id . ' | ' . $routine->name . ' | ' . $routine->classification->name . ' | ' . $routine->category->name . ' | ' . $routine->level->name . ' | ' . $routine->style->name . ' | ' . count($routine->dancers);
+                    echo '<br>';
+                }
                 echo '<br>';
             }
-            echo '<br>';
         }
-            }
             
         exit;
     }
@@ -76,4 +73,3 @@ class SpaController extends Controller
         return redirect(app()->getLocale());
     }
 }
-
