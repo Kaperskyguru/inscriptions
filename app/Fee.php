@@ -24,6 +24,6 @@ class Fee extends Model
     }
     public function getTotalAmountAttribute()
     {
-        return sprintf('%01.2f', (($this->feeType->attributes['price'] * $this->attributes['entries'])/ 100));
+        return number_format((($this->feeType->attributes['price'] * $this->attributes['entries'])/ 100), 2, '.', ',');
     }
 }

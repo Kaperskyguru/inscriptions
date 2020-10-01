@@ -27,6 +27,6 @@ class Payment extends Model
 
     public function getFormattedAmountAttribute()
     {
-        return sprintf('%01.2f', ($this->attributes['amount'] / 100));
+        return number_format(($this->attributes['amount'] / 100), 2, '.', ',');
     }
 }

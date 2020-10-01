@@ -17,8 +17,6 @@ use Session;
 use App\Category;
 use App\Organization;
 
-
-
 class QuickbooksController extends Controller
 {
     //
@@ -44,7 +42,6 @@ class QuickbooksController extends Controller
     }
     public function callback(Request $request)
     {
-        
         $dataService = $this->getDataService();
         $OAuth2LoginHelper = $dataService->getOAuth2LoginHelper();
 
@@ -52,18 +49,19 @@ class QuickbooksController extends Controller
         $subscription_id = session('subscription_id');
 
 
-        $organizations = Organization::orderBy('name')->whereHas('subscriptions', function ($query) use ($subscription_id) { 
-            $query->where('subscriptions.id', $subscription_id); 
+        $organizations = Organization::orderBy('name')->whereHas('subscriptions', function ($query) use ($subscription_id) {
+            $query->where('subscriptions.id', $subscription_id);
         })
         ->with('organizationType')
         ->with([
-            'dancers' => function($query) {
+            'dancers' => function ($query) {
                 $query->orderBy('first_name', 'ASC');
             },
         ])
         ->with('user')
-        ->with([
-            'subscriptions' => function($query) use ($subscription_id) {
+        ->with(
+            [
+            'subscriptions' => function ($query) use ($subscription_id) {
                 $query->where('subscriptions.id', $subscription_id)->withCount('routines');
             },
             'subscriptions.routines.category',
@@ -79,12 +77,12 @@ class QuickbooksController extends Controller
         $categories = Category::groupBy('id')->where('id', '!=', 7)
         ->where('event_type_id', config('EVENT_TYPE_ID'))
         ->with([
-            'routines' => function($query) use ($subscription_id) {
+            'routines' => function ($query) use ($subscription_id) {
                 $query->where('subscription_id', $subscription_id);
-            },        
+            },
         ])
         ->withCount([
-            'routines' => function($query) use ($subscription_id) {
+            'routines' => function ($query) use ($subscription_id) {
                 $query->where('subscription_id', $subscription_id);
             },
             
@@ -123,16 +121,16 @@ class QuickbooksController extends Controller
 
         $lines = [];
 
-        foreach($categories as $key => $category) {
+        foreach ($categories as $key => $category) {
             $entries = 0;
-            foreach($category->routines as $routine) {
+            foreach ($category->routines as $routine) {
                 $entries += count($routine->dancers);
             }
             $total = $entries *  $category['rebate_price'];
 
             $itemRef = $this->getItemObj($dataService, $category->translate('en')->name);
             $LineObj = Line::create([
-                    "Amount" => sprintf('%01.2f', ($total / 100)),
+                    "Amount" => number_format(($total / 100), 2, '.', ','),
                     "DetailType" => "SalesItemLineDetail",
                     "SalesItemLineDetail" => [
                         "Qty" => $entries,
@@ -148,7 +146,7 @@ class QuickbooksController extends Controller
             $lines[] = $LineObj;
             //$categories[$key]['entries'] =  $entries;
             //$categories[$key]['entries'] =  $entries;
-            // $categories[$key]['total'] = 
+            // $categories[$key]['total'] =
         }
         $invoiceObj = Invoice::create([
                 "Line" => $lines,
@@ -159,41 +157,41 @@ class QuickbooksController extends Controller
                     "Address" => $organizations->user->email
                 ]
             ]);
-            $resultingInvoiceObj = $dataService->Add($invoiceObj);
-            $error = $dataService->getLastError();
-            if ($error) {
-                echo "The Status code is: " . $error->getHttpStatusCode() . "\n";
-                echo "The Helper message is: " . $error->getOAuthHelperError() . "\n";
-                echo "The Response message is: " . $error->getResponseBody() . "\n";
-                exit;
-            }
-            //$invoiceId = $resultingInvoiceObj->Id;   // This needs to be passed in the Payment creation later
-            // echo "Created invoice Id={$invoiceId}. Reconstructed response body below:\n";
-            // $result = json_encode($resultingInvoiceObj, JSON_PRETTY_PRINT);
-            // print_r($result . "\n\n\n");
-            echo 'Facture Généré';
-        
+        $resultingInvoiceObj = $dataService->Add($invoiceObj);
+        $error = $dataService->getLastError();
+        if ($error) {
+            echo "The Status code is: " . $error->getHttpStatusCode() . "\n";
+            echo "The Helper message is: " . $error->getOAuthHelperError() . "\n";
+            echo "The Response message is: " . $error->getResponseBody() . "\n";
+            exit;
+        }
+        //$invoiceId = $resultingInvoiceObj->Id;   // This needs to be passed in the Payment creation later
+        // echo "Created invoice Id={$invoiceId}. Reconstructed response body below:\n";
+        // $result = json_encode($resultingInvoiceObj, JSON_PRETTY_PRINT);
+        // print_r($result . "\n\n\n");
+        echo 'Facture Généré';
     }
-    private function getTaxRate($dataService) {
+    private function getTaxRate($dataService)
+    {
         $taxesArray = $dataService->Query("Select * From TaxRate");
         $error = $dataService->getLastError();
         if ($error) {
             var_dump($error);
             exit;
-         } else {
-             if (is_array($taxesArray) && sizeof($taxesArray) > 0) {
-                 return current($taxesArray);
-             }
-         }
+        } else {
+            if (is_array($taxesArray) && sizeof($taxesArray) > 0) {
+                return current($taxesArray);
+            }
+        }
     }
-    private function getCustomerObj($dataService, $organizations) {
-
+    private function getCustomerObj($dataService, $organizations)
+    {
         $customerName = $organizations->name;
         $customerArray = $dataService->Query("select * from Customer where DisplayName='" . $customerName . "'");
         $error = $dataService->getLastError();
         if ($error) {
-           var_dump($error);
-           exit;
+            var_dump($error);
+            exit;
         } else {
             if (is_array($customerArray) && sizeof($customerArray) > 0) {
                 return current($customerArray);
@@ -228,7 +226,7 @@ class QuickbooksController extends Controller
         ]
        ];
 
-       // Create Customer
+        // Create Customer
         $customerRequestObj = Customer::create($customerData);
         $customerResponseObj = $dataService->Add($customerRequestObj);
         $error = $dataService->getLastError();
@@ -240,7 +238,8 @@ class QuickbooksController extends Controller
             return $customerResponseObj;
         }
     }
-    private function getItemObj($dataService, $itemName) {
+    private function getItemObj($dataService, $itemName)
+    {
         $itemArray = $dataService->Query("select * from Item WHERE Name='" . $itemName . "'");
         $error = $dataService->getLastError();
         if ($error) {
@@ -253,7 +252,8 @@ class QuickbooksController extends Controller
         }
     }
    
-    private function getDataService() {
+    private function getDataService()
+    {
         $dataService = DataService::Configure(array(
             'auth_mode' => 'oauth2',
             'ClientID' => env('QB_CLIENT_ID'),
@@ -266,11 +266,10 @@ class QuickbooksController extends Controller
     }
     private function parseAuthRedirectUrl($url)
     {
-        parse_str($url,$qsArray);
+        parse_str($url, $qsArray);
         return array(
             'code' => $qsArray['code'],
             'realmId' => $qsArray['realmId']
         );
     }
 }
-

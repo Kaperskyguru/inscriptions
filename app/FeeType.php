@@ -20,6 +20,6 @@ class FeeType extends Model implements TranslatableContract
     }
     public function getFormattedPriceAttribute()
     {
-        return sprintf('%01.2f', ($this->attributes['price'] / 100));
+        return number_format(($this->attributes['price'] / 100), 2, '.', ',');
     }
 }
