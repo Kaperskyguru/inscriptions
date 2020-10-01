@@ -27,11 +27,11 @@ class Category extends Model implements TranslatableContract
 
     public function getFormattedPriceAttribute()
     {
-        return money_format('%i', ($this->attributes['price'] / 100));
+        return sprintf('%01.2f', ($this->attributes['price'] / 100));
     }
     public function getFormattedRebatePriceAttribute()
     {
-        return money_format('%i', ($this->attributes['rebate_price'] / 100));
+        return sprintf('%01.2f', ($this->attributes['rebate_price'] / 100));
     }
     
 }

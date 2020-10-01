@@ -390,7 +390,7 @@ class AdminController extends Controller
             }
             $categories[$key]['entries'] =  $entries;
             $total = $entries *  $category['rebate_price'];
-            $categories[$key]['total'] = money_format('%i', ($total / 100));
+            $categories[$key]['total'] = sprintf('%01.2f', ($total / 100));
         }
         $paymentTypes = PaymentType::all();
         $feeTypes = FeeType::all();
@@ -501,7 +501,7 @@ class AdminController extends Controller
             }
             $categories[$i]['entries'] =  $entries;
             $total = $entries *  $category['rebate_price'];
-            $categories[$i]['total'] = money_format('%i', ($total / 100));
+            $categories[$i]['total'] = sprintf('%01.2f', ($total / 100));
 
             foreach($category->routines as $j => $routine) {
                 $dancers_age = [];

@@ -46,7 +46,7 @@ class Subscription extends Model
     {
         $sum = $this->routines->reduce(function ($total, $routine) {
             return $total + count($routine->dancers);
-          },0);
+        }, 0);
 
         return $sum;
     }
@@ -54,58 +54,59 @@ class Subscription extends Model
     {
         $subtotal = 0;
 
-        foreach($this->routines as $routine) {
+        foreach ($this->routines as $routine) {
             $total_cost = (count($routine->dancers) * $routine->category->rebate_price);
             $subtotal += $total_cost;
         }
-        foreach($this->fees as $fee) {
+        foreach ($this->fees as $fee) {
             $total_cost = ($fee->feeType->price * $fee->entries);
             $subtotal += $total_cost;
         }
 
-        return money_format('%i', ($subtotal / 100));
+        return sprintf('%01.2f', ($subtotal / 100)); //sprintf('%01.2f', ($subtotal / 100));
     }
     public function getTpsAttribute()
     {
         $tps = $this->getSubTotalAttribute() * env('TAX_TPS');
-        return money_format('%i', ($tps));
+        return sprintf('%01.2f', ($tps));
     }
     public function getTvqAttribute()
     {
         $tvq = $this->getSubTotalAttribute() * env('TAX_TVQ');
-        return money_format('%i', ($tvq));
+        return sprintf('%01.2f', ($tvq));
     }
     public function getTvhAttribute()
     {
         $tvq = $this->getSubTotalAttribute() * env('TAX_TVH');
-        return money_format('%i', ($tvq));
+        return sprintf('%01.2f', ($tvq));
     }
-    public function getTotalAttribute() {
+    public function getTotalAttribute()
+    {
         // TODO Better way handle taxes
-        if($this->event->state_id == 58) { // Ontario
+        if ($this->event->state_id == 58) { // Ontario
 
             $total = $this->getSubTotalAttribute() + $this->getTvhAttribute();
-        }else if($this->event->state_id == 57) {
+        } elseif ($this->event->state_id == 57) {
             $total = $this->getSubTotalAttribute() + $this->getTpsAttribute() + $this->getTvqAttribute();
         }
         return round($total, 2);
     }
     public function getSumPaymentsAttribute()
     {
-
         $sum = $this->payments->reduce(function ($total, $payment) {
-          return $total + $payment->amount;
-        },0);
+            return $total + $payment->amount;
+        }, 0);
 
-        return money_format('%i', ($sum / 100));
+        return sprintf('%01.2f', ($sum / 100));
     }
-    public function getBalanceAttribute() {
+    public function getBalanceAttribute()
+    {
         $total = $this->getTotalAttribute();
         $payments = $this->getSumPaymentsAttribute();
 
         //$balance = (($total - $payments) < 0) ? 0 : ($total - $payments);
         $balance = ($total - $payments);
 
-        return money_format('%i', round($balance, 2));
+        return sprintf('%01.2f', round($balance, 2));
     }
 }
