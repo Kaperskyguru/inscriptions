@@ -1,3 +1,720 @@
-html{font-size:62.5%;box-sizing:border-box;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased;font-weight:400;overflow-x:hidden;height:100%}*,:after,:before{box-sizing:inherit}@-moz-document url-prefix(){body{font-weight:lighter!important}}body{background-color:#f8fafc;color:#212529;font-size:1.8rem;font-weight:400;margin:0;padding:0;position:relative}h1,h2,h3,h4,h5,h6{line-height:1;margin-top:0}a{position:relative}a,a[href^=tel]{text-decoration:none}a[href^=tel]{color:inherit}a[x-apple-data-detectors]{color:inherit!important;text-decoration:none!important;font-size:inherit!important;font-family:inherit!important;font-weight:inherit!important;line-height:inherit!important}button{font:inherit;color:inherit;text-transform:none;background-color:transparent;border:0;margin:0;overflow:visible}button:focus{outline:0}img.responsive-img{display:block;width:100%;outline:0;height:auto}select{background:none;border:none;color:#fff;-webkit-appearance:none;-moz-appearance:none;appearance:none;-ms-appearance:none;border-radius:0}select,select:focus{outline:none}
+/**
+ * Convert font-size from px to rem with px fallback
+ *
+ * @param $size - the value in pixel you want to convert
+ *
+ * e.g. p {@include fontSize(12px);}
+ * 
+ */
 
-/*! HTML5 Boilerplate v6.1.0 | MIT License | https://html5boilerplate.com/ */::-moz-selection{background:#000;color:#fff;text-shadow:none}::selection{background:#000;color:#fff;text-shadow:none}hr{display:block;height:1px;border:0;border-top:1px solid #ccc;margin:1em 0;padding:0}audio,canvas,iframe,img,svg,video{vertical-align:middle}fieldset{border:0;margin:0;padding:0}textarea{resize:vertical}.browserupgrade{margin:.2em 0;background:#ccc;color:#000;padding:.2em 0}.hidden{display:none!important}.visuallyhidden{border:0;clip:rect(0 0 0 0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px;white-space:nowrap}.visuallyhidden.focusable:focus,.visuallyhidden:active{clip:auto;height:auto;margin:0;overflow:visible;position:static;width:auto;white-space:inherit}.invisible{visibility:hidden}.clearfix:after,.clearfix:before{content:" ";display:table}.clearfix:after{clear:both}.c-align{text-align:center}.text-body-display{font-size:1.6rem;line-height:1.5}.text-body{font-size:1.6rem;line-height:2}.text-subhead{font-size:1.4rem;line-height:1.3571428571}.text-subhead div{display:inline}.text-footnote{font-size:1.2rem;line-height:1.3333333333}.text-caption,.text-link{font-size:1.1rem;line-height:1.1818181818}.text-link{color:#731e6a;text-decoration:underline;display:flex}.text-link svg path{fill:#731e6a}.text-link span{font-size:1.4rem}.text-data-disabled{color:#677979;font-size:1.4rem;line-height:1.1428571429;padding-bottom:2rem;padding-left:1.6rem;border-bottom:1px solid #677979;padding-top:2rem}.text-center{margin:0 auto 5.6rem}.grid-1{width:6.3829787234%}.grid-2{width:14.8936170213%}.grid-3{width:23.4042553191%}.grid-4{width:31.914893617%}.grid-5{width:40.4255319149%}.grid-6{width:48.9361702128%}.grid-7{width:57.4468085106%}.grid-8{width:65.9574468085%}.grid-9{width:74.4680851064%}.grid-10{width:82.9787234043%}.grid-11{width:91.4893617021%}.grid-12{width:100%}.export-actions{display:flex;justify-content:flex-end;margin:3.2rem 0 0}.export-actions .btn{display:inline-flex}#export-layout{padding:8rem 4rem;width:960px;margin:0 auto}.export-header,.export-section{margin:0 0 6.4rem}.export-header{height:155px}.export-header .title-primary{margin:0}.export-logo{display:block;float:left}.export-subscription-info{float:right}.export-thanks{font-style:italic;text-align:right}.export-list-organization{margin:0;padding:0;list-style-type:none}.table-list{display:flex;justify-content:space-between;margin:0;padding:0}.table-header{margin:0 0 .8rem}.table-header .table-item{color:#677979}.table-header .table-item:first-child{padding-left:2.4rem}.table-menu{cursor:pointer;width:16px;margin-right:1.6rem;z-index:10}.table-menu>span>div{text-align:center}.table-menu svg path{transition:fill .2s ease;fill:#d4d8db}.table-menu:hover svg path{fill:#677979}.table-item{position:relative}.table-loading{pointer-events:none}.table-loading .table-body .table-item{opacity:.4}.table-item-link{width:100%;position:absolute;left:0;top:0;bottom:0;right:0}.table-item-link a{display:block;width:100%;height:100%;position:relative}.table-item-link a:hover:after{opacity:1}.table-item-link a:after{box-shadow:0 4px 20px rgba(33,37,41,.1);content:"";display:block;position:absolute;width:100%;height:100%;top:0;right:0;bottom:0;left:0;will-change:opacity;opacity:0;transition:opacity .2s ease}.table-list-body{background-color:#fff;margin:0 0 .8rem}.table-list-body.table-list-body-routine{background-color:#731e6a;color:#fff}.table-list-body .table-item{display:flex;justify-content:space-between;align-content:center;align-items:center;height:48px}.table-list-body .table-item:first-child{padding-left:2.4rem}.table-list-body .table-item:last-child{padding-right:2.4rem;justify-content:space-between}.title-large{font-family:DIN Condensed Bold,-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;font-style:normal;font-weight:400;font-size:4.5rem;line-height:1;text-transform:uppercase;color:#000;margin:0 0 3.2rem;text-align:center}.title-primary,.title-secondary,.title-tertiary{font-family:Helvetica-Neue-condensed,-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;font-style:normal;font-weight:400;margin:0 0 2.4rem}.title-primary{font-size:2.7rem;line-height:1.2222222222}.title-primary,.title-secondary{font-style:normal;font-weight:400}.title-secondary{font-size:2.1rem;line-height:1.2380952381}.title-tertiary{font-size:1.9rem;font-style:normal;font-weight:400;line-height:1.2631578947;margin:0 0 1.6rem}.title-headline{font-weight:700;font-size:1.4rem;line-height:1.5;text-transform:uppercase;margin:0}.title-fee{margin-top:3.2rem}body{background-color:#fff;font-family:Helvetica-Neue-condensed,-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol}.table-list{display:block;margin:0 0 8px;padding:8px 0;list-style-type:none;position:relative}.table-list-body{background-color:#eff0f5}.table-list-body .table-item{display:inline-block;vertical-align:center;position:relative;height:auto}.clear{clear:both}.table-item{display:inline-block;vertical-align:center;height:100%}.invoice-list-total{display:table;text-align:right;width:100%;margin:42px 0 0}.invoice-item{display:table-row;height:36px;text-align:right;vertical-align:middle;margin:0 0 8px}.invoice-total{background-color:#eff0f5;height:auto;padding:8px 0}.invoice-data{padding:0;width:70%}.invoice-data,.invoice-int{display:table-cell;text-align:right}.invoice-int{padding-right:13.4%}.page-break{page-break-after:always}
+/*
+	Acts like a php var_dump but with a SASS list or variable
+*/
+
+/*
+	Calculate the resize ratio of the svg sprite based on the icon provided
+	The icon needs at least 4 params (x, y, width, height)
+	(optional) w or h based ratio
+*/
+
+/*
+	Slice a SASS list like php array_slice
+*/
+
+/*$mq-mobile:620px;
+$mq-tablet:768px;
+$mq-desktop:960px;
+$mq-tablet-landscape:1024px;
+$mq-default:$default-width;
+$mq-large:1920px;*/
+
+/*-------------------------------------------------------------------
+	SVG Icons generation
+-------------------------------------------------------------------*/
+
+html {
+  font-size: 62.5%;
+  box-sizing: border-box;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-weight: 400;
+  overflow-x: hidden;
+  height: 100%;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+/**
+ * Firefox specific rule
+ */
+
+@-moz-document url-prefix()  {
+  body {
+    font-weight: lighter !important;
+  }
+}
+
+body {
+  background-color: #f8fafc;
+  color: #212529;
+  font-family: Helvetica-Neue-condensed, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 1.8rem;
+  font-weight: 400;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1;
+  margin-top: 0;
+}
+
+a {
+  position: relative;
+  text-decoration: none;
+}
+
+a[href^=tel] {
+  color: inherit;
+  /* Inherit text color of parent element. */
+  text-decoration: none;
+  /* Remove underline. */
+  /* Additional css `propery: value;` pairs here */
+}
+
+a[x-apple-data-detectors] {
+  color: inherit !important;
+  text-decoration: none !important;
+  font-size: inherit !important;
+  font-family: inherit !important;
+  font-weight: inherit !important;
+  line-height: inherit !important;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  text-transform: none;
+  background-color: transparent;
+  border: 0;
+  margin: 0;
+  overflow: visible;
+}
+
+button:focus {
+  outline: 0;
+}
+
+img.responsive-img {
+  display: block;
+  width: 100%;
+  outline: 0;
+  height: auto;
+}
+
+select {
+  background: none;
+  border: none;
+  color: white;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  -ms-appearance: none;
+  /* get rid of default appearance for IE8, 9 and 10*/
+  border-radius: 0;
+  outline: none;
+}
+
+select:focus {
+  outline: none;
+}
+
+/*! HTML5 Boilerplate v6.1.0 | MIT License | https://html5boilerplate.com/ */
+
+/*
+ * What follows is the result of much research on cross-browser styling.
+ * Credit left inline and big thanks to Nicolas Gallagher, Jonathan Neal,
+ * Kroc Camen, and the H5BP dev community and team.
+ */
+
+/* ==========================================================================
+   Base styles: opinionated defaults
+   ========================================================================== */
+
+/*
+ * Remove text-shadow in selection highlight:
+ * https://twitter.com/miketaylr/status/12228805301
+ *
+ * Vendor-prefixed and regular ::selection selectors cannot be combined:
+ * https://stackoverflow.com/a/16982510/7133471
+ *
+ * Customize the background color to match your design.
+ */
+
+::-moz-selection {
+  background: black;
+  color: white;
+  text-shadow: none;
+}
+
+::selection {
+  background: black;
+  color: white;
+  text-shadow: none;
+}
+
+/*
+ * A better looking default horizontal rule
+ */
+
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 1em 0;
+  padding: 0;
+}
+
+/*
+ * Remove the gap between audio, canvas, iframes,
+ * images, videos and the bottom of their containers:
+ * https://github.com/h5bp/html5-boilerplate/issues/440
+ */
+
+audio,
+canvas,
+iframe,
+img,
+svg,
+video {
+  vertical-align: middle;
+}
+
+/*
+ * Remove default fieldset styles.
+ */
+
+fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+/*
+ * Allow only vertical resizing of textareas.
+ */
+
+textarea {
+  resize: vertical;
+}
+
+/* ==========================================================================
+   Browser Upgrade Prompt
+   ========================================================================== */
+
+.browserupgrade {
+  margin: 0.2em 0;
+  background: #ccc;
+  color: #000;
+  padding: 0.2em 0;
+}
+
+/* ==========================================================================
+   Helper classes
+   ========================================================================== */
+
+/*
+ * Hide visually and from screen readers
+ */
+
+.hidden {
+  display: none !important;
+}
+
+/*
+ * Hide only visually, but have it available for screen readers:
+ * https://snook.ca/archives/html_and_css/hiding-content-for-accessibility
+ *
+ * 1. For long content, line feeds are not interpreted as spaces and small width
+ *    causes content to wrap 1 word per line:
+ *    https://medium.com/@jessebeach/beware-smushed-off-screen-accessible-text-5952a4c2cbfe
+ */
+
+.visuallyhidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+  white-space: nowrap;
+  /* 1 */
+}
+
+/*
+ * Extends the .visuallyhidden class to allow the element
+ * to be focusable when navigated to via the keyboard:
+ * https://www.drupal.org/node/897638
+ */
+
+.visuallyhidden:active,
+.visuallyhidden.focusable:focus {
+  clip: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  position: static;
+  width: auto;
+  white-space: inherit;
+}
+
+/*
+ * Hide visually and from screen readers, but maintain layout
+ */
+
+.invisible {
+  visibility: hidden;
+}
+
+/*
+ * Clearfix: contain floats
+ *
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *    `contenteditable` attribute is included anywhere else in the document.
+ *    Otherwise it causes space to appear at the top and bottom of elements
+ *    that receive the `clearfix` class.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *    `:before` to contain the top-margins of child elements.
+ */
+
+.clearfix:before,
+.clearfix:after {
+  content: " ";
+  /* 1 */
+  display: table;
+  /* 2 */
+}
+
+.clearfix:after {
+  clear: both;
+}
+
+.c-align {
+  text-align: center;
+}
+
+.text-body-display {
+  font-size: 1.6rem;
+  line-height: 1.5;
+}
+
+.text-body {
+  font-size: 1.6rem;
+  line-height: 2;
+}
+
+.text-subhead {
+  font-size: 1.4rem;
+  line-height: 1.3571428571;
+}
+
+.text-subhead div {
+  display: inline;
+}
+
+.text-footnote {
+  font-size: 1.2rem;
+  line-height: 1.3333333333;
+}
+
+.text-caption {
+  font-size: 1.1rem;
+  line-height: 1.1818181818;
+}
+
+.text-link {
+  font-size: 1.1rem;
+  line-height: 1.1818181818;
+  color: #731E6A;
+  text-decoration: underline;
+  display: flex;
+}
+
+.text-link svg path {
+  fill: #731E6A;
+}
+
+.text-link span {
+  font-size: 1.4rem;
+}
+
+.text-data-disabled {
+  color: #677979;
+  font-size: 1.4rem;
+  line-height: 1.1428571429;
+  padding-bottom: 2rem;
+  padding-left: 1.6rem;
+  border-bottom: 1px solid #677979;
+  padding-top: 2rem;
+}
+
+.text-center {
+  margin: 0 auto 5.6rem auto;
+}
+
+.grid-1 {
+  width: 6.3829787234%;
+}
+
+.grid-2 {
+  width: 14.8936170213%;
+}
+
+.grid-3 {
+  width: 23.4042553191%;
+}
+
+.grid-4 {
+  width: 31.914893617%;
+}
+
+.grid-5 {
+  width: 40.4255319149%;
+}
+
+.grid-6 {
+  width: 48.9361702128%;
+}
+
+.grid-7 {
+  width: 57.4468085106%;
+}
+
+.grid-8 {
+  width: 65.9574468085%;
+}
+
+.grid-9 {
+  width: 74.4680851064%;
+}
+
+.grid-10 {
+  width: 82.9787234043%;
+}
+
+.grid-11 {
+  width: 91.4893617021%;
+}
+
+.grid-12 {
+  width: 100%;
+}
+
+.export-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin: 3.2rem 0 0 0;
+}
+
+.export-actions .btn {
+  display: inline-flex;
+}
+
+#export-layout {
+  padding: 8rem 4rem;
+  width: 960px;
+  margin: 0 auto;
+}
+
+.export-section {
+  margin: 0 0 6.4rem 0;
+}
+
+.export-header {
+  margin: 0 0 6.4rem 0;
+  height: 155px;
+}
+
+.export-header .title-primary {
+  margin: 0;
+}
+
+.export-logo {
+  display: block;
+  float: left;
+}
+
+.export-subscription-info {
+  float: right;
+}
+
+.export-thanks {
+  font-style: italic;
+  text-align: right;
+}
+
+.export-list-organization {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.table-list {
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  position: relative;
+}
+
+.table-header {
+  margin: 0 0 0.8rem 0;
+}
+
+.table-header .table-item {
+  color: #677979;
+}
+
+.table-header .table-item:first-child {
+  padding-left: 2.4rem;
+}
+
+.table-menu {
+  cursor: pointer;
+  width: 16px;
+  margin-right: 1.6rem;
+  z-index: 10;
+}
+
+.table-menu > span > div {
+  text-align: center;
+}
+
+.table-menu svg path {
+  transition: fill 0.2s ease;
+  fill: #D4D8DB;
+}
+
+.table-menu:hover svg path {
+  fill: #677979;
+}
+
+.table-item {
+  position: relative;
+}
+
+.table-loading {
+  pointer-events: none;
+}
+
+.table-loading .table-body .table-item {
+  opacity: 0.4;
+}
+
+.table-item-link {
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+}
+
+.table-item-link a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.table-item-link a:hover:after {
+  opacity: 1;
+}
+
+.table-item-link a:after {
+  box-shadow: 0px 4px 20px rgba(33, 37, 41, 0.1);
+  content: "";
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  will-change: opacity;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.table-list-body {
+  background-color: #ffffff;
+  margin: 0 0 0.8rem 0;
+}
+
+.table-list-body.table-list-body-routine {
+  background-color: #731E6A;
+  color: #ffffff;
+}
+
+.table-list-body .table-item {
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+  align-items: center;
+  height: 48px;
+  position: relative;
+}
+
+.table-list-body .table-item:first-child {
+  padding-left: 2.4rem;
+}
+
+.table-list-body .table-item:last-child {
+  padding-right: 2.4rem;
+  justify-content: space-between;
+}
+
+.title-large {
+  font-family: "DIN Condensed Bold", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-style: normal;
+  font-weight: normal;
+  font-size: 4.5rem;
+  line-height: 1;
+  /* or 100% */
+  text-transform: uppercase;
+  color: #000000;
+  margin: 0 0 3.2rem 0;
+  text-align: center;
+}
+
+.title-primary,
+.title-secondary,
+.title-tertiary {
+  font-family: Helvetica-Neue-condensed, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-style: normal;
+  font-weight: normal;
+  margin: 0 0 2.4rem 0;
+}
+
+.title-primary {
+  font-size: 2.7rem;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1.2222222222;
+}
+
+.title-secondary {
+  font-size: 2.1rem;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1.2380952381;
+}
+
+.title-tertiary {
+  font-size: 1.9rem;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1.2631578947;
+  margin: 0 0 1.6rem 0;
+}
+
+.title-headline {
+  font-weight: bold;
+  font-size: 1.4rem;
+  line-height: 1.5;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.title-fee {
+  margin-top: 3.2rem;
+}
+
+body {
+  background-color: #ffffff;
+  font-family: Helvetica-Neue-condensed, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+.table-list {
+  display: block;
+  margin: 0 0 8px 0;
+  padding: 8px 0;
+  list-style-type: none;
+  position: relative;
+}
+
+.table-list-body {
+  background-color: #EFF0F5;
+}
+
+.table-list-body .table-item {
+  display: inline-block;
+  vertical-align: center;
+  position: relative;
+  height: auto;
+}
+
+.clear {
+  clear: both;
+}
+
+.table-item {
+  display: inline-block;
+  vertical-align: center;
+  height: 100%;
+}
+
+.invoice-list-total {
+  display: table;
+  text-align: right;
+  width: 100%;
+  margin: 42px 0 0 0;
+}
+
+.invoice-item {
+  display: table-row;
+  height: 36px;
+  text-align: right;
+  vertical-align: middle;
+  margin: 0 0 8px 0;
+}
+
+.invoice-total {
+  background-color: #EFF0F5;
+  height: auto;
+  padding: 8px 0;
+}
+
+.invoice-data {
+  display: table-cell;
+  text-align: right;
+  padding: 0;
+  width: 70%;
+}
+
+.invoice-int {
+  display: table-cell;
+  text-align: right;
+  padding-right: 13.4%;
+}
+
+.page-break {
+  page-break-after: always;
+}
+

@@ -1,5 +1,5 @@
-const mix = require('laravel-mix');
-const svgicon = require('laravel-mix-vue-svgicon');
+const mix = require("laravel-mix");
+const svgicon = require("laravel-mix-vue-svgicon");
 
 /*
  |--------------------------------------------------------------------------
@@ -12,11 +12,12 @@ const svgicon = require('laravel-mix-vue-svgicon');
  |
  */
 
-mix.js('resources/js/appv1.js', 'public/js')
-.copyDirectory('resources/fonts', 'public/css/fonts')
-    .sass('resources/sass/appv1.scss', 'public/css')
-    .sass('resources/sass/print.scss', 'public/css')
-    .svgicon('./resources/svg')
+mix.js("resources/js/appv1.js", "public/js")
+    .js("resources/js/appv2.js", "public/js")
+    .copyDirectory("resources/fonts", "public/css/fonts")
+    .sass("resources/sass/appv1.scss", "public/css")
+    .sass("resources/sass/print.scss", "public/css")
+    .svgicon("./resources/svg");
 
 if (mix.inProduction()) {
     mix.version();
