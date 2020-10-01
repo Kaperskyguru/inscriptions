@@ -1,0 +1,46 @@
+.autocomplete {
+    position:absolute;
+    left:0;
+    bottom:-8px;
+    width: 306px;
+    transform:translateY(100%);
+    background: #FFFFFF;
+    box-shadow: 0px 4px 8px rgba(115, 30, 106, 0.08);
+
+}
+
+.autocomplete-results {
+    margin:0;
+    padding:0;
+    list-style-type: none;
+}
+
+.autocomplete-item {
+    cursor:pointer;
+    height:52px; 
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    align-items: center;
+    padding:0 1.6rem;
+    color:$porto;
+    border-top:1px solid $athens;
+    background-color:$white;
+    transition:background-color 0.2s ease;
+    will-change:background-color;
+    &.autocomplete-item-0 {
+        cursor:auto;
+        &:hover {
+            background-color:$white;
+        }
+        .autocomplete-age {
+            display:none;
+        }
+    }
+    &:hover {
+        background-color:$athens;
+    }
+    &:first-child {
+        border-top:none;
+    }
+}

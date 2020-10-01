@@ -1,0 +1,71 @@
+@charset "UTF-8";
+
+// Body
+$catskill: #f8fafc;
+
+// Typography
+$font-size-base: 0.9rem;
+$line-height-base: 1.6;
+
+
+$white:#ffffff;
+$requin:#212529;
+$porto:#731E6A;
+$loulou:#390F35;
+$oslo:#677979;
+$athens:#EFF0F5;
+$soldat:#C70000;
+$fer:#D4D8DB;
+
+$mercury:#e5e5e5;
+$york: #A8F78E;
+$corn: #FEF185;
+$mandy: #FFAA90;
+$malibu: #82CBFA;
+
+// FLOFEST
+$catalina:#0001D0;
+$aqua:#39DAFF;
+
+
+// Fonts
+$default-font: Helvetica-Neue-condensed, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
+$din-cond-regular: DINCond-Reg, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
+$din-cond-bold: 'DIN Condensed Bold', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
+
+// Set the number of columns you want to use on your layout.
+$grid-columns: 12 !default;
+// Set the gutter between columns.
+$gutter-width: 0.8rem !default;
+//$flexboxgrid-gutter-width: 2.45vw !default;
+// Set a margin for the container sides.
+$flexboxgrid-outer-margin: 0rem !default;
+
+
+$flexboxgrid-max-width:1440;
+$grid-content-width: 1128;
+$grid-gutter-width: 24;
+$grid-col-width: 72;
+
+/*$mq-mobile:620px;
+$mq-tablet:768px;
+$mq-desktop:960px;
+$mq-tablet-landscape:1024px;
+$mq-default:$default-width;
+$mq-large:1920px;*/
+
+$mq-mobile:670px;
+$mq-tablet:768px;
+$mq-tablet-landscape:1024px;
+$mq-breakpoint:874px;
+$mq-default:1440px;
+$mq-large:1920px;
+
+
+
+$transition-duration:0.2s;
+$transition-inview-duration:0.8s;
+$opacity-hover :0.5;

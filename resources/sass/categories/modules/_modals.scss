@@ -1,0 +1,31 @@
+.modal {
+    background-color:$catskill;
+    width:464px;
+}
+.v--modal-overlay {
+    background:rgba($requin, 0.6)!important;
+}
+.modal-header {
+    color:white;
+    background-color:$porto;
+    height:80px;
+    padding:0 2.4rem;
+    display:flex;
+    justify-content: space-between;
+    align-content: center;
+    align-items:center;
+    .modal-title {
+        margin:0;
+    }
+
+}
+.modal-body {
+    padding:4.2rem 2.4rem;
+}
+.modal-close {
+    cursor:pointer;
+}
+.modal-autocomplete {
+    height:400px;
+    overflow-y:scroll;
+}

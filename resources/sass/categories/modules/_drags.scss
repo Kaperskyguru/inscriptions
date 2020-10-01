@@ -1,0 +1,51 @@
+.drag-parent {
+    padding:0;
+    .drag-item:first-child {
+        
+    }
+
+}
+.drag-area {
+    margin:0;
+    list-style-type: none;
+    // width:1130px;
+}
+.drag-table {
+    background-color:$athens;
+    border-collapse:separate;
+    border-spacing:0 1px;
+    border:none;
+    width:100%;
+    padding:1.6rem 1.6rem 0.8rem 1.6rem;
+
+    &.has-cut-tool {
+        tr {
+            &:hover {
+                td {border-bottom:1px solid $porto;}
+            }
+        }
+    }
+}
+.drag-table-title {
+    color:$oslo;
+    font-weight:normal;
+    text-align:left;
+}
+.drag-item {
+    margin:0 0 0.8rem 0;
+}
+
+.drag-subitem {
+    height:48px;
+    background: #FFFFFF;
+    vertical-align: middle;
+}
+.drag-order-position {
+    color:$fer;
+    border:none;
+    width:50px;
+}
+
+.drag-padded {
+    padding-right:0.8rem;
+}

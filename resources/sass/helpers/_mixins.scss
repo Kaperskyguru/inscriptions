@@ -1,0 +1,155 @@
+@mixin responsive($max, $min:0){
+	@if $min != 0{
+		@media only screen and (min-width : $min+1) and (max-width : $max) {
+			@content;
+		}
+	}
+	@else{
+		@media only screen and (max-width : $max) {
+			@content;
+		}
+	}
+}
+
+@mixin responsive-min($min){
+	@media only screen and (min-width : $min+1) {
+		@content;
+	}
+}
+
+@mixin responsive-max($max){
+	@media only screen and (max-width : $max+1) {
+		@content;
+	}
+}
+// Set the grid defaults
+// -----------------------------------------------------------------------------}
+
+
+@mixin responsiveHeight($max){
+	@media only screen and (max-height : $max) {
+		@content;
+	}
+}
+
+@mixin viewport-ratio($ratio: 1 1, $width: 90, $height: 90) {
+	@if length($ratio) < 2 or length($ratio) > 2 {
+		@warn "$ratio must be a list with two values.";
+	}
+	width:#{$width}vw;
+	height:#{((nth($ratio, 2) / nth($ratio, 1)) * $width)}vw;
+	max-height:#{$height}vh;
+	max-width:#{((nth($ratio, 1) / nth($ratio, 2)) * $height)}vh;
+}
+///
+/// Viewport sized typography with minimum and maximum values
+///
+/// @author Eduardo Boucas (@eduardoboucas)
+///
+/// @param {Number}   $responsive  - Viewport-based size
+/// @param {Number}   $min         - Minimum font size (px)
+/// @param {Number}   $max         - Maximum font size (px)
+///                                  (optional)
+/// @param {Number}   $fallback    - Fallback for viewport-
+///                                  based units (optional)
+///
+/// @example scss - 5vw font size (with 50px fallback),
+///                 minumum of 35px and maximum of 150px
+///  @include responsive-font(5vw, 35px, 150px, 50px);
+///
+@mixin responsive-font($responsive, $min, $max: false, $fallback: false) {
+	$responsive-unitless:$responsive / ($responsive - $responsive + 1);
+	$dimension:if(unit($responsive) == 'vh', 'height', 'width');
+	$min-breakpoint:$min / $responsive-unitless * 100;
+
+	@media (max-#{$dimension}: #{$min-breakpoint}) {
+		font-size:$min;
+	}
+
+	@if $max {
+		$max-breakpoint:$max / $responsive-unitless * 100;
+
+		@media (min-#{$dimension}: #{$max-breakpoint}) {
+			font-size:$max;
+		}
+	}
+
+	@if $fallback {
+		font-size:$fallback;
+	}
+
+	font-size:$responsive;
+}
+
+// Mixin that will include the fall back px declaration as well as the calculated rem value.
+@mixin fontSize($size) {
+	font-size: $size;
+	font-size: calculateRem($size);
+  }
+
+/*-------------------------------------------------------------------
+	SVG Icons generation
+-------------------------------------------------------------------*/
+@mixin grunticon-sizes($svg, $prefix) {
+	@if type-of(nth(nth($svg,3),1)) == string {
+		$size: nth($svg, 3);
+
+		&.#{$prefix}-#{nth($size,1)} {
+			height: #{nth($size, 3)};
+			width: #{nth($size, 2)};
+		}
+	} @else {
+		@each $size in nth($svg, 3) {
+			&.#{$prefix}-#{nth($size,1)} {
+				height: #{nth($size, 3)};
+				width: #{nth($size, 2)};
+			}
+		}
+	}
+}
+
+@mixin grunticon($svg, $prefix) {
+	height: #{nth($svg, 2)};
+	width: #{nth($svg, 1)};
+
+	// Add size classes
+	@if length($svg) > 2 and type-of(nth($svg,3)) == list {
+		@include grunticon-sizes($svg, $prefix);
+	}
+}
+@mixin pseudo($display: block, $pos: absolute, $content: ''){
+    content: $content;
+    display: $display;
+    position: $pos;
+}
+@mixin responsive-ratio($x,$y, $pseudo: false) {
+    $padding: unquote( ( $y / $x ) * 100 + '%' );
+    @if $pseudo {
+        &:before {
+            @include pseudo($pos: relative);
+            width: 100%;
+            padding-top: $padding;
+        }
+    } @else {
+        padding-top: $padding;
+    }
+}
+// Simple and effective for when you need to trigger hardware acceleration for some animation
+@mixin hardware($backface: true, $perspective: 1000) {
+    @if $backface {
+        backface-visibility: hidden;
+    }
+    perspective: $perspective;
+}
+
+
+@mixin get-col-width($col, $margin:$grid-gutter-width, $grid-width:$grid-content-width) {
+    width:percentage((((($col - 1) * $margin) + ($col * $grid-col-width))) / $grid-width);
+
+}
+
+// mixin to convert letter-spacing from Adobe XD to CSS
+
+  @mixin letter-spacing($spacing) {
+    letter-spacing: ($spacing / 1000) * 1em;
+  }

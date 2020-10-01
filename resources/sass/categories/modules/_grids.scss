@@ -1,0 +1,9 @@
+.grid {
+
+}
+
+
+
+@for $i from 1 through $grid-columns {
+    .grid-#{$i} { @include get-col-width($i); }
+}

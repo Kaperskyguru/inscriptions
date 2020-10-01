@@ -1,0 +1,17 @@
+.callout-main,
+.callout-secondary {
+    color:$white;
+    font-weight:normal;
+    font-style:normal;
+    font-size: 1.5rem;
+    line-height: get-line-height(15px,20px);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+}
+.callout-main {
+    font-family: $din-cond-bold;
+}
+
+.callout-secondary {
+    font-family: $din-cond-regular;
+}

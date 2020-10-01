@@ -1,0 +1,18 @@
+.hero {
+    height:235px;
+    background-color:$loulou;
+    color:$white;
+    width:100%;
+    padding:4.8rem 0 0 2.4rem;
+    margin:0 0 4.8rem 0;
+
+    .hero-title {
+        color:$white;
+        text-align:left;
+        margin:0 0 1.6rem 0;
+    }
+
+    .hero-text {
+        margin:0 0 2.4 0;
+    }
+}

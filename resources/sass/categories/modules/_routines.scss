@@ -1,0 +1,52 @@
+.routine-container {
+    margin:0 0 2.4rem 0;
+    position:relative;
+
+}
+.routine-actions {
+    display:flex;
+    flex-direction: row;
+    position:relative;
+    margin-top:2.4rem;
+    margin-bottom:15.2rem;
+    .routine-btn {
+        display:inline-flex;
+    }
+    &.has-menu-open {
+        .actions-container {
+            display:block;
+        }
+    }
+}
+.routine-dancers {
+    margin:3.2rem 0 3.2rem 0;
+    padding: 0;
+    list-style-type: none;
+}
+.routine-dancer-item {
+    display:flex;
+    justify-content: flex-start;
+    align-content: center;
+    align-items: center;
+    height:48px;
+    position:relative;
+    margin:0 0 0.8rem 0;
+
+}
+.routine-dancer-info {
+    background-color:$white;
+    display:flex;
+    justify-content: space-between;
+    padding:0 3.2rem 0 1.6rem;
+    align-content: center;
+    align-items: center;
+    height:100%;
+    width:100%;
+}
+.routine-dancer-delete {
+    cursor:pointer;
+    position:absolute;
+    top:50%;
+    transform:translate(0, -50%);
+    right:-30px;
+}

@@ -1,0 +1,71 @@
+.schedule-title {
+    text-align: center;
+    color:white;
+    background-color:$porto;
+    height:48px;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items:center;
+    margin:0;
+}
+.schedule-title-uncategorized {
+    text-align: center;
+    color:white;
+    background-color:$oslo;
+    height:48px;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items:center;
+    margin:0;
+}
+.schedule-title-item {
+    position:relative;
+}
+
+.schedule-title-menu {
+    position:absolute;
+    right:0;
+    top:50%;
+    transform:translate(0, -50%);
+    svg path {
+        fill:$white;
+    }
+}
+.schedule-title-input {
+    color:$white;
+    border:none;
+    outline: none;
+    background-image:none;
+    background-color:transparent;
+    box-shadow: none;
+    text-align:center;
+    width:100%;
+    will-change:opacity;
+    transition:opacity 0.2s ease;
+    &:focus {
+        opacity:0.7;
+    }
+}
+
+.schedule-add {
+    background-color:$athens;
+    color:$oslo;
+    cursor:pointer;
+    display: flex;
+    height:32px;
+    justify-content: center;
+    align-content: center;
+    align-items:center;
+    margin-top:0.8rem;
+    width:100%;
+}
+
+.schedule-input {
+    color:$porto;
+    border:none;
+}
+.schedule-hour {
+    padding-right:0.8rem;
+}

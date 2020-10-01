@@ -1,0 +1,64 @@
+.alert {
+    min-width:304px;
+    margin:0 auto 5.6rem auto;
+    padding:1.6rem 2.4rem;
+    min-height:52px;
+    border:1px solid $porto;
+    color:$porto;
+    display:flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    text-align:center;
+    .text-body-display {
+        margin:0;
+    }
+}
+.alert-no-data,
+.alert-submission {
+    background-color:white;
+    border:none;
+    color:$oslo;
+    display:flex;
+    height:80px;
+    padding:0 2.4rem 0 2.4rem;
+    margin-bottom:0;
+    align-content:center;
+    align-items:center;
+    z-index:30;
+
+}
+.alert-text {
+    margin:0;
+}
+
+.alert-login {
+    max-width:600px;
+}
+
+.alert-no-data {
+    justify-content: flex-start;
+}
+.alert-submission {
+    background-color:transparent;
+    position:fixed;
+    right:0;
+    bottom:2.4rem;
+    width: calc(100vw - 190px);
+    padding-left:4rem;
+    padding-right:8rem;
+    .alert-inner {
+        background-color:white;
+        box-shadow:0px 4px 20px rgba(115, 30, 106, 0.1);
+        border:none;
+        color:$oslo;
+        display:flex;
+        height:80px;
+        padding:0 2.4rem 0 2.4rem;
+        margin-bottom:0;
+        align-content:center;
+        align-items:center;
+        justify-content: space-between;
+        width:100%;
+    }
+}
