@@ -1,0 +1,28 @@
+.invoice-list-total {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    list-style-type: none;
+    padding:0;
+    margin:4.2rem 0 0 0;
+}
+
+.invoice-item {
+    display: flex;
+    justify-content: flex-end;
+    text-align:right;
+    margin:0 0 0.8rem 0;
+}
+.invoice-data {
+    display:block;
+}
+.invoice-total {
+    background-color:$athens;
+    height:48px;
+    display: flex;
+    align-items: center;
+}
+.invoice-int {
+    padding-right:10.893617%;
+
+}

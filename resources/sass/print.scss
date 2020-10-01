@@ -1,0 +1,75 @@
+
+// Accessing inside CSS file
+// Variables
+@import "helpers/functions";
+@import "helpers/variables";
+@import "helpers/mixins";
+
+@import "categories/base";
+@import "categories/modules/texts";
+@import "categories/modules/grids";
+@import "categories/modules/exports";
+@import "categories/modules/tables";
+@import "categories/modules/titles";
+
+body {
+    background-color:#ffffff;
+    font-family:$default-font;
+}
+.table-list {
+    display:block;
+    margin:0 0 8px 0;
+    padding:8px 0;
+    list-style-type: none;
+    position:relative;
+ }
+ .table-list-body {
+    background-color:$athens;
+    .table-item {
+        display: inline-block;
+        vertical-align: center;
+        position:relative;
+        height:auto;
+    }
+}
+.clear {
+    clear:both;
+}
+
+.table-item {
+    display: inline-block;
+    vertical-align: center;
+    height:100%;
+}
+.invoice-list-total {
+    display:table;
+    text-align:right;
+    width:100%;
+    margin:42px 0 0 0;
+}
+.invoice-item {
+    display:table-row;
+    height:36px;
+    text-align:right;
+    vertical-align:middle;
+    margin:0 0 8px 0;
+}
+.invoice-total {
+    background-color:$athens;
+    height:auto;
+    padding:8px 0;
+}
+.invoice-data{
+   display:table-cell;
+    text-align:right;
+    padding:0;
+    width:70%;
+}
+.invoice-int {
+    display:table-cell;
+    text-align:right;
+    padding-right:13.4%
+}
+.page-break {
+    page-break-after: always;
+}

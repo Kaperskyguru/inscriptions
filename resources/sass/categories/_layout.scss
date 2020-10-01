@@ -1,0 +1,47 @@
+
+
+#layout-header {
+
+}
+#layout-content {
+   //padding-top:36px;
+}
+#layout-footer {
+
+}
+
+.layout-wrapper {
+    display:flex;
+    justify-content: center;
+    align-content: center;
+    align-self: center;
+    flex-direction: column;
+}
+#layout-dashboard {
+    //background-color:grey;
+    //width: calc(100vw - 230px);
+    width: calc(100vw - 190px);
+    height: 100vh;
+    position:relative;
+    padding-left:4rem;
+    padding-right:8rem;
+    padding-top:4rem;
+    min-width:768px;
+    overflow-y:scroll;
+}
+#layout-aside {
+    background: linear-gradient(180deg, #731E6A 0%, #460B41 100%);
+    width:190px;
+    height:100vh;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding:7.2rem 0 4.8rem 0;
+    box-shadow: 10px 4px 20px rgba(115, 30, 106, 0.08);
+
+    &.layout-aside-admin {
+        background:$requin;
+        box-shadow: 10px 4px 20px rgba(115, 30, 106, 0.08);
+    }
+
+}

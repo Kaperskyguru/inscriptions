@@ -1,0 +1,149 @@
+.nav-logo {
+    display:block;
+    margin:0 auto;
+    width:30px;
+    height:48px;
+}
+
+#nav-dashboard {
+    text-align:center;
+    .nav-link {
+        justify-content: center;
+    }
+}
+#nav-dashboard-admin {
+    text-align:center;
+    .nav-link {
+        justify-content: center;
+
+        &.router-link-exact-active {
+            color:$requin;
+        }
+        &.router-link-active {
+            background-color:$white;
+            color:$requin;
+        }
+        &.nav-link-dashboard {
+            background-color:transparent;
+            color:$white;
+            &.router-link-exact-active {
+                background-color:$white;
+                color:$requin;
+            }
+        }
+    }
+    }
+
+    
+.nav-link {
+    background-color:rgba(255,255,255, 0);
+    cursor:pointer;
+    color:$white;
+    display:flex;
+    height:32px;
+    align-items:center;
+    will-change:background-color;
+    transition:background-color 0.2s ease;
+    &:hover {
+        background-color:rgba(255,255,255, 0.1);
+        color:$white;
+    }
+    &.router-link-exact-active {
+        background-color:$white;
+        color:$porto;
+    }
+    &.router-link-active {
+        background-color:$white;
+        color:$porto;
+    }
+}
+
+.nav-list {
+    list-style-type:none;
+    padding:0;
+    margin:0;
+
+    a {
+        color:$white;
+    }
+
+    &.nav-list-competitions {
+        margin:2.4rem 0;
+        padding:2.4rem 0;
+        position:relative;
+
+        &:before{
+            content:' ';
+            background-color:$white;
+            display:block;
+            left:50%;
+            position:absolute;
+            transform:translate(-50%, 0);
+            width:24px;
+            height:1px;
+        }
+
+        &:before {
+            top:0;
+        }
+    }
+}
+#nav-meta {
+    .nav-link {
+        padding:0 0 0 2.4rem;
+    }
+}
+.nav-item-spacer {
+    margin-top:4.2rem;
+}
+.nav-icon {
+    margin-right:0.8rem;
+}
+.nav-tabs {
+    margin:4.2rem 0 0 0;
+    border-bottom:1px solid $athens;
+}
+
+.nav-tabs-link {
+    cursor:pointer;
+    margin:0 1.6rem;
+    padding:0 1.6rem;
+    position:relative;
+    &.active {
+        border-bottom:3px solid $porto;
+    }
+    // &:after {
+    //     width:100%;
+    //     display:block;
+    //     bottom:0;
+    //     left:0;
+    //     height:
+    // }
+}
+
+#nav-event {
+    margin-left:4rem;
+    .nav-link {
+        color:$requin;
+        display:inline;
+        margin:0 4rem;
+        position:relative;
+        &:after {
+            content:"";
+            display:none;
+            width:100%;
+            height:3px;
+            background-color:$requin;
+            position:absolute;
+            bottom:-8px;
+            left:0;
+
+        }
+        &:hover,
+        &.router-link-exact-active {
+            &:after {
+                display:block;
+            }
+        }
+    }
+}

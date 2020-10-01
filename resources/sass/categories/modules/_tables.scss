@@ -1,0 +1,116 @@
+ .table-list {
+    display:flex;
+    justify-content: space-between;
+    margin:0;
+    padding:0;
+    list-style-type: none;
+    position:relative;
+ }
+.table-header {
+    margin:0 0 0.8rem 0;
+    .table-item {
+        color:$oslo;
+    }
+    .table-item:first-child {
+        padding-left:2.4rem;
+    }
+}
+.table-menu {
+    cursor:pointer;
+    width:16px;
+    margin-right:1.6rem;
+    z-index:10;
+    > span > div {
+        text-align:center;
+    }
+    svg path{
+        transition:fill 0.2s ease;
+        fill:$fer;
+    }
+    &:hover {
+        svg path{
+            fill:$oslo;
+        }
+    }
+}
+.table-item {
+    
+    position:relative;
+
+}
+.table-body {
+    // height:375px;
+    // overflow-y:scroll;
+}
+
+.table-loading {
+    pointer-events:none;
+    .table-body {
+        .table-item {
+            opacity:0.4;
+        }
+    }
+    
+    
+}
+
+.table-item-link {
+    width: 100%;
+    position:absolute;
+    left:0;
+    top:0;
+    bottom:0;
+    right:0;
+    a {
+        display:block;
+        width:100%;
+        height:100%;
+        position:relative;
+        &:hover {
+            &:after {
+                opacity:1;
+            }
+        }
+        &:after {
+            box-shadow: 0px 4px 20px rgba(33, 37, 41, 0.1);
+            content:'';
+            display:block;
+            position:absolute;
+            width:100%;
+            height:100%;
+            top:0;
+            right:0;
+            bottom:0;
+            left:0;
+            will-change:opacity;
+            opacity:0;
+            transition:opacity 0.2s ease;
+        }
+    }
+}
+
+.table-list-body {
+    background-color:$white;
+    margin:0 0 0.8rem 0;
+
+    &.table-list-body-routine {
+        background-color:$porto;
+        color:$white;
+    }
+    .table-item {
+        display: flex;
+        justify-content: space-between;
+        align-content: center;
+        align-items: center;
+        height:48px;
+        position:relative;
+    }
+    .table-item:first-child {
+        padding-left:2.4rem;
+    }
+    .table-item:last-child {
+        padding-right:2.4rem;
+        justify-content: space-between;
+    }
+
+}

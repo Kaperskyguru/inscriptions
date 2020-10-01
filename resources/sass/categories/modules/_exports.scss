@@ -1,0 +1,45 @@
+.export-actions {
+    display:flex;
+    justify-content: flex-end;
+    margin:3.2rem 0 0 0;
+    .btn {
+        display:inline-flex;
+    }
+}
+
+#export-layout {
+    padding:8rem 4rem;
+    width:960px;
+    margin:0 auto;
+}
+.export-section {
+    margin:0 0 6.4rem 0;
+}
+.export-header {
+   margin:0 0 6.4rem 0;
+   height:155px;
+
+   .title-primary {
+       margin:0;
+   }
+}
+
+.export-logo {
+    display:block;
+  //margin:0 0 1.6rem 0;
+  float:left;
+}
+.export-subscription-info {
+   float:right;
+    
+}
+
+.export-thanks {
+    font-style:italic;
+    text-align:right;
+}
+.export-list-organization {
+    margin:0;
+    padding:0;
+    list-style-type:none;
+}

@@ -1,0 +1,26 @@
+.debug-mode {
+    .grid-debug {
+        display:flex;
+    }
+}
+.has-menu-open {
+    .actions-container {
+        display:block;
+    }
+}
+.is-loading {
+    opacity:0.3;
+}
+
+.is-locked {
+    //opacity:0.6;
+    // // .drag-table {
+    // //     background-color:$oslo
+    // // }
+    // .drag-item {
+    //     background-color:$porto;
+    // }
+}
+.item-locked {
+    padding-right:0.8rem;
+}

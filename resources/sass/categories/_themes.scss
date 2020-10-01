@@ -1,0 +1,213 @@
+.theme-flofest {
+
+    .actions-container{
+        box-shadow: 0px 4px 8px rgba(4, 28, 116, 0.08);
+    }
+    .action {
+        color:$catalina;
+        svg {
+            path {
+                fill:$catalina;
+            }
+        }
+    }
+    .alert {
+      
+        border:1px solid $catalina;
+        color:$catalina;
+       
+    }
+    .alert-no-data,
+    .alert-submission {
+        background-color:white;
+        border:none;
+        color:$oslo;
+
+    }
+    .alert-submission {
+        background-color:transparent;
+    }
+    .autocomplete-item {
+        color:$catalina;
+    }
+    .routine-dancer-delete {
+        svg {
+            path {
+                fill:$catalina;
+            }
+        }
+    }
+    .tooltip-note {
+        color:$catalina;
+    }
+    .btn-primary {
+        background-color:$catalina;
+        color:$white;
+        border-color:$catalina;
+        &:hover,
+        &.is-active {
+            background-color:$white;
+            color:$catalina;
+        }
+    
+        &.btn-inverted {
+            background-color:transparent;
+            color:$catalina;
+            &:hover {
+                background-color:$catalina;
+                color:$white;
+            }
+        }
+    
+        &.btn-waiting {
+            background-color:$requin;
+            &:hover {
+                border-color:$requin;
+                background-color:transparent;
+                color:$requin;
+            }
+        }
+    }
+
+    .btn-secondary {
+        color:$catalina;
+        &:hover,
+        &.is-active {
+            background-color:$fer;
+            border:none;
+        }
+    
+    }
+    .btn-back {
+        svg {
+            path {
+                fill:$catalina;
+            }
+        }
+    }
+    .btn-back-text {
+        color:$catalina;
+        
+    }
+    .btn-primary:disabled,
+    .btn-primary[disabled]{
+        background-color: $fer;
+        border-color:$fer;
+        color:$white;
+        cursor:auto;
+    }
+    .btn-secondary:disabled,
+    .btn-secondary[disabled]{
+        background-color: transparent;
+        border-color:$white;
+        color:$fer;
+        cursor:auto;
+    }
+
+    .card {
+        box-shadow: 0px 4px 20px rgba(4, 28, 116, 0.1);
+    }
+    .card-event {
+        box-shadow:none;
+    }
+    .card-header {
+        background-color:$catalina;
+    }
+
+    .hero {
+        background-color:darken($catalina,10%);
+    }
+
+
+
+    .form-select:focus + .floating-label {
+        color:$catalina;
+    }
+    .form-select:focus {
+        border-bottom:2px solid $catalina;
+        background-image: url("data:image/svg+xml,%3Csvg width='10' height='5' viewBox='0 0 10 5' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 5L5 -4.37114e-07L0 5L10 5Z' fill='%23041C74'/%3E%3C/svg%3E%0A");
+    }
+    .form-text-field-input:focus {
+        background-color:#EFF0F5;
+        border-bottom:2px solid $catalina;
+    }
+    .form-text-field-input:focus + .floating-label {
+        color:$catalina;
+    }
+    .form-select:focus + .floating-label {
+        color:$catalina;
+    }
+
+    .form-radio-input:checked + .form-radio-label:before,
+    .form-radio-input:not(:checked) + .form-radio-label:before {
+        border: 1px solid $catalina;
+    }
+
+    .form-radio-input:checked + .form-radio-label:after,
+    .form-radio-input:not(:checked) + .form-radio-label:after {
+        background: $catalina;
+    }
+    .form-actions-fixed {
+        box-shadow: 0px 4px 20px rgba(4, 28, 116, 0.1);
+    }
+
+    .text-link {
+        color:$catalina;
+        svg path {
+            fill:$catalina;
+        }
+    }
+
+    .event-list {
+        .event-title {
+            color:$catalina;
+        }
+    }
+    .nav-link {
+        &.router-link-exact-active {
+            color:$catalina;
+        }
+    }
+
+    .modal-header {
+        background-color:$catalina;
+    }
+    .form-radio-input:checked + .form-radio-button-label,
+    .form-radio-button-label-active {
+        border:1px solid $catalina;
+        background-color:$catalina;
+    }
+    .nav-logo {
+        width:60px;
+        height:36px;
+    }
+    .nav-tabs-link {
+        &.active {
+            border-bottom:3px solid $catalina;
+        }
+        // &:after {
+        //     width:100%;
+        //     display:block;
+        //     bottom:0;
+        //     left:0;
+        //     height:
+        // }
+    }
+
+    #layout-aside {
+        background: linear-gradient(180deg, $catalina 0%, darken($catalina,5%) 100%);
+        width:190px;
+        height:100vh;
+        display:flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding:7.2rem 0 4.8rem 0;
+        box-shadow: 10px 4px 20px rgba(4, 28, 116, 0.08);
+    
+        &.layout-aside-admin {
+            background:$requin;
+            box-shadow: 10px 4px 20px rgba(4, 28, 116, 0.08);
+        }
+    
+    }
+}

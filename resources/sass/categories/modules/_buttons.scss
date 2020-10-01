@@ -1,0 +1,126 @@
+.btn-container {
+    display:flex;
+    justify-content: space-between;
+}
+.btn {
+    display:flex;
+    color:white;
+    cursor:pointer;
+    text-align:center;
+    min-width:122px;
+    width:auto;
+    height:48px;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    padding:0 2.4rem;
+    border:0;
+    background:none;
+    background-color:transparent;
+    font-family: DIN Condensed;
+    font-style: normal;
+    font-size: 1.5rem;
+    line-height: get-line-height(15px, 20px);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    &:focus {
+        outline:0;
+    }
+}
+
+.btn-spaced {
+    margin-right:16px;
+}
+
+
+
+
+.btn-primary {
+    background-color:$porto;
+    color:$white;
+    border-color:$porto;
+    border-style: solid;
+    border-width:1px;
+    z-index:1;
+    &:hover,
+    &.is-active {
+        background-color:$white;
+        color:$porto;
+    }
+
+    &.btn-inverted {
+        background-color:transparent;
+        color:$porto;
+        &:hover {
+            background-color:$porto;
+            color:$white;
+        }
+    }
+
+    &.btn-waiting {
+        background-color:$requin;
+        margin-right:1.6rem;
+        &:hover {
+            border-color:$requin;
+            background-color:transparent;
+            color:$requin;
+        }
+    }
+}
+.btn-hero {
+    display: inline-flex;
+    background-color:transparent;
+    color:$white;
+    border-color:$white;
+    border-style: solid;
+    border-width:1px;
+    &:hover {
+        background-color:$white;
+        color:$loulou;
+    }
+}
+.btn-primary:disabled,
+.btn-primary[disabled]{
+    background-color: $fer;
+    border-color:$fer;
+    color:$white;
+    cursor:auto;
+}
+.btn-secondary {
+    background-color:transparent;
+    color:$porto;
+    border:none;
+    // border-color:$catskill;
+    // border-style: solid;
+    // border-width:1px;
+    &:hover,
+    &.is-active {
+        background-color:$fer;
+        border:none;
+        // border-color:$fer;
+    }
+
+}
+.btn-secondary:disabled,
+.btn-secondary[disabled]{
+    background-color: transparent;
+    border-color:$white;
+    color:$fer;
+    cursor:auto;
+}
+.btn-back {
+    display: inline-flex;
+    justify-content: flex-start;
+    align-items:center;
+    align-content:center;
+    margin:0 0 2.4rem 0;
+}
+
+.btn-back-text {
+    color:$porto;
+    margin-left:0.8rem;
+}
+.btn-filter {
+    cursor:pointer;
+}

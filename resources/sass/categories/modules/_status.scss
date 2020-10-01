@@ -1,0 +1,91 @@
+.status {
+    background-color: $mercury;
+    border-radius: 60px;
+    color:$requin;
+    text-align:center;
+    height:32px;
+    display:inline-flex;
+    align-items: center;
+    padding:0 1.6rem;
+    min-width:62px;
+    margin:0 0.4rem 0 0;
+}
+.status-success,
+.status-warning,
+.status-danger {
+    color:$requin;
+}
+.status-success {
+    background-color: $york;
+}
+.status-warning {
+    background-color: $corn;
+}
+.status-danger {
+    background-color: $mandy;
+}
+.status-waiting {
+    background-color: $malibu;
+}
+
+
+.status-list {
+    margin:0;
+    padding:0;
+    list-style-type:none;
+    display:flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.status-count,
+.status-label {
+    display:block;
+    margin:0;
+}
+.status-list-item {
+    width:40%;
+    margin:2.4rem 0;
+    .status-count,
+    .status-label {
+        margin:0;
+    }
+}
+
+.status-count {
+    position:relative;
+    &:before {
+        position:absolute;
+        content:'';
+        display:block;
+        width:10px;
+        height: 10px;
+        border-radius:50%;
+        top:8px;
+        left:-10px;
+        transform:translate(-100%,0);
+    }
+
+    &.status-count-default:before {
+        background-color:$mercury;
+    }
+    &.status-count-success:before {
+        background-color: $york;
+    }
+    &.status-count-warning:before {
+        background-color: $corn;
+    }
+    &.status-count-danger:before {
+        background-color: $mandy;
+    }
+    &.status-count-waiting:before {
+        background-color: $malibu;
+    }
+}
+
+.status-container {
+    position:relative;
+    .actions-container {
+        left:0;
+    }
+}
