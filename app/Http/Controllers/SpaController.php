@@ -2,24 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use DB;
 use App;
 use Lang;
 use Config;
-use App\Schedule;
-use App\ScheduleTitle;
-use App\ScheduleItem;
-use App\Classification;
-use App\Organization;
-use App\Routine;
-use Carbon\Carbon;
 use Helper;
-use DB;
+use App\Routine;
+use App\Schedule;
+use Carbon\Carbon;
+use App\Organization;
+use App\ScheduleItem;
+use App\ScheduleTitle;
+use App\Classification;
+use Illuminate\Http\Request;
+
+use App\Services\QuickBookService;
 
 class SpaController extends Controller
 {
     public function index(Request $request)
     {
+        // return QuickBookService::getInstance()->create_customer($request);
+        
         $locale = $request->segment(1);
         
         if (array_key_exists($locale, Config::get('languages'))) {

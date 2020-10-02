@@ -63945,11 +63945,6 @@ module.exports = g;
   !*** ./resources/js/appv2.js ***!
   \*******************************/
 /*! no exports provided */
-<<<<<<< HEAD
-/***/ (function(module, exports) {
-
-throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index.js):\nError: ENOENT: no such file or directory, open '/home/kaperskyguru/Projects/PHPProjects/inscriptions/resources/js/appv2.js'");
-=======
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -69636,7 +69631,6 @@ module.exports = "<svg width=25 height=25 viewBox=\"0 0 25 25\" fill=none xmlns=
 /***/ (function(module, exports) {
 
 module.exports = "<svg xmlns=http://www.w3.org/2000/svg height=24 viewBox=\"0 0 24 24\" width=24><path d=\"M0 0h24v24H0z\" fill=none /><path fill=#731E6A d=\"M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z\"/></svg>";
->>>>>>> 7b904575057a0e6daad5e759c9ea91e670597e75
 
 /***/ }),
 

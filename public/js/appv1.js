@@ -69357,11 +69357,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-<<<<<<< HEAD
-throw new Error("Module build failed (from ./node_modules/css-loader/index.js):\nModuleBuildError: Module build failed (from ./node_modules/sass-loader/dist/cjs.js):\nError: ENOENT: no such file or directory, open '/home/kaperskyguru/Projects/PHPProjects/inscriptions/resources/sass/appv1.scss'\n    at /home/kaperskyguru/Projects/PHPProjects/inscriptions/node_modules/webpack/lib/NormalModule.js:316:20\n    at /home/kaperskyguru/Projects/PHPProjects/inscriptions/node_modules/loader-runner/lib/LoaderRunner.js:367:11\n    at /home/kaperskyguru/Projects/PHPProjects/inscriptions/node_modules/loader-runner/lib/LoaderRunner.js:203:19\n    at /home/kaperskyguru/Projects/PHPProjects/inscriptions/node_modules/enhanced-resolve/lib/CachedInputFileSystem.js:85:15\n    at processTicksAndRejections (internal/process/task_queues.js:75:11)");
-=======
 // removed by extract-text-webpack-plugin
->>>>>>> 7b904575057a0e6daad5e759c9ea91e670597e75
 
 /***/ }),
 
@@ -69372,9 +69368,6 @@ throw new Error("Module build failed (from ./node_modules/css-loader/index.js):\
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-<<<<<<< HEAD
-throw new Error("Module build failed (from ./node_modules/css-loader/index.js):\nModuleBuildError: Module build failed (from ./node_modules/sass-loader/dist/cjs.js):\nError: ENOENT: no such file or directory, open '/home/kaperskyguru/Projects/PHPProjects/inscriptions/resources/sass/print.scss'\n    at /home/kaperskyguru/Projects/PHPProjects/inscriptions/node_modules/webpack/lib/NormalModule.js:316:20\n    at /home/kaperskyguru/Projects/PHPProjects/inscriptions/node_modules/loader-runner/lib/LoaderRunner.js:367:11\n    at /home/kaperskyguru/Projects/PHPProjects/inscriptions/node_modules/loader-runner/lib/LoaderRunner.js:203:19\n    at /home/kaperskyguru/Projects/PHPProjects/inscriptions/node_modules/enhanced-resolve/lib/CachedInputFileSystem.js:85:15\n    at processTicksAndRejections (internal/process/task_queues.js:75:11)");
-=======
 // removed by extract-text-webpack-plugin
 
 /***/ }),
@@ -69660,7 +69653,6 @@ module.exports = "<svg width=25 height=25 viewBox=\"0 0 25 25\" fill=none xmlns=
 /***/ (function(module, exports) {
 
 module.exports = "<svg xmlns=http://www.w3.org/2000/svg height=24 viewBox=\"0 0 24 24\" width=24><path d=\"M0 0h24v24H0z\" fill=none /><path fill=#731E6A d=\"M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z\"/></svg>";
->>>>>>> 7b904575057a0e6daad5e759c9ea91e670597e75
 
 /***/ }),
 

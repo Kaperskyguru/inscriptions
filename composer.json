@@ -12,10 +12,11 @@
         "astrotomic/laravel-translatable": "^11.1",
         "barryvdh/laravel-snappy": "^0.4.5",
         "fideloper/proxy": "^4.0",
+        "guzzlehttp/guzzle": "^7.1",
         "h4cc/wkhtmltoimage-amd64": "^0.12.4",
         "h4cc/wkhtmltopdf-amd64": "^0.12.4",
-        "laravel/framework": "5.8.*",
-        "laravel/tinker": "^1.0",
+        "laravel/framework": "^7.0",
+        "laravel/tinker": "^2.0",
         "maatwebsite/excel": "^3.1",
         "quickbooks/v3-php-sdk": "^5.3",
         "tymon/jwt-auth": "dev-develop"
@@ -49,7 +50,6 @@
             "database/seeds",
             "database/factories"
         ]
-       
     },
     "autoload-dev": {
         "psr-4": {
