@@ -5924,6 +5924,673 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -5964,7 +6631,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         last_name: "",
         date_of_birth: ""
       },
-      authUrl: ''
+      authUrl: ""
     };
   },
   beforeRouteEnter: function beforeRouteEnter(to, from, next) {
@@ -6400,12 +7067,24 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     changeStatus: function changeStatus(status_id) {
       var _this8 = this;
 
-      this.saving = true;
-      this.updateStatus({
-        status_id: status_id,
-        subscription_id: this.subscription_id //query: this.query,
+      // this.saving = true;
+      console.log("th");
+      var data = {};
 
-      }).then(function () {
+      if (status_id === 3 && this.content["categories"].length) {
+        data.invoices = {};
+        data.invoices.data = this.content["categories"];
+        data.invoices.customer = this.organization;
+        data.invoices.event_name = this.event_name;
+        data.status_id = status_id;
+        data.subscription_id = this.subscription_id; //query: this.query,
+      } else {
+        data.status_id = status_id;
+        data.subscription_id = this.subscription_id;
+      } // console.log(data);
+
+
+      this.updateStatus(data).then(function () {
         _store__WEBPACK_IMPORTED_MODULE_2__["store"].dispatch("admin/subscription", {
           event: _this8.event_name,
           subscription_id: _this8.subscription_id
@@ -6413,7 +7092,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         var actions = document.getElementsByClassName("has-menu-open");
 
         if (actions.length > 0) {
-          actions[0].classList.remove('has-menu-open');
+          actions[0].classList.remove("has-menu-open");
         }
 
         _this8.setFeedback({
@@ -34244,7 +34923,11 @@ var render = function() {
           ),
           _vm._v(" "),
           _c("h1", { staticClass: "title-primary" }, [
-            _vm._v(_vm._s(this.content["organizations"].name))
+            _vm._v(
+              "\n            " +
+                _vm._s(this.content["organizations"].name) +
+                "\n        "
+            )
           ]),
           _vm._v(" "),
           _c("header", { staticClass: "subscription-header" }, [
@@ -34445,7 +35128,11 @@ var render = function() {
             _c("div", { staticClass: "card-row" }, [
               _c("div", { staticClass: "card-info card-col" }, [
                 _c("h2", { staticClass: "title-headline" }, [
-                  _vm._v(_vm._s(_vm.$t("dashboard.title.totalSubscriptions")))
+                  _vm._v(
+                    "\n                        " +
+                      _vm._s(_vm.$t("dashboard.title.totalSubscriptions")) +
+                      "\n                    "
+                  )
                 ]),
                 _vm._v(" "),
                 _c("span", { staticClass: "text-body-display" }, [
@@ -34460,7 +35147,11 @@ var render = function() {
               _vm._v(" "),
               _c("div", { staticClass: "card-info card-col" }, [
                 _c("h2", { staticClass: "title-headline" }, [
-                  _vm._v(_vm._s(_vm.$t("dashboard.table.title.routine")))
+                  _vm._v(
+                    "\n                        " +
+                      _vm._s(_vm.$t("dashboard.table.title.routine")) +
+                      "\n                    "
+                  )
                 ]),
                 _vm._v(" "),
                 _c("span", { staticClass: "text-body-display" }, [
@@ -34475,14 +35166,18 @@ var render = function() {
               _vm._v(" "),
               _c("div", { staticClass: "card-info card-col" }, [
                 _c("h2", { staticClass: "title-headline" }, [
-                  _vm._v(_vm._s(_vm.$t("dashboard.title.debt")))
+                  _vm._v(
+                    "\n                        " +
+                      _vm._s(_vm.$t("dashboard.title.debt")) +
+                      "\n                    "
+                  )
                 ]),
                 _vm._v(" "),
                 _c("span", { staticClass: "text-body-display" }, [
                   _vm._v(
                     _vm._s(
                       this.content["organizations"].subscriptions[0].balance
-                    ) + " $"
+                    ) + "\n                        $"
                   )
                 ])
               ])
@@ -34502,7 +35197,7 @@ var render = function() {
                   }
                 }
               },
-              [_vm._v("Inscriptions")]
+              [_vm._v("\n                Inscriptions\n            ")]
             ),
             _vm._v(" "),
             _c(
@@ -34517,7 +35212,7 @@ var render = function() {
                   }
                 }
               },
-              [_vm._v("Informations")]
+              [_vm._v("\n                Informations\n            ")]
             ),
             _vm._v(" "),
             _c(
@@ -34532,7 +35227,7 @@ var render = function() {
                   }
                 }
               },
-              [_vm._v("Danseurs")]
+              [_vm._v("\n                Danseurs\n            ")]
             )
           ]),
           _vm._v(" "),
@@ -34582,7 +35277,11 @@ var render = function() {
                   },
                   [
                     _c("h1", { staticClass: "title-tertiary" }, [
-                      _vm._v(_vm._s(_vm.$t("admin.title.routines")))
+                      _vm._v(
+                        "\n                        " +
+                          _vm._s(_vm.$t("admin.title.routines")) +
+                          "\n                    "
+                      )
                     ]),
                     _vm._v(" "),
                     !_vm.subscription.routines.length
@@ -34590,7 +35289,13 @@ var render = function() {
                           _c(
                             "p",
                             { staticClass: "alert-text text-body-display" },
-                            [_vm._v(_vm._s(_vm.$t("admin.text.noRoutines")))]
+                            [
+                              _vm._v(
+                                "\n                            " +
+                                  _vm._s(_vm.$t("admin.text.noRoutines")) +
+                                  "\n                        "
+                              )
+                            ]
                           )
                         ])
                       : _c("div", { staticClass: "table" }, [
@@ -35001,7 +35706,11 @@ var render = function() {
                   },
                   [
                     _c("h1", { staticClass: "title-tertiary" }, [
-                      _vm._v(_vm._s(_vm.$t("admin.title.invoice")))
+                      _vm._v(
+                        "\n                        " +
+                          _vm._s(_vm.$t("admin.title.invoice")) +
+                          "\n                    "
+                      )
                     ]),
                     _vm._v(" "),
                     !_vm.subscription.routines.length
@@ -35009,7 +35718,13 @@ var render = function() {
                           _c(
                             "p",
                             { staticClass: "alert-text text-body-display" },
-                            [_vm._v(_vm._s(_vm.$t("admin.text.noInvoice")))]
+                            [
+                              _vm._v(
+                                "\n                            " +
+                                  _vm._s(_vm.$t("admin.text.noInvoice")) +
+                                  "\n                        "
+                              )
+                            ]
                           )
                         ])
                       : _vm._e(),
@@ -35148,7 +35863,8 @@ var render = function() {
                                           _vm._v(
                                             _vm._s(
                                               category.formatted_rebate_price
-                                            ) + " $"
+                                            ) +
+                                              "\n                                        $"
                                           )
                                         ]
                                       )
@@ -35334,7 +36050,11 @@ var render = function() {
                                 },
                                 [
                                   _vm._v(
-                                    _vm._s(_vm.$t("admin.actions.add.waiting"))
+                                    "\n                                " +
+                                      _vm._s(
+                                        _vm.$t("admin.actions.add.waiting")
+                                      ) +
+                                      "\n                            "
                                   )
                                 ]
                               )
@@ -35372,7 +36092,9 @@ var render = function() {
                                 },
                                 [
                                   _vm._v(
-                                    _vm._s(_vm.$t("admin.actions.approve"))
+                                    "\n                                " +
+                                      _vm._s(_vm.$t("admin.actions.approve")) +
+                                      "\n                            "
                                   )
                                 ]
                               )
@@ -35396,7 +36118,11 @@ var render = function() {
                   },
                   [
                     _c("h1", { staticClass: "title-tertiary" }, [
-                      _vm._v(_vm._s(_vm.$t("admin.title.payments")))
+                      _vm._v(
+                        "\n                        " +
+                          _vm._s(_vm.$t("admin.title.payments")) +
+                          "\n                    "
+                      )
                     ]),
                     _vm._v(" "),
                     !_vm.subscription.payments.length
@@ -35404,7 +36130,13 @@ var render = function() {
                           _c(
                             "p",
                             { staticClass: "alert-text text-body-display" },
-                            [_vm._v(_vm._s(_vm.$t("admin.text.noPayments")))]
+                            [
+                              _vm._v(
+                                "\n                            " +
+                                  _vm._s(_vm.$t("admin.text.noPayments")) +
+                                  "\n                        "
+                              )
+                            ]
                           )
                         ])
                       : _c("div", { staticClass: "table" }, [
@@ -35521,7 +36253,7 @@ var render = function() {
                                         [
                                           _vm._v(
                                             _vm._s(payment.formatted_amount) +
-                                              " $"
+                                              "\n                                        $"
                                           )
                                         ]
                                       ),
@@ -35777,7 +36509,13 @@ var render = function() {
                             }
                           }
                         },
-                        [_vm._v(_vm._s(_vm.$t("admin.actions.add.payment")))]
+                        [
+                          _vm._v(
+                            "\n                            " +
+                              _vm._s(_vm.$t("admin.actions.add.payment")) +
+                              "\n                        "
+                          )
+                        ]
                       )
                     ])
                   ]
@@ -35811,7 +36549,9 @@ var render = function() {
                             "div",
                             {
                               staticClass: "form-group",
-                              class: { "has-error": _vm.errors.has("name") }
+                              class: {
+                                "has-error": _vm.errors.has("name")
+                              }
                             },
                             [
                               _c(
@@ -35878,7 +36618,13 @@ var render = function() {
                                   ],
                                   staticClass: "form-msg-error"
                                 },
-                                [_vm._v(_vm._s(_vm.errors.first("name")))]
+                                [
+                                  _vm._v(
+                                    "\n                                        " +
+                                      _vm._s(_vm.errors.first("name")) +
+                                      "\n                                    "
+                                  )
+                                ]
                               )
                             ]
                           ),
@@ -35887,7 +36633,9 @@ var render = function() {
                             "div",
                             {
                               staticClass: "form-group",
-                              class: { "has-error": _vm.errors.has("email") }
+                              class: {
+                                "has-error": _vm.errors.has("email")
+                              }
                             },
                             [
                               _c(
@@ -35900,11 +36648,14 @@ var render = function() {
                                         name: "model",
                                         rawName: "v-model",
                                         value: _vm.organization.user.email,
-                                        expression: "organization.user.email"
+                                        expression:
+                                          "\n                                                organization.user.email\n                                            "
                                       }
                                     ],
                                     staticClass: "form-text-field-input",
-                                    class: { "has-value": this.user.email },
+                                    class: {
+                                      "has-value": this.user.email
+                                    },
                                     attrs: {
                                       id: "user_email",
                                       type: "email",
@@ -35956,7 +36707,13 @@ var render = function() {
                                   ],
                                   staticClass: "form-msg-error"
                                 },
-                                [_vm._v(_vm._s(_vm.errors.first("email")))]
+                                [
+                                  _vm._v(
+                                    "\n                                        " +
+                                      _vm._s(_vm.errors.first("email")) +
+                                      "\n                                    "
+                                  )
+                                ]
                               )
                             ]
                           )
@@ -35991,7 +36748,9 @@ var render = function() {
                             "div",
                             {
                               staticClass: "form-group",
-                              class: { "has-error": _vm.errors.has("name") }
+                              class: {
+                                "has-error": _vm.errors.has("name")
+                              }
                             },
                             [
                               _c(
@@ -36061,7 +36820,13 @@ var render = function() {
                                   ],
                                   staticClass: "form-msg-error"
                                 },
-                                [_vm._v(_vm._s(_vm.errors.first("name")))]
+                                [
+                                  _vm._v(
+                                    "\n                                    " +
+                                      _vm._s(_vm.errors.first("name")) +
+                                      "\n                                "
+                                  )
+                                ]
                               )
                             ]
                           ),
@@ -36146,7 +36911,13 @@ var render = function() {
                                   ],
                                   staticClass: "form-msg-error"
                                 },
-                                [_vm._v(_vm._s(_vm.errors.first("accronyme")))]
+                                [
+                                  _vm._v(
+                                    "\n                                    " +
+                                      _vm._s(_vm.errors.first("accronyme")) +
+                                      "\n                                "
+                                  )
+                                ]
                               )
                             ]
                           ),
@@ -36155,7 +36926,9 @@ var render = function() {
                             "div",
                             {
                               staticClass: "form-group",
-                              class: { "has-error": _vm.errors.has("address") }
+                              class: {
+                                "has-error": _vm.errors.has("address")
+                              }
                             },
                             [
                               _c(
@@ -36229,7 +37002,13 @@ var render = function() {
                                   ],
                                   staticClass: "form-msg-error"
                                 },
-                                [_vm._v(_vm._s(_vm.errors.first("address")))]
+                                [
+                                  _vm._v(
+                                    "\n                                    " +
+                                      _vm._s(_vm.errors.first("address")) +
+                                      "\n                                "
+                                  )
+                                ]
                               )
                             ]
                           ),
@@ -36238,7 +37017,9 @@ var render = function() {
                             "div",
                             {
                               staticClass: "form-group",
-                              class: { "has-error": _vm.errors.has("city") }
+                              class: {
+                                "has-error": _vm.errors.has("city")
+                              }
                             },
                             [
                               _c(
@@ -36308,7 +37089,13 @@ var render = function() {
                                   ],
                                   staticClass: "form-msg-error"
                                 },
-                                [_vm._v(_vm._s(_vm.errors.first("city")))]
+                                [
+                                  _vm._v(
+                                    "\n                                    " +
+                                      _vm._s(_vm.errors.first("city")) +
+                                      "\n                                "
+                                  )
+                                ]
                               )
                             ]
                           ),
@@ -36317,7 +37104,9 @@ var render = function() {
                             "div",
                             {
                               staticClass: "form-group",
-                              class: { "has-error": _vm.errors.has("zipcode") }
+                              class: {
+                                "has-error": _vm.errors.has("zipcode")
+                              }
                             },
                             [
                               _c(
@@ -36391,7 +37180,13 @@ var render = function() {
                                   ],
                                   staticClass: "form-msg-error"
                                 },
-                                [_vm._v(_vm._s(_vm.errors.first("zipcode")))]
+                                [
+                                  _vm._v(
+                                    "\n                                    " +
+                                      _vm._s(_vm.errors.first("zipcode")) +
+                                      "\n                                "
+                                  )
+                                ]
                               )
                             ]
                           ),
@@ -36400,7 +37195,9 @@ var render = function() {
                             "div",
                             {
                               staticClass: "form-group",
-                              class: { "has-error": _vm.errors.has("phone") }
+                              class: {
+                                "has-error": _vm.errors.has("phone")
+                              }
                             },
                             [
                               _c(
@@ -36472,7 +37269,13 @@ var render = function() {
                                   ],
                                   staticClass: "form-msg-error"
                                 },
-                                [_vm._v(_vm._s(_vm.errors.first("phone")))]
+                                [
+                                  _vm._v(
+                                    "\n                                    " +
+                                      _vm._s(_vm.errors.first("phone")) +
+                                      "\n                                "
+                                  )
+                                ]
                               )
                             ]
                           ),
@@ -36570,7 +37373,13 @@ var render = function() {
                             staticClass: "btn btn-primary",
                             attrs: { type: "submit", disabled: _vm.saving }
                           },
-                          [_vm._v(_vm._s(_vm.$t("forms.actions.save")))]
+                          [
+                            _vm._v(
+                              "\n                                " +
+                                _vm._s(_vm.$t("forms.actions.save")) +
+                                "\n                            "
+                            )
+                          ]
                         )
                       ])
                     ]
@@ -36600,7 +37409,13 @@ var render = function() {
                           _c(
                             "p",
                             { staticClass: "alert-text text-body-display" },
-                            [_vm._v(_vm._s(_vm.$t("dashboard.text.noDancers")))]
+                            [
+                              _vm._v(
+                                "\n                            " +
+                                  _vm._s(_vm.$t("dashboard.text.noDancers")) +
+                                  "\n                        "
+                              )
+                            ]
                           )
                         ])
                       : _c("div", { staticClass: "table" }, [
@@ -36845,7 +37660,13 @@ var render = function() {
                             }
                           }
                         },
-                        [_vm._v(_vm._s(_vm.$t("dashboard.label.add.dancer")))]
+                        [
+                          _vm._v(
+                            "\n                            " +
+                              _vm._s(_vm.$t("dashboard.label.add.dancer")) +
+                              "\n                        "
+                          )
+                        ]
                       )
                     ])
                   ]
@@ -36867,7 +37688,11 @@ var render = function() {
           _c("article", { staticClass: "modal-inner" }, [
             _c("header", { staticClass: "modal-header" }, [
               _c("h1", { staticClass: "modal-title title-primary" }, [
-                _vm._v(_vm._s(_vm.$t("forms.title.add.payment")))
+                _vm._v(
+                  "\n                    " +
+                    _vm._s(_vm.$t("forms.title.add.payment")) +
+                    "\n                "
+                )
               ]),
               _vm._v(" "),
               _c(
@@ -36908,7 +37733,9 @@ var render = function() {
                         "div",
                         {
                           staticClass: "form-group",
-                          class: { "has-error": _vm.errors.has("receive_on") }
+                          class: {
+                            "has-error": _vm.errors.has("receive_on")
+                          }
                         },
                         [
                           _c(
@@ -36917,7 +37744,9 @@ var render = function() {
                             [
                               _c("cleave", {
                                 staticClass: "form-text-field-input",
-                                class: { "has-value": this.payment.receive_on },
+                                class: {
+                                  "has-value": this.payment.receive_on
+                                },
                                 attrs: {
                                   raw: false,
                                   options: {
@@ -36971,7 +37800,13 @@ var render = function() {
                               ],
                               staticClass: "form-msg-error"
                             },
-                            [_vm._v(_vm._s(_vm.errors.first("receive_on")))]
+                            [
+                              _vm._v(
+                                "\n                                " +
+                                  _vm._s(_vm.errors.first("receive_on")) +
+                                  "\n                            "
+                              )
+                            ]
                           ),
                           _vm._v(" "),
                           _c("p", { staticClass: "form-hint text-caption" }, [
@@ -37061,7 +37896,9 @@ var render = function() {
                         "div",
                         {
                           staticClass: "form-group",
-                          class: { "has-error": _vm.errors.has("amount") }
+                          class: {
+                            "has-error": _vm.errors.has("amount")
+                          }
                         },
                         [
                           _c(
@@ -37078,7 +37915,9 @@ var render = function() {
                                   }
                                 ],
                                 staticClass: "form-text-field-input",
-                                class: { "has-value": this.payment.amount },
+                                class: {
+                                  "has-value": this.payment.amount
+                                },
                                 attrs: { id: "payment_amount", type: "text" },
                                 domProps: { value: _vm.payment.amount },
                                 on: {
@@ -37120,7 +37959,13 @@ var render = function() {
                               ],
                               staticClass: "form-msg-error"
                             },
-                            [_vm._v(_vm._s(_vm.errors.first("amount")))]
+                            [
+                              _vm._v(
+                                "\n                                " +
+                                  _vm._s(_vm.errors.first("amount")) +
+                                  "\n                            "
+                              )
+                            ]
                           )
                         ]
                       ),
@@ -37129,7 +37974,9 @@ var render = function() {
                         "div",
                         {
                           staticClass: "form-group",
-                          class: { "has-error": _vm.errors.has("note") }
+                          class: {
+                            "has-error": _vm.errors.has("note")
+                          }
                         },
                         [
                           _c(
@@ -37146,7 +37993,9 @@ var render = function() {
                                   }
                                 ],
                                 staticClass: "form-text-field-input",
-                                class: { "has-value": this.payment.note },
+                                class: {
+                                  "has-value": this.payment.note
+                                },
                                 attrs: { id: "payment_note", type: "text" },
                                 domProps: { value: _vm.payment.note },
                                 on: {
@@ -37188,7 +38037,13 @@ var render = function() {
                               ],
                               staticClass: "form-msg-error"
                             },
-                            [_vm._v(_vm._s(_vm.errors.first("note")))]
+                            [
+                              _vm._v(
+                                "\n                                " +
+                                  _vm._s(_vm.errors.first("note")) +
+                                  "\n                            "
+                              )
+                            ]
                           )
                         ]
                       ),
@@ -37205,7 +38060,13 @@ var render = function() {
                               }
                             }
                           },
-                          [_vm._v(_vm._s(_vm.$t("forms.actions.cancel")))]
+                          [
+                            _vm._v(
+                              "\n                                " +
+                                _vm._s(_vm.$t("forms.actions.cancel")) +
+                                "\n                            "
+                            )
+                          ]
                         ),
                         _vm._v(" "),
                         _c(
@@ -37214,7 +38075,13 @@ var render = function() {
                             staticClass: "btn btn-primary",
                             attrs: { type: "submit", disabled: _vm.saving }
                           },
-                          [_vm._v(_vm._s(_vm.$t("forms.actions.save")))]
+                          [
+                            _vm._v(
+                              "\n                                " +
+                                _vm._s(_vm.$t("forms.actions.save")) +
+                                "\n                            "
+                            )
+                          ]
                         )
                       ])
                     ]
@@ -37236,7 +38103,11 @@ var render = function() {
           _c("article", { staticClass: "modal-inner" }, [
             _c("header", { staticClass: "modal-header" }, [
               _c("h1", { staticClass: "modal-title title-primary" }, [
-                _vm._v(_vm._s(_vm.$t("forms.title.add.dancer")))
+                _vm._v(
+                  "\n                    " +
+                    _vm._s(_vm.$t("forms.title.add.dancer")) +
+                    "\n                "
+                )
               ]),
               _vm._v(" "),
               _c(
@@ -37277,7 +38148,9 @@ var render = function() {
                         "div",
                         {
                           staticClass: "form-group",
-                          class: { "has-error": _vm.errors.has("first_name") }
+                          class: {
+                            "has-error": _vm.errors.has("first_name")
+                          }
                         },
                         [
                           _c(
@@ -37294,7 +38167,9 @@ var render = function() {
                                   }
                                 ],
                                 staticClass: "form-text-field-input",
-                                class: { "has-value": this.dancer.first_name },
+                                class: {
+                                  "has-value": this.dancer.first_name
+                                },
                                 attrs: {
                                   id: "dancer_first_name",
                                   type: "text"
@@ -37343,7 +38218,13 @@ var render = function() {
                               ],
                               staticClass: "form-msg-error"
                             },
-                            [_vm._v(_vm._s(_vm.errors.first("first_name")))]
+                            [
+                              _vm._v(
+                                "\n                                " +
+                                  _vm._s(_vm.errors.first("first_name")) +
+                                  "\n                            "
+                              )
+                            ]
                           )
                         ]
                       ),
@@ -37352,7 +38233,9 @@ var render = function() {
                         "div",
                         {
                           staticClass: "form-group",
-                          class: { "has-error": _vm.errors.has("last_name") }
+                          class: {
+                            "has-error": _vm.errors.has("last_name")
+                          }
                         },
                         [
                           _c(
@@ -37369,7 +38252,9 @@ var render = function() {
                                   }
                                 ],
                                 staticClass: "form-text-field-input",
-                                class: { "has-value": this.dancer.last_name },
+                                class: {
+                                  "has-value": this.dancer.last_name
+                                },
                                 attrs: { id: "dancer_last_name", type: "text" },
                                 domProps: { value: _vm.dancer.last_name },
                                 on: {
@@ -37411,7 +38296,13 @@ var render = function() {
                               ],
                               staticClass: "form-msg-error"
                             },
-                            [_vm._v(_vm._s(_vm.errors.first("last_name")))]
+                            [
+                              _vm._v(
+                                "\n                                " +
+                                  _vm._s(_vm.errors.first("last_name")) +
+                                  "\n                            "
+                              )
+                            ]
                           )
                         ]
                       ),
@@ -37487,7 +38378,13 @@ var render = function() {
                               ],
                               staticClass: "form-msg-error"
                             },
-                            [_vm._v(_vm._s(_vm.errors.first("date_of_birth")))]
+                            [
+                              _vm._v(
+                                "\n                                " +
+                                  _vm._s(_vm.errors.first("date_of_birth")) +
+                                  "\n                            "
+                              )
+                            ]
                           )
                         ]
                       ),
@@ -37504,7 +38401,13 @@ var render = function() {
                               }
                             }
                           },
-                          [_vm._v(_vm._s(_vm.$t("forms.actions.cancel")))]
+                          [
+                            _vm._v(
+                              "\n                                " +
+                                _vm._s(_vm.$t("forms.actions.cancel")) +
+                                "\n                            "
+                            )
+                          ]
                         ),
                         _vm._v(" "),
                         _c(
@@ -37513,7 +38416,13 @@ var render = function() {
                             staticClass: "btn btn-primary",
                             attrs: { type: "submit", disabled: _vm.saving }
                           },
-                          [_vm._v(_vm._s(_vm.$t("forms.actions.done")))]
+                          [
+                            _vm._v(
+                              "\n                                " +
+                                _vm._s(_vm.$t("forms.actions.done")) +
+                                "\n                            "
+                            )
+                          ]
                         )
                       ])
                     ]
@@ -65272,21 +66181,21 @@ __webpack_require__.r(__webpack_exports__);
     });
   },
   search: function search(data) {
-    return axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/api/v1/admin/search', data).then(function (response) {
+    return axios__WEBPACK_IMPORTED_MODULE_1___default.a.post("/api/v1/admin/search", data).then(function (response) {
       return response.data;
     })["catch"](function (error) {
       return Promise.reject(error.response);
     });
   },
   addPayment: function addPayment(data) {
-    return axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/api/v1/admin/add/payment', data).then(function (response) {
+    return axios__WEBPACK_IMPORTED_MODULE_1___default.a.post("/api/v1/admin/add/payment", data).then(function (response) {
       return response.data;
     })["catch"](function (error) {
       return Promise.reject(error.response);
     });
   },
   updatePayment: function updatePayment(data) {
-    return axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/api/v1/admin/update/payment', data).then(function (response) {
+    return axios__WEBPACK_IMPORTED_MODULE_1___default.a.post("/api/v1/admin/update/payment", data).then(function (response) {
       return response.data;
     })["catch"](function (error) {
       return Promise.reject(error.response);
@@ -65300,7 +66209,7 @@ __webpack_require__.r(__webpack_exports__);
     });
   },
   updateStatus: function updateStatus(data) {
-    return axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/api/v1/admin/update/status', data).then(function (response) {
+    return axios__WEBPACK_IMPORTED_MODULE_1___default.a.post("/api/v1/admin/update/status", data).then(function (response) {
       return response.data;
     })["catch"](function (error) {
       return Promise.reject(error.response);

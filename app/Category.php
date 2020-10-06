@@ -30,12 +30,12 @@ class Category extends Model implements TranslatableContract
     {
         // return NumberFormatter('en_US', NumberFormatter::CURRENCY)::formatCurrency(($this->attributes['price'] / 100));
 
-        return number_format(($this->attributes['price'] / 100), 2, '.', ',');
+        return number_format(($this->attributes['price'] / 100), 2, '.', '');
     }
     public function getFormattedRebatePriceAttribute()
     {
         // return $formatter =  NumberFormatter('en_US', NumberFormatter::CURRENCY)::formatCurrency(($this->attributes['rebate_price'] / 100));
 
-        return number_format(($this->attributes['rebate_price'] / 100), 2, '.', ',');
+        return number_format(($this->attributes['rebate_price'] / 100), 2, '.', '');
     }
 }

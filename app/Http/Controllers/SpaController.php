@@ -22,7 +22,7 @@ class SpaController extends Controller
 {
     public function index(Request $request)
     {
-        // return QuickBookService::getInstance()->create_customer($request);
+        // return QuickBookService::getInstance()->create_invoice($request);
         
         $locale = $request->segment(1);
         

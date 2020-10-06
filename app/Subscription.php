@@ -63,24 +63,24 @@ class Subscription extends Model
             $total_cost = ($fee->feeType->price * $fee->entries);
             $subtotal += $total_cost;
         }
-        // dd(number_format(($subtotal / 100), 2, '.', ','));
-        return (float) number_format(($subtotal / 100), 2, '.', ','); //sprintf('%01.2f', ($subtotal / 100));
+        // dd(number_format(($subtotal / 100), 2, '.', ''));
+        return  ($subtotal / 100);
     }
     public function getTpsAttribute()
     {
         $tps = $this->getSubTotalAttribute() * env('TAX_TPS');
         
-        return number_format(($tps), 2, '.', ',');
+        return number_format(($tps), 2, '.', '');
     }
     public function getTvqAttribute()
     {
         $tvq = $this->getSubTotalAttribute() * env('TAX_TVQ');
-        return number_format(($tvq), 2, '.', ',');
+        return number_format(($tvq), 2, '.', '');
     }
     public function getTvhAttribute()
     {
         $tvq = $this->getSubTotalAttribute() * env('TAX_TVH');
-        return number_format(($tvq), 2, '.', ',');
+        return number_format(($tvq), 2, '.', '');
     }
     public function getTotalAttribute()
     {
@@ -99,7 +99,7 @@ class Subscription extends Model
             return $total + $payment->amount;
         }, 0);
 
-        return number_format(($sum / 100), 2, '.', ',');
+        return number_format(($sum / 100), 2, '.', '');
     }
     public function getBalanceAttribute()
     {
@@ -109,6 +109,6 @@ class Subscription extends Model
         //$balance = (($total - $payments) < 0) ? 0 : ($total - $payments);
         $balance = ($total - $payments);
 
-        return number_format(round($balance, 2), 2, '.', ',');
+        return number_format(round($balance, 2), 2, '.', '');
     }
 }

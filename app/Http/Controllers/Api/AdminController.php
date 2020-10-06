@@ -2,38 +2,39 @@
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Subscription;
-use App\Status;
-use App\Category;
-use App\Organization;
-use App\PaymentType;
-use App\FeeType;
-use App\Payment;
-use App\Classification;
-use App\Level;
-use App\Style;
-use App\ScheduleTitle;
-use App\ScheduleItem;
-use Carbon\Carbon;
-use App\Routine;
+use DB;
 use PDF;
 use Excel;
-use DB;
-use App\Exports\ReportExport;
+use Session;
+use App\Level;
+use App\Style;
+use App\Status;
+use App\FeeType;
+use App\Payment;
+use App\Routine;
+use App\Category;
 use App\Schedule;
+use Carbon\Carbon;
+use App\PaymentType;
+use App\Organization;
+use App\ScheduleItem;
+use App\Subscription;
+use App\ScheduleTitle;
+use App\Classification;
+use Illuminate\Http\Request;
+use App\Exports\ReportExport;
 //use App\Exports\RoutinesExport;
 //use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Support\Facades\Validator;
+use App\Services\QuickBookService;
 
-use QuickBooksOnline\API\DataService\DataService;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
+use QuickBooksOnline\API\Facades\Customer;
 use QuickBooksOnline\API\Core\ServiceContext;
+use QuickBooksOnline\API\DataService\DataService;
+
 use QuickBooksOnline\API\PlatformService\PlatformService;
 use QuickBooksOnline\API\Core\Http\Serialization\XmlObjectSerializer;
-use QuickBooksOnline\API\Facades\Customer;
-
-use Session;
 
 class AdminController extends Controller
 {
@@ -385,7 +386,7 @@ class AdminController extends Controller
             }
             $categories[$key]['entries'] =  $entries;
             $total = $entries *  $category['rebate_price'];
-            $categories[$key]['total'] = number_format(($total / 100), 2, '.', ',');
+            $categories[$key]['total'] = number_format(($total / 100), 2, '.', '');
         }
         $paymentTypes = PaymentType::all();
         $feeTypes = FeeType::all();
@@ -415,6 +416,11 @@ class AdminController extends Controller
     public function updateStatus(Request $request)
     {
         $data = $request->toArray();
+
+        return QuickBookService::getInstance()->create_invoice($request);
+
+        dd();
+
 
         $subscription = Subscription::find($data['subscription_id']);
 
@@ -495,7 +501,7 @@ class AdminController extends Controller
             }
             $categories[$i]['entries'] =  $entries;
             $total = $entries *  $category['rebate_price'];
-            $categories[$i]['total'] = number_format(($total / 100), 2, '.', ',');
+            $categories[$i]['total'] = number_format(($total / 100), 2, '.', '');
 
             foreach ($category->routines as $j => $routine) {
                 $dancers_age = [];

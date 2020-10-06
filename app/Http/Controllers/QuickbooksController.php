@@ -130,7 +130,7 @@ class QuickbooksController extends Controller
 
             $itemRef = $this->getItemObj($dataService, $category->translate('en')->name);
             $LineObj = Line::create([
-                    "Amount" => number_format(($total / 100), 2, '.', ','),
+                    "Amount" => number_format(($total / 100), 2, '.', ''),
                     "DetailType" => "SalesItemLineDetail",
                     "SalesItemLineDetail" => [
                         "Qty" => $entries,

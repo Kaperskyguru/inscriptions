@@ -1,8 +1,9 @@
 <?php
 namespace App\Services;
 
-use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Validator;
 
 class QuickBookService
 {
@@ -32,7 +33,7 @@ class QuickBookService
         $realmID = env('QB_REALMID');
         $baseurl.= "/v3/company/$realmID";
 
-        $this->url = urlencode($baseurl);
+        $this->url = $baseurl; //urlencode($baseurl);
     }
 
     public function create_customer(Request $request)
@@ -40,13 +41,8 @@ class QuickBookService
  
         // ************** TEST DATA *****************
         $request['city'] = 'Port Harcourt';
-        $request['country'] = 'Nigeria';
-        $request['display_name'] = 'Solomon Eseme';
-        $request['title'] = 'Mr';
-        $request['given_name'] = 'Solomon Eseme';
-        $request['middle_name'] = 'Eseme';
-        $request['family_name'] = 'Adaada';
-        $request['suffix'] = 'Jr';
+        $request['address'] = '22 wokenkoro';
+        $request['name'] = 'Solomon Eseme';
         $request['email'] = 'kaperskyguru@gmail.com';
         $request['company_name'] = 'Test Company';
         $request['zip_code'] = '500272';
@@ -57,11 +53,9 @@ class QuickBookService
 
         // Run validation
         $request->validate([
-            'title' => 'string',
             'city' => 'string',
-            'country' => 'string',
-            'display_name' => 'required|string',
-            'given_name' => 'required|string',
+            'address' => 'string',
+            'name' => 'required|string',
             'email' => 'required|email',
             'company_name' => 'string',
             'zip_code' => 'string',
@@ -70,85 +64,103 @@ class QuickBookService
         
 
        
+        $names = explode(' ', $request->name);
 
         $address = [];
         $address['City'] = $request->city;
-        $address['Country'] = $request->country;
+        $address['Line1'] = $request->address;
         $address['PostalCode'] = $request->zip_code;
 
-        // $data = [];
-        $data['FullyQualifiedName'] = $request->given_name;
-        $data['DisplayName'] = $request->display_name;
-        $data['Title'] = $request->title;
-        $data['GivenName'] = $request->given_name;
+        $data['FullyQualifiedName'] = $request->name;
+        $data['FamilyName'] = $names[1];
+        $data['GivenName'] = $names[0];
         $data['PrimaryEmailAddr']['Address'] = $request->email;
         $data['PrimaryPhone']['FreeFormNumber'] = $request->phone_number;
         $data['CompanyName'] = $request->company_name;
         $data['BillAddr'] = $address;
 
-        return response()->json($data); // Return Fake Json
+        // return response()->json($data); // Return Fake Json
 
-        $this->url .= '/customer?minorversion=54';
-        $response = Http::post($this->url, $data);
+        $url = $this->url . '/customer?minorversion=54';
+        $response = Http::withToken(env('QB_TOKEN'))->post($url, $data);
+        dd($response->json());
         return $response->json();
+    }
+
+    public function findOrCreateCustomer()
+    {
+        dd($this->findCustomer('Solomon Eseme'));
+    }
+
+    public function findCustomer($name)
+    {
+        $url = $this->url . "/query/query?query=SELECT*from Customer where GiveName=$name&minorversion=54?minorversion=54";
+        $response = Http::withToken(env('QB_TOKEN'))->get($url);
+        return $response;
     }
 
     public function create_invoice(Request $request)
     {
-        
-
-
-        // ************** TEST DATA *****************
-
-        $line = new \stdClass;
-        $line->amount = 60;
-        $line->entries = 4;
-        $line->unit_price = 60;
-        $line->description = "this is a fake product";
-        $line->name = "Test name";
-        $ar = array($line, $line, $line);
-
-        $request['lines'] = $ar;
-        $request['customer'] = 'Test Customer';
-
-        // ************** TEST DATA *****************
-
-
-        // Query all Items into array
-        
 
         // Run validation
-        $request->validate([
-            'customer' => 'required|string',
-            'lines' => 'array',
+        $v = Validator::make($request->all(), [
+            'invoices' => 'required|array',
+            'invoices.data' => 'required|array',
+            'invoices.customer' => 'required|array',
+            'invoices.event_name'=> 'required|string'
         ]);
-        
+        if ($v->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $v->errors()
+            ], 422);
+        }
 
-        $this->url .= '/customer?minorversion=54';
+        $this->findOrCreateCustomer();
+        // Query all Items into array
+        
+        $validatedData = $v->validated();
         $lines = [];
-        foreach ($request->lines as $line) {
+        foreach ($validatedData['invoices']['data'] as $line) {
             $lineItem = [];
+            $routine = $line['routines_count'];
             $lineItem['DetailType'] = 'SalesItemLineDetail';
-            $lineItem['Amount'] = $line->amount;
-            $lineItem['SalesItemLineDetail']['Qty'] = $line->entries;
-            $lineItem['SalesItemLineDetail']['UnitPrice'] = $line->unit_price;
-            $lineItem['SalesItemLineDetail']['Description'] = $line->description;
-            $lineItem['SalesItemLineDetail']['TaxCodeRef']['value'] = "NON";
+            $lineItem['Amount'] = $line['total'];
+            $lineItem['Description'] = $line['name'] . " ( Routine: $routine )";
+            $lineItem['SalesItemLineDetail']['Qty'] = $line['entries'];
+            $lineItem['SalesItemLineDetail']['UnitPrice'] = $line['formatted_rebate_price'];
+            $lineItem['SalesItemLineDetail']['TaxCodeRef']['value'] = "TAX";
 
             $item = [];
-            $item['name'] = $line->name;
-            $item['value'] = $line->name; //$this->itemLookupArray($line->name);
+            // $this->create_item($line['name']);
+
+            $item['name'] = $line['name'];
+            $item['value'] =  '2'; //$line->name; //$this->itemLookupArray($line->name);
             $lineItem['SalesItemLineDetail']['ItemRef'] = $item;
             \array_push($lines, $lineItem);
         }
+        
 
-        $data['CustomerRef']['value'] = $request->customer; //$this->customerLookupArray($request->customer);
+        $data['CustomerRef']['value'] = '58'; //$this->customerLookupArray($request->customer);
         $data['Line'] = $lines;
 
-        return response()->json($data); // Return Fake Json
+        // dd($data);
 
-        $this->url .= '/invoice?minorversion=54';
-        $response = Http::post($this->url, $data);
+        $url = $this->url . '/invoice?minorversion=54';
+        $response = Http::withToken(env('QB_TOKEN'))->post($url, $data);
+        dd($response);
+        return $response->json();
+    }
+
+    public function create_item($item_name)
+    {
+        $data = [];
+        $data['Name'] = $item_name;
+        $data['Type'] = 'Service';
+        $data['IncomeAccountRef']['name'] = 'Service';
+        $url = $this->url . '/item?minorversion=54';
+        $response = Http::withToken(env('QB_TOKEN'))->post($url, $data);
+        dd($response->json());
         return $response->json();
     }
 }
