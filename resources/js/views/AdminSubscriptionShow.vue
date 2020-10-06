@@ -1601,6 +1601,7 @@ import axios from "axios";
 export default {
     data: function() {
         return {
+            status_id: "",
             saving: false,
             organization: {
                 user: {
@@ -2087,24 +2088,24 @@ export default {
             );
         },
         changeStatus(status_id) {
-            // this.saving = true;
-            console.log("th");
+            this.saving = true;
+            this.status_id = status_id;
             const data = {};
-            if (status_id === 3 && this.content["categories"].length) {
+            if (this.status_id == 3 && this.content["categories"].length) {
                 data.invoices = {};
                 data.invoices.data = this.content["categories"];
                 data.invoices.customer = this.organization;
                 data.invoices.event_name = this.event_name;
-                data.status_id = status_id;
+                data.status_id = this.status_id;
                 data.subscription_id = this.subscription_id;
                 //query: this.query,
             } else {
-                data.status_id = status_id;
+                data.status_id = this.status_id;
                 data.subscription_id = this.subscription_id;
             }
-            // console.log(data);
             this.updateStatus(data)
-                .then(() => {
+                .then(res => {
+                    // console.log(res, "first");
                     store.dispatch("admin/subscription", {
                         event: this.event_name,
                         subscription_id: this.subscription_id
@@ -2117,14 +2118,24 @@ export default {
                         actions[0].classList.remove("has-menu-open");
                     }
                     this.setFeedback({
-                        message: i18n.t("messages.global.success"),
+                        message:
+                            this.status_id == 3
+                                ? i18n.t("messages.global.QBO_created")
+                                : i18n.t("messages.global.success"),
                         type: "success"
                     });
                 })
                 .catch(error => {
                     this.saving = false;
+                    this.setFeedback({
+                        message: i18n.t("messages.global.fail"),
+                        type: "warning"
+                    });
                 })
-                .then(_ => (this.saving = false));
+                .then(_ => {
+                    // console.log(_, "second");
+                    this.saving = false;
+                });
         },
         back() {
             this.$router.go(-1);

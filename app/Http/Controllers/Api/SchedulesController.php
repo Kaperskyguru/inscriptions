@@ -169,7 +169,7 @@ class SchedulesController extends Controller
         
        
         return response()->json([
-            'status' => 'sucess',
+            'status' => 'success',
             'msg' => __('messages.global.success')
         ], 200);
         

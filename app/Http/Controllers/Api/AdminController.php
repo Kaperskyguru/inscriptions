@@ -219,7 +219,7 @@ class AdminController extends Controller
             }
         }
         return response()->json([
-            'status' => 'sucess',
+            'status' => 'success',
             'msg' => __('messages.global.success'),
         ], 200);
     }
@@ -278,7 +278,7 @@ class AdminController extends Controller
             ], 400);
         }
         return response()->json([
-            'status' => 'sucess',
+            'status' => 'success',
             'msg' => __('messages.global.success'),
         ], 200);
     }
@@ -324,7 +324,7 @@ class AdminController extends Controller
             ], 400);
         }
         return response()->json([
-            'status' => 'sucess',
+            'status' => 'success',
             'msg' => __('messages.global.success'),
         ], 200);
     }
@@ -415,43 +415,40 @@ class AdminController extends Controller
 
     public function updateStatus(Request $request)
     {
-        $data = $request->toArray();
+        $invoice = QuickBookService::getInstance()->create_invoice($request);
 
-        return QuickBookService::getInstance()->create_invoice($request);
-
-        dd();
-
-
-        $subscription = Subscription::find($data['subscription_id']);
+        if ($invoice['success']) {
+            $data = $request->toArray();
+            $subscription = Subscription::find($data['subscription_id']);
 
 
-        if (!$subscription) {
-            return response()->json([
+            if (!$subscription) {
+                return response()->json([
                 'status' => 'error',
                 'msg' => __('messages.global.fail')
             ], 400);
-        }
+            }
        
-        // if((int)$subscription->balance <= 0.00) {
-        //     $subscription->status_id = 4; // Paid
-        // }else {
-        //     $subscription->status_id = $data['status_id'];
-        // }
+            // if((int)$subscription->balance <= 0.00) {
+            //     $subscription->status_id = 4; // Paid
+            // }else {
+            //     $subscription->status_id = $data['status_id'];
+            // }
 
-        $subscription->status_id = $data['status_id'];
-    
-        if (!$subscription->save()) {
-            return response()->json([
-                'status' => 'error',
-                'msg' => __('messages.global.fail')
-            ], 400);
+            $subscription->status_id = $data['status_id'];
+            if ($subscription->save()) {
+                return response()->json([
+                    'status' => 'success',
+                    'msg' => __('messages.global.QBO_created'),
+                    'subscription' => $subscription
+                ], 200);
+            }
         }
-
         return response()->json([
-            'status' => 'sucess',
-            'msg' => __('messages.global.success'),
-            'subscription' => $subscription
-        ], 200);
+            'status' => 'error',
+            'error' => $invoice['error'],
+            'msg' => __('messages.global.fail')
+        ], 400);
     }
 
     public function exportSubscription($subscription_id)

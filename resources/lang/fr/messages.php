@@ -29,6 +29,7 @@ return [
     'global' => [
         'success' => 'Sauvegarde réussie!',
         'fail' => 'Une erreur est survenue. Veuillez réessayer.',
+        'QBO_created' => "Votre facture a été créée dans Quickbook"
     ],
     'email' => [
         'fail' => 'Le courriel n\'a pu être envoyé à cette adresse'

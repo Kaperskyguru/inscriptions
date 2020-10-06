@@ -145,7 +145,7 @@ class SubscriptionsController extends Controller
         $subscription = $subscription->where('id', $subscription->id)->with(['event', 'status'])->first();
         
         return response()->json([
-            'status' => 'sucess',
+            'status' => 'success',
             'msg' => __('messages.global.success'),
             'subscription' => $subscription
         ], 200);
@@ -200,7 +200,7 @@ class SubscriptionsController extends Controller
         }
 
         return response()->json([
-            'status' => 'sucess',
+            'status' => 'success',
             'msg' => __('messages.global.success'),
             'subscription' => $subscription
         ], 200);
@@ -273,7 +273,7 @@ class SubscriptionsController extends Controller
        
 
         return response()->json([
-            'status' => 'sucess',
+            'status' => 'success',
             'msg' => __('messages.global.success'),
             'subscription' => $subscription
         ], 200);
@@ -297,7 +297,7 @@ class SubscriptionsController extends Controller
             ], 400);
         }
         return response()->json([
-            'status' => 'sucess',
+            'status' => 'success',
             'msg' => __('messages.global.success'),
         ], 200);
     }

@@ -3,16 +3,19 @@ namespace App\Services;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use QuickBooksOnline\API\Facades\Item;
+use QuickBooksOnline\API\Facades\Line;
 use Illuminate\Support\Facades\Validator;
+use QuickBooksOnline\API\Facades\Invoice;
+use QuickBooksOnline\API\Facades\Customer;
+use QuickBooksOnline\API\DataService\DataService;
 
 class QuickBookService
 {
     private static $instance = null;
-    private $url;
 
     private function __construct()
     {
-        $this->buildURL();
     }
 
     public static function getInstance()
@@ -23,80 +26,111 @@ class QuickBookService
         return self::$instance;
     }
 
-    private function buildURL($sandbox = true)
+    private function create_customer(array $validatedData)
     {
-        $baseurl = env('QB_BASE_URL');
-        if ($sandbox) {
-            $baseurl = env('QB_SANDBOX_BASE_URL');
-        }
-
-        $realmID = env('QB_REALMID');
-        $baseurl.= "/v3/company/$realmID";
-
-        $this->url = $baseurl; //urlencode($baseurl);
-    }
-
-    public function create_customer(Request $request)
-    {
- 
-        // ************** TEST DATA *****************
-        $request['city'] = 'Port Harcourt';
-        $request['address'] = '22 wokenkoro';
-        $request['name'] = 'Solomon Eseme';
-        $request['email'] = 'kaperskyguru@gmail.com';
-        $request['company_name'] = 'Test Company';
-        $request['zip_code'] = '500272';
-        $request['phone_number'] = '+2348145655380';
-        
-        // ************** TEST DATA *****************
-
-
-        // Run validation
-        $request->validate([
-            'city' => 'string',
-            'address' => 'string',
-            'name' => 'required|string',
-            'email' => 'required|email',
-            'company_name' => 'string',
-            'zip_code' => 'string',
-            'phone_number' => 'string'
-        ]);
-        
-
-       
-        $names = explode(' ', $request->name);
+        $names = explode(' ', $validatedData['user']['name']);
 
         $address = [];
-        $address['City'] = $request->city;
-        $address['Line1'] = $request->address;
-        $address['PostalCode'] = $request->zip_code;
+        $address['City'] = $validatedData['city'];
+        $address['Line1'] = $validatedData['address'];
+        $address['PostalCode'] = $validatedData['zipcode'];
 
-        $data['FullyQualifiedName'] = $request->name;
+        $data['FullyQualifiedName'] = $validatedData['user']['name'];
         $data['FamilyName'] = $names[1];
         $data['GivenName'] = $names[0];
-        $data['PrimaryEmailAddr']['Address'] = $request->email;
-        $data['PrimaryPhone']['FreeFormNumber'] = $request->phone_number;
-        $data['CompanyName'] = $request->company_name;
+        $data['PrimaryEmailAddr']['Address'] = $validatedData['user']['email'];
+        $data['PrimaryPhone']['FreeFormNumber'] = $validatedData['phone'];
+        $data['CompanyName'] = $validatedData['name'];
         $data['BillAddr'] = $address;
 
-        // return response()->json($data); // Return Fake Json
+        // Create Customer
+        $customerRequestObj = Customer::create($data);
+        $customerResponseObj = $this->getDataService()->Add($customerRequestObj);
+        $error = $this->getDataService()->getLastError();
+        $res = [];
 
-        $url = $this->url . '/customer?minorversion=54';
-        $response = Http::withToken(env('QB_TOKEN'))->post($url, $data);
-        dd($response->json());
-        return $response->json();
+        if ($error) {
+            $res['status'] = false;
+            $res['error'] = $error;
+            return $res;
+        }
+        $res['status'] = true;
+        $res['data'] = $customerResponseObj;
+        return $res;
     }
 
-    public function findOrCreateCustomer()
+    public function findOrCreateCustomer(Request $request)
     {
-        dd($this->findCustomer('Solomon Eseme'));
+       
+        // Run validation
+        $v = Validator::make($request->all(), [
+            'invoices.customer.city' => 'string',
+            'invoices.customer.address' => 'string',
+            'invoices.customer.user.name' => 'required|string',
+            'invoices.customer.user.email' => 'required|email',
+            'invoices.customer.name' => 'string',
+            'invoices.customer.zipcode' => 'string',
+            'invoices.customer.phone' => 'string'
+        ]);
+
+        if ($v->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $v->errors()
+            ], 422);
+        }
+       
+        $validatedData = $v->validated();
+
+        if ($customer = $this->findCustomer($validatedData['invoices']['customer']['user']['name'])) {
+            return $customer;
+        }
+
+        return $this->create_customer($validatedData['invoices']['customer']);
     }
 
-    public function findCustomer($name)
+
+    private function getDataService()
     {
-        $url = $this->url . "/query/query?query=SELECT*from Customer where GiveName=$name&minorversion=54?minorversion=54";
-        $response = Http::withToken(env('QB_TOKEN'))->get($url);
-        return $response;
+        $dataService = DataService::Configure(array(
+            'auth_mode' => 'oauth2',
+            'ClientID' => env('QB_CLIENT_ID'),
+            'ClientSecret' =>  env('QB_CLIENT_SECRET'),
+            'RedirectURI' => env('QB_OAUTH_REDIRECT_URI'),
+            'scope' => env('QB_OAUTH_SCOPE'),
+            'baseUrl' => env('QB_ENV'),
+            'QBORealmID' => env('QB_REALMID'),
+            'refreshTokenKey' => session()->get('QB_REFRESH_TOKEN', env('QB_REFRESH_TOKEN'))
+        ));
+        $OAuth2LoginHelper = $dataService->getOAuth2LoginHelper();
+        $refreshedAccessTokenObj = $OAuth2LoginHelper->refreshToken();
+        session(['QB_REFRESH_TOKEN' => $refreshedAccessTokenObj->getRefreshToken()]);
+
+        $error = $OAuth2LoginHelper->getLastError();
+        if ($error) {
+        } else {
+            //Refresh Token is called successfully
+            $dataService->updateOAuth2Token($refreshedAccessTokenObj);
+        }
+        return $dataService;
+    }
+
+    private function findCustomer($name)
+    {
+        $customerArray = $this->getDataService()->Query("select * from Customer where DisplayName='" . $name . "'");
+        $error = $this->getDataService()->getLastError();
+
+        $res = [];
+        if ($error) {
+            $res['status'] = false;
+            $res['error'] = $error;
+            return $res;
+        }
+        if (is_array($customerArray) && sizeof($customerArray) > 0) {
+            $res['status'] = true;
+            $res['data'] = current($customerArray);
+            return $res;
+        }
     }
 
     public function create_invoice(Request $request)
@@ -115,52 +149,123 @@ class QuickBookService
                 'errors' => $v->errors()
             ], 422);
         }
-
-        $this->findOrCreateCustomer();
-        // Query all Items into array
         
-        $validatedData = $v->validated();
-        $lines = [];
-        foreach ($validatedData['invoices']['data'] as $line) {
-            $lineItem = [];
-            $routine = $line['routines_count'];
-            $lineItem['DetailType'] = 'SalesItemLineDetail';
-            $lineItem['Amount'] = $line['total'];
-            $lineItem['Description'] = $line['name'] . " ( Routine: $routine )";
-            $lineItem['SalesItemLineDetail']['Qty'] = $line['entries'];
-            $lineItem['SalesItemLineDetail']['UnitPrice'] = $line['formatted_rebate_price'];
-            $lineItem['SalesItemLineDetail']['TaxCodeRef']['value'] = "TAX";
+        $invoiceObj = $this->generateInvoiceData($request, $v);
+        $resultingInvoiceObj = $this->getDataService()->Add($invoiceObj);
 
-            $item = [];
-            // $this->create_item($line['name']);
-
-            $item['name'] = $line['name'];
-            $item['value'] =  '2'; //$line->name; //$this->itemLookupArray($line->name);
-            $lineItem['SalesItemLineDetail']['ItemRef'] = $item;
-            \array_push($lines, $lineItem);
+        $error = $this->getDataService()->getLastError();
+        if ($error || \is_null($resultingInvoiceObj)) {
+            $res['success'] = false;
+            $res['message'] =  __("messages.global.fail");
+            $res['error'] = $error;
+            return $res;
         }
         
-
-        $data['CustomerRef']['value'] = '58'; //$this->customerLookupArray($request->customer);
-        $data['Line'] = $lines;
-
-        // dd($data);
-
-        $url = $this->url . '/invoice?minorversion=54';
-        $response = Http::withToken(env('QB_TOKEN'))->post($url, $data);
-        dd($response);
-        return $response->json();
+        $res['success'] = true;
+        $res['message'] = __("messages.global.QBO_created");
+        $res['data'] = $resultingInvoiceObj;
+        return $res;
     }
 
-    public function create_item($item_name)
+    public function findOrCreateItem($name)
+    {
+        if (!\is_null($item = $this->getItem($name))) {
+            return $item;
+        }
+        return $this->create_item($name);
+    }
+    
+    private function create_item($name)
     {
         $data = [];
-        $data['Name'] = $item_name;
+        $data['Name'] = $name;
         $data['Type'] = 'Service';
-        $data['IncomeAccountRef']['name'] = 'Service';
-        $url = $this->url . '/item?minorversion=54';
-        $response = Http::withToken(env('QB_TOKEN'))->post($url, $data);
-        dd($response->json());
-        return $response->json();
+        $data['IncomeAccountRef']['Name'] = 'Service';
+        $data['IncomeAccountRef']['Value'] = 1;
+
+        $itemObj = Item::create($data);
+        $resultingItemObj = $this->getDataService()->Add($itemObj);
+        $error = $this->getDataService()->getLastError();
+        if ($error) {
+            return null;
+        }
+        return $resultingItemObj;
+    }
+
+    private function getItem($name)
+    {
+        $itemArray = $this->getDataService()->Query("select * from Item WHERE Name='" . $name . "'");
+        $error = $this->getDataService()->getLastError();
+        if ($error) {
+            return null;
+        } else {
+            if (is_array($itemArray) && sizeof($itemArray) > 0) {
+                return current($itemArray);
+            }
+            return null;
+        }
+    }
+
+    private function generateInvoiceData($request, $v)
+    {
+        $customerObj = $this->findOrCreateCustomer($request);
+        $res = [];
+
+
+        if ($customerObj['status']) {
+            $customer = $customerObj['data'];
+
+            $validatedData = $v->validated()['invoices'];
+            $lines = [];
+            foreach ($validatedData['data'] as $line) {
+                $item = [];
+                $itemObj = $this->findOrCreateItem($line['name']);
+                $item['name'] = $itemObj->Name;
+                $item['value'] =  $itemObj->Id;
+                
+                $routine = $line['routines_count'];
+
+                $lineItem = Line::create([
+                'DetailType' => 'SalesItemLineDetail',
+                'Amount' => $line['total'],
+                'Description' => $line['name'] . " ( Routine: $routine )",
+                'SalesItemLineDetail' => [
+                    'Qty' => $line['entries'],
+                    'UnitPrice' => $line['formatted_rebate_price'],
+                    'TaxCodeRef' => ['value' => "TAX"],
+                    'ItemRef' => $item
+                    ],
+                ]);
+                \array_push($lines, $lineItem);
+            }
+
+            $data['CustomerRef']['value'] = $customer->Id;
+            $data["BillEmail"]["Address"] = $validatedData['customer']['user']['email'];
+            $data['Line'] = $lines;
+
+            // Add Custom Field
+            $customField = [
+                "DefinitionId" => "1",
+                "StringValue" =>  $validatedData['event_name'],
+                "Type" => "StringType",
+                "Name" => "Crew #"
+            ];
+            $data["CustomField"] = $customField;
+
+            // Add Tax
+            $data["TxnTaxDetail"]['TxnTaxCodeRef']['value'] = '7';
+            $data['TxnTaxDetail']['TxnTaxCodeRef']['name'] = 'GST/QST QC - 9.975';
+
+            $invoiceObj = Invoice::create($data);
+
+            return $invoiceObj;
+        }
+
+        // Customer not found and cannot create new
+        return response()->json([
+            'status' => 'error',
+            'error' => $customerObj['error'],
+            'msg' => __('messages.global.fail')
+        ], 400);
     }
 }

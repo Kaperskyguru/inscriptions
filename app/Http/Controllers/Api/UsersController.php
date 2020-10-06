@@ -134,7 +134,7 @@ class UsersController extends Controller
     //     }
         
     //     return response()->json([
-    //         'status' => 'sucess',
+    //         'status' => 'success',
     //         'msg' => __('messages.global.success'),
     //         'user' => User::find($user_id)
     //     ], 200);

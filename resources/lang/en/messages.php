@@ -29,6 +29,8 @@ return [
     'global' => [
         'success' => 'Saved successfully!',
         'fail' => 'An error has occurred. Try Again.',
+        'QBO_created' => "Your invoice has been created in Quickbook",
+
     ],
     'email' => [
         'fail' => 'The email could not be sent to this address.'

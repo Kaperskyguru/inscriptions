@@ -180,7 +180,7 @@ class DancersController extends Controller
         }
 
         return response()->json([
-            'status' => 'sucess',
+            'status' => 'success',
             'msg' => __('messages.global.success'),
             'dancer' => $dancer
         ], 200);
@@ -287,7 +287,7 @@ class DancersController extends Controller
         }
 
         return response()->json([
-            'status' => 'sucess',
+            'status' => 'success',
             'msg' => __('messages.global.success'),
             'dancer' => Dancer::find($id)
         ], 200);
@@ -343,7 +343,7 @@ class DancersController extends Controller
         }
         
         return response()->json([
-            'status' => 'sucess',
+            'status' => 'success',
             'msg' => __('messages.global.success'),
         ], 200);
 

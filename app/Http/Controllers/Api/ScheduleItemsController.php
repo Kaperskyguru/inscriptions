@@ -37,7 +37,7 @@ class ScheduleItemsController extends Controller
             
         }
         return response()->json([
-            'status' => 'sucess',
+            'status' => 'success',
             'msg' =>_('messages.global.success')
         ], 200);
 
@@ -57,7 +57,7 @@ class ScheduleItemsController extends Controller
             }
         }
         return response()->json([
-            'status' => 'sucess',
+            'status' => 'success',
             'msg' => $data
         ], 200);
     }

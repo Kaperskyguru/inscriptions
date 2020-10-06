@@ -213,7 +213,7 @@ class RoutinesController extends Controller
         $routine->dancers()->attach($dancers_filtered);
 
         return response()->json([
-            'status' => 'sucess',
+            'status' => 'success',
             'msg' => __('messages.global.success'),
         ], 200);
     }
@@ -495,7 +495,7 @@ class RoutinesController extends Controller
         $routine->update($data);
 
         return response()->json([
-            'status' => 'sucess',
+            'status' => 'success',
             'msg' => __('messages.global.success'),
             'routine' => $routine
 
@@ -551,7 +551,7 @@ class RoutinesController extends Controller
                 }
     
                 return response()->json([
-                    'status' => 'sucess',
+                    'status' => 'success',
                     'msg' => __('messages.global.success'),
         
                 ], 200);
@@ -587,7 +587,7 @@ class RoutinesController extends Controller
             ], 400);
         }
         return response()->json([
-            'status' => 'sucess',
+            'status' => 'success',
             'msg' => __('messages.global.success'),
         ], 200);
     }

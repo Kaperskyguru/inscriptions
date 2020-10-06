@@ -23,7 +23,7 @@ class FeesController extends Controller
         }
 
         return response()->json([
-            'status' => 'sucess',
+            'status' => 'success',
             'msg' => __('messages.global.success'),
         ], 200);
 
@@ -61,7 +61,7 @@ class FeesController extends Controller
         //     ], 400);
         // }
         return response()->json([
-            'status' => 'sucess',
+            'status' => 'success',
             'msg' => __('messages.global.success'),
         ], 200);
     }
@@ -93,7 +93,7 @@ class FeesController extends Controller
         }
 
         return response()->json([
-            'status' => 'sucess',
+            'status' => 'success',
             'msg' => __('messages.global.success'),
         ], 200);
 
