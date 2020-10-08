@@ -56,7 +56,7 @@ class Subscription extends Model
         $subtotal = 0;
 
         foreach ($this->routines as $routine) {
-            $total_cost = (count($routine->dancers) * $routine->category->rebate_price);
+            $total_cost = (count($routine->dancers) * $routine->category->price->rebate_price);
             $subtotal += $total_cost;
         }
         foreach ($this->fees as $fee) {

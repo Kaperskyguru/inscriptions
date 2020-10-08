@@ -13,7 +13,7 @@ class Category extends Model implements TranslatableContract
     use Translatable;
     public $translatedAttributes = ['name'];
 
-    protected $appends = ['formatted_price', 'formatted_rebate_price'];
+    protected $appends = ['formatted_rebate_price'];
 
 
     public function eventType()
@@ -21,21 +21,29 @@ class Category extends Model implements TranslatableContract
         return $this->belongsTo('App\EventType');
     }
 
+    public function Price()
+    {
+        return $this->belongsTo('App\Price');
+    }
+
     public function routines()
     {
         return $this->hasMany('App\Routine')->withCount('dancers');
     }
 
-    public function getFormattedPriceAttribute()
-    {
-        // return NumberFormatter('en_US', NumberFormatter::CURRENCY)::formatCurrency(($this->attributes['price'] / 100));
+    // public function getRebatePriceAttribute()
+    // {
+    //     return $this->price->rebate_price;
+    // }
 
-        return number_format(($this->attributes['price'] / 100), 2, '.', '');
-    }
     public function getFormattedRebatePriceAttribute()
     {
-        // return $formatter =  NumberFormatter('en_US', NumberFormatter::CURRENCY)::formatCurrency(($this->attributes['rebate_price'] / 100));
-
-        return number_format(($this->attributes['rebate_price'] / 100), 2, '.', '');
+        return $this->price->formatted_rebate_price;
     }
+
+    // public function getPriceAttribute()
+    // {
+    //     dd($this->price);
+    //     return $this->price->price;
+    // }
 }

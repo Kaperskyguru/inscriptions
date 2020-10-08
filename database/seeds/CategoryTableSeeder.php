@@ -1,7 +1,8 @@
 <?php
 
-use Illuminate\Database\Seeder;
+use App\Price;
 use App\Category;
+use Illuminate\Database\Seeder;
 
 class CategoryTableSeeder extends Seeder
 {
@@ -25,7 +26,7 @@ class CategoryTableSeeder extends Seeder
             ],
             [
                 'duration' => 180, // In second
-                'price' => 5500, 
+                'price' => 5500,
                 'rebate_price' => 5000,
                 'name' => [
                     'fr' => 'Duo',
@@ -34,7 +35,7 @@ class CategoryTableSeeder extends Seeder
             ],
             [
                 'duration' => 180, // In second
-                'price' => 5500, 
+                'price' => 5500,
                 'rebate_price' => 5000,
                 'name' => [
                     'fr' => 'Trio',
@@ -43,7 +44,7 @@ class CategoryTableSeeder extends Seeder
             ],
             [
                 'duration' => 240, // In second
-                'price' => 4700, 
+                'price' => 4700,
                 'rebate_price' => 4200,
                 'name' => [
                     'fr' => 'Petit groupe',
@@ -52,7 +53,7 @@ class CategoryTableSeeder extends Seeder
             ],
             [
                 'duration' => 240, // In second
-                'price' => 4700, 
+                'price' => 4700,
                 'rebate_price' => 4200,
                 'name' => [
                     'fr' => 'Grand Groupe',
@@ -61,7 +62,7 @@ class CategoryTableSeeder extends Seeder
             ],
             [
                 'duration' => 240, // In second
-                'price' => 4700, 
+                'price' => 4700,
                 'rebate_price' => 4200,
                 'name' => [
                     'fr' => 'Production',
@@ -70,7 +71,7 @@ class CategoryTableSeeder extends Seeder
             ],
             [
                 'duration' => 0, // In second
-                'price' => 0, 
+                'price' => 0,
                 'rebate_price' => 0,
                 'name' => [
                     'fr' => 'Non classé',
@@ -78,17 +79,20 @@ class CategoryTableSeeder extends Seeder
                 ]
             ]
         ];
-        foreach($data as $item) {
-            $model = new Category();
-            $model->duration = $item['duration'];
-            $model->price = $item['price'];
-            $model->rebate_price = $item['rebate_price'];
-            foreach($item['name'] as $locale => $subitem) {
-                app()->setLocale($locale);
-                $model->name = $subitem;
+        foreach ($data as $item) {
+            $price = new Price();
+            $price->price = $item['price'];
+            $price->rebate_price = $item['rebate_price'];
+            if ($price->save()) {
+                $model = new Category();
+                $model->duration = $item['duration'];
+                $model->price_id = $price->id;
+                foreach ($item['name'] as $locale => $subitem) {
+                    app()->setLocale($locale);
+                    $model->name = $subitem;
+                }
+                $model->save();
             }
-            $model->save();
-
         }
     }
 }

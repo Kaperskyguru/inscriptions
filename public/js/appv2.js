@@ -6588,6 +6588,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
 
 
 
@@ -35866,7 +35867,8 @@ var render = function() {
                                         [
                                           _vm._v(
                                             _vm._s(
-                                              category.formatted_rebate_price
+                                              category.price
+                                                .formatted_rebate_price
                                             ) +
                                               "\n                                        $"
                                           )

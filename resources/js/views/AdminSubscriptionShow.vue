@@ -476,7 +476,8 @@
                                         <span
                                             class="table-text text-body-display"
                                             >{{
-                                                category.formatted_rebate_price
+                                                category.price
+                                                    .formatted_rebate_price
                                             }}
                                             $</span
                                         >

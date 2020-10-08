@@ -385,7 +385,7 @@ class AdminController extends Controller
                 $entries += count($routine->dancers);
             }
             $categories[$key]['entries'] =  $entries;
-            $total = $entries *  $category['rebate_price'];
+            $total = $entries *  $category->price->rebate_price;
             $categories[$key]['total'] = number_format(($total / 100), 2, '.', '');
         }
         $paymentTypes = PaymentType::all();
@@ -497,7 +497,7 @@ class AdminController extends Controller
                 $entries += count($routine->dancers);
             }
             $categories[$i]['entries'] =  $entries;
-            $total = $entries *  $category['rebate_price'];
+            $total = $entries *  $category->price->rebate_price;
             $categories[$i]['total'] = number_format(($total / 100), 2, '.', '');
 
             foreach ($category->routines as $j => $routine) {

@@ -1,4 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <html>
 
@@ -166,7 +167,7 @@
     @endforeach
     <div class="page-break"></div>
     <div class="export-section export-invoices">
-    <h3 class="title-tertiary">{{ __('admin.export.cost') }} - {{$organization['name']}}</h3>
+      <h3 class="title-tertiary">{{ __('admin.export.cost') }} - {{$organization['name']}}</h3>
       <div class="table">
         <div class="table-header">
           <ul class="table-list">
@@ -188,7 +189,7 @@
           </ul>
         </div>
         <div class="table-body">
-        @foreach ($categories as $category)
+          @foreach ($categories as $category)
           <ul class="table-list table-list-body">
             <li class="table-item grid-4">
               <span class="table-text text-body-display">{{$category->name}}</span>
@@ -200,7 +201,7 @@
               <span class="table-text text-body-display">{{$category->entries}}</span>
             </li>
             <li class="table-item grid-2">
-              <span class="table-text text-body-display">{{$category->formatted_rebate_price}} $</span>
+              <span class="table-text text-body-display">{{$category->price->formatted_rebate_price}} $</span>
             </li>
             <li class="table-item grid-2">
               <span class="table-text text-body-display">{{$category->total}} $</span>
@@ -235,7 +236,8 @@
         </li>
         @foreach($subscription->payments as $payment)
         <li class="invoice-item text-body-display">
-          <span class="invoice-data">{{ __('admin.export.payment') }} {{ $payment['paymentType']['name'] }} {{ __('admin.export.receive_on') }} {{ $payment['receive_on']}}</span>
+          <span class="invoice-data">{{ __('admin.export.payment') }} {{ $payment['paymentType']['name'] }} {{
+            __('admin.export.receive_on') }} {{ $payment['receive_on']}}</span>
           <span class="invoice-int">{{ $payment['formatted_amount']}} $</span>
         </li>
         @endforeach
@@ -251,7 +253,7 @@
       <p class="export-thanks text-footnote">{{ __('admin.export.thanks') }}</p>
     </div>
   </div>
-  
+
   </div>
 </body>
 

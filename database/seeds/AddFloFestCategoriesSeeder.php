@@ -1,7 +1,8 @@
 <?php
 
-use Illuminate\Database\Seeder;
+use App\Price;
 use App\Category;
+use Illuminate\Database\Seeder;
 
 class AddFloFestCategoriesSeeder extends Seeder
 {
@@ -26,7 +27,7 @@ class AddFloFestCategoriesSeeder extends Seeder
             ],
             [
                 'duration' => 240, // In second
-                'price' => 4600, 
+                'price' => 4600,
                 'rebate_price' => 4600,
                 'event_type_id' => 2,
                 'name' => [
@@ -36,7 +37,7 @@ class AddFloFestCategoriesSeeder extends Seeder
             ],
             [
                 'duration' => 240, // In second
-                'price' => 4600, 
+                'price' => 4600,
                 'rebate_price' => 4600,
                 'event_type_id' => 2,
                 'name' => [
@@ -46,7 +47,7 @@ class AddFloFestCategoriesSeeder extends Seeder
             ],
             [
                 'duration' => 240, // In second
-                'price' => 4600, 
+                'price' => 4600,
                 'rebate_price' => 4600,
                 'event_type_id' => 2,
                 'name' => [
@@ -55,18 +56,20 @@ class AddFloFestCategoriesSeeder extends Seeder
                 ],
             ]
         ];
-        foreach($data as $item) {
-            $model = new Category();
-            $model->duration = $item['duration'];
-            $model->price = $item['price'];
-            $model->rebate_price = $item['rebate_price'];
-            $model->event_type_id = $item['event_type_id'];
-            foreach($item['name'] as $locale => $subitem) {
-                app()->setLocale($locale);
-                $model->name = $subitem;
+        foreach ($data as $item) {
+            $price = new Price();
+            $price->price = $item['price'];
+            $price->rebate_price = $item['rebate_price'];
+            if ($price->save()) {
+                $model = new Category();
+                $model->duration = $item['duration'];
+                $model->price_id = $price->id;
+                foreach ($item['name'] as $locale => $subitem) {
+                    app()->setLocale($locale);
+                    $model->name = $subitem;
+                }
+                $model->save();
             }
-            $model->save();
-
         }
     }
 }
