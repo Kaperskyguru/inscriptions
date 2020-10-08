@@ -63,8 +63,7 @@ class Subscription extends Model
             $total_cost = ($fee->feeType->price * $fee->entries);
             $subtotal += $total_cost;
         }
-        // dd(number_format(($subtotal / 100), 2, '.', ''));
-        return  ($subtotal / 100);
+        return number_format(($subtotal / 100), 2, '.', '');
     }
     public function getTpsAttribute()
     {
@@ -99,7 +98,7 @@ class Subscription extends Model
             return $total + $payment->amount;
         }, 0);
 
-        return number_format(($sum / 100), 2, '.', '');
+        return number_format($sum, 2, '.', '');
     }
     public function getBalanceAttribute()
     {

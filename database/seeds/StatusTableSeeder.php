@@ -12,7 +12,6 @@ class StatusTableSeeder extends Seeder
      */
     public function run()
     {
-
         $statuses = [
             [
                 'type' => 'default',
@@ -40,11 +39,11 @@ class StatusTableSeeder extends Seeder
                 'type' => 'warning',
                 'admin_label' => [
                     'fr' => 'En attente de paiement',
-                    'en' => 'Wating for paiement'
+                    'en' => 'Waiting for payment'
                 ],
                 'public_label' => [
                     'fr' => 'En attente de paiement',
-                    'en' => 'Wating for paiement'
+                    'en' => 'Waiting for payment'
                 ],
             ],
             [
@@ -70,19 +69,18 @@ class StatusTableSeeder extends Seeder
                 ],
             ],
         ];
-        foreach($statuses as $status) {
+        foreach ($statuses as $status) {
             $statusModel = new Status();
             $statusModel->type = $status['type'];
-            foreach($status['admin_label'] as $locale => $label) {
+            foreach ($status['admin_label'] as $locale => $label) {
                 app()->setLocale($locale);
                 $statusModel->admin_label = $label;
             }
-            foreach($status['public_label'] as $locale => $label) {
+            foreach ($status['public_label'] as $locale => $label) {
                 app()->setLocale($locale);
                 $statusModel->public_label = $label;
             }
             $statusModel->save();
-
         }
     }
 }

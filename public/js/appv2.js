@@ -6588,9 +6588,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
 
 
 
@@ -36257,12 +36254,7 @@ var render = function() {
                                           staticClass:
                                             "table-text text-body-display"
                                         },
-                                        [
-                                          _vm._v(
-                                            _vm._s(payment.formatted_amount) +
-                                              "\n                                        $"
-                                          )
-                                        ]
+                                        [_vm._v(_vm._s(payment.amount) + " $")]
                                       ),
                                       _vm._v(" "),
                                       _c(

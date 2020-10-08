@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Services\QuickBookService;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -14,6 +15,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         //
+        'App\Console\Commands\QBOPayments'
     ];
 
     /**
@@ -24,8 +26,11 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        // $schedule->call(function () {
+        //     QuickBookService::getInstance()->get_daily_payments();
+        // })->twiceDaily(1, 13);
+
+        $schedule->command('QBOPayments:payments')->everyFiveMinutes();
     }
 
     /**

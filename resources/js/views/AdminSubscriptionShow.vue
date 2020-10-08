@@ -674,10 +674,7 @@
                                     <li class="table-item grid-2">
                                         <span
                                             class="table-text text-body-display"
-                                            >{{
-                                                payment.formatted_amount
-                                            }}
-                                            $</span
+                                            >{{ payment.amount }} $</span
                                         >
                                         <div
                                             class="table-menu"

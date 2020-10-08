@@ -1,6 +1,8 @@
 <?php
 namespace App\Services;
 
+use App\Payment;
+use App\Subscription;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use QuickBooksOnline\API\Facades\Item;
@@ -92,6 +94,7 @@ class QuickBookService
 
     private function getDataService()
     {
+        // session()->forget('QB_REFRESH_TOKEN');
         $dataService = DataService::Configure(array(
             'auth_mode' => 'oauth2',
             'ClientID' => env('QB_CLIENT_ID'),
@@ -141,7 +144,8 @@ class QuickBookService
             'invoices' => 'required|array',
             'invoices.data' => 'required|array',
             'invoices.customer' => 'required|array',
-            'invoices.event_name'=> 'required|string'
+            'invoices.event_name'=> 'required|string',
+            'subscription_id' => 'required'
         ]);
         if ($v->fails()) {
             return response()->json([
@@ -245,10 +249,18 @@ class QuickBookService
 
             // Add Custom Field
             $customField = [
-                "DefinitionId" => "1",
-                "StringValue" =>  $validatedData['event_name'],
-                "Type" => "StringType",
-                "Name" => "Crew #"
+                [
+                    "DefinitionId" => "1",
+                    "StringValue" =>  $validatedData['event_name'],
+                    "Type" => "StringType",
+                    "Name" => "EventName"
+                ],
+                [
+                    "DefinitionId" => "2",
+                    "StringValue" =>  $request->subscription_id,
+                    "Type" => "StringType",
+                    "Name" => "SubscriptionID"
+                ]
             ];
             $data["CustomField"] = $customField;
 
@@ -267,5 +279,103 @@ class QuickBookService
             'error' => $customerObj['error'],
             'msg' => __('messages.global.fail')
         ], 400);
+    }
+
+    public function get_daily_payments()
+    {
+        $paymentArray = $this->getDataService()->Query("select * from Payment WHERE TxnDate >='" . now()->toDateString() . "'");
+        $error = $this->getDataService()->getLastError();
+        dd($paymentArray);
+        if ($error || is_null($paymentArray)) {
+            return null;
+        } else {
+            if (is_array($paymentArray) && sizeof($paymentArray) > 0) {
+                // Store in Database
+                echo 'running';
+                return $this->storePayments($paymentArray);
+            }
+            return null;
+        }
+    }
+
+    private function storePayments($payments)
+    {
+        foreach ($payments as $payment) {
+            $this->createOrUpdatePayment($payment);
+        }
+        return;
+    }
+
+    private function createOrUpdatePayment($payment)
+    {
+        $subscription_id = $this->findSubscriptionIDFromInvoice($payment->Line->LinkedTxn->TxnId);
+        if ($subscription_id) {
+            $oldPayment = Payment::where('subscription_id', $subscription_id)->first();
+        
+            if (!$oldPayment) {
+                $newpayment = new Payment;
+                $newpayment->payment_type_id = 3; // Transfer
+                $newpayment->subscription_id = $subscription_id;
+                $newpayment->receive_on = $payment->TxnDate;
+                $newpayment->amount = $payment->TotalAmt;
+                $newpayment->note = "Payment recieved from QBO ". now()->year;
+                $newpayment->save();
+            } else {
+                $oldPayment->payment_type_id = 3; // Transfer
+                $oldPayment->subscription_id = $subscription_id;
+                $oldPayment->receive_on = $payment->TxnDate;
+                $oldPayment->amount = $payment->TotalAmt;
+                $oldPayment->note = "Payment recieved from QBO ". now()->year;
+                $oldPayment->save();
+            }
+
+            // Update Subscription Payment status
+            $this->updateSubscriptionStatus($subscription_id, 4 /* Paid */);
+        }
+    }
+
+    private function updateSubscriptionStatus($id, $status)
+    {
+        if ($subscription = Subscription::find($id)) {
+            $subscription->status_id = $status;
+            $subscription->save();
+        }
+    }
+
+    private function findSubscriptionIDFromInvoice($id)
+    {
+        $invoice = $this->findInvoice($id);
+        if ($invoice) {
+            return $this->findSubscriptionIDFromCustomField($invoice->CustomField);
+        }
+        return null;
+    }
+
+    private function findSubscriptionIDFromCustomField($customFields)
+    {
+        if (is_array($customFields)) {
+            foreach ($customFields as $field) {
+                if ($field->DefinitionId == 2) {
+                    return $field->StringValue;
+                }
+                continue;
+            }
+        } else {
+            if ($customFields->DefinitionId == 2) {
+                return $customFields->StringValue;
+            }
+        }
+        return null;
+    }
+
+    private function findInvoice($id)
+    {
+        $invoice = $this->getDataService()->FindById("Invoice", $id);
+        $error = $this->getDataService()->getLastError();
+        if ($error) {
+            return null;
+        } else {
+            return $invoice;
+        }
     }
 }

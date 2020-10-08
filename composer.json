@@ -11,6 +11,7 @@
         "php": "^7.3",
         "astrotomic/laravel-translatable": "^11.9",
         "barryvdh/laravel-snappy": "^0.4.8",
+        "doctrine/dbal": "^2.11",
         "fideloper/proxy": "^4.4",
         "guzzlehttp/guzzle": "^7.1",
         "h4cc/wkhtmltoimage-amd64": "^0.12.4",
