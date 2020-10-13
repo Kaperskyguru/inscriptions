@@ -1,21 +1,23 @@
 <?php
 
-namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
-use QuickBooksOnline\API\DataService\DataService;
-use QuickBooksOnline\API\Core\ServiceContext;
-use QuickBooksOnline\API\PlatformService\PlatformService;
-use QuickBooksOnline\API\Core\Http\Serialization\XmlObjectSerializer;
-use QuickBooksOnline\API\Facades\Customer;
-use QuickBooksOnline\API\Facades\Invoice;
-use QuickBooksOnline\API\Facades\Line;
-
-
+namespace App\Http\Controllers\Api;
 
 use Session;
 use App\Category;
 use App\Organization;
+use Illuminate\Http\Request;
+use App\Services\QuickBookService;
+use App\Http\Controllers\Controller;
+use QuickBooksOnline\API\Facades\Line;
+use QuickBooksOnline\API\Facades\Invoice;
+
+
+
+use QuickBooksOnline\API\Facades\Customer;
+use QuickBooksOnline\API\Core\ServiceContext;
+use QuickBooksOnline\API\DataService\DataService;
+use QuickBooksOnline\API\PlatformService\PlatformService;
+use QuickBooksOnline\API\Core\Http\Serialization\XmlObjectSerializer;
 
 class QuickbooksController extends Controller
 {
@@ -271,5 +273,10 @@ class QuickbooksController extends Controller
             'code' => $qsArray['code'],
             'realmId' => $qsArray['realmId']
         );
+    }
+
+    public function getPayments(Request $request)
+    {
+        return QuickBookService::getInstance()->get_daily_payments();
     }
 }

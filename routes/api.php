@@ -18,7 +18,6 @@ use Illuminate\Http\Request;
 // });
 
 Route::namespace('Api')->group(function () {
-
     Route::prefix('v1')->group(function () {
         Route::prefix('auth')->group(function () {
             // Below mention routes are public, user can access those without any restriction.
@@ -45,7 +44,6 @@ Route::namespace('Api')->group(function () {
                 // Logout user from application
                 Route::post('logout', 'AuthController@logout');
                 Route::post('update', 'AuthController@update');
-
             });
         });
        
@@ -57,7 +55,6 @@ Route::namespace('Api')->group(function () {
         });
 
         Route::prefix('dancers')->group(function () {
-           
             Route::middleware('auth:api')->group(function () {
                 Route::get('/', 'DancersController@index');
                 Route::get('/check', 'DancersController@check');
@@ -68,7 +65,6 @@ Route::namespace('Api')->group(function () {
             });
         });
         Route::prefix('routines')->group(function () {
-           
             Route::middleware('auth:api')->group(function () {
                 Route::get('/', 'RoutinesController@index');
                 Route::post('store', 'RoutinesController@store');
@@ -96,8 +92,6 @@ Route::namespace('Api')->group(function () {
                 Route::delete('/{id}', 'SubscriptionsController@destroy');
 
                 Route::get('export/{event_name}/dancer', 'SubscriptionsController@exportSubscriptionDancer');
-
-               
             });
         });
         Route::prefix('categories')->group(function () {
@@ -111,9 +105,9 @@ Route::namespace('Api')->group(function () {
         });
 
         Route::prefix('admin')->group(function () {
-
-            
             Route::middleware('auth:api')->group(function () {
+                Route::get('/categories/{year}', 'AdminController@getCategoriesByPriceYear');
+
                 Route::get('/', 'AdminController@index');
                 Route::post('search', 'AdminController@search');
                 Route::post('add/payment', 'AdminController@addPayment');
@@ -155,10 +149,6 @@ Route::namespace('Api')->group(function () {
                 Route::get('/{city}/schedule/get-by-position', 'AdminController@scheduleOrderByPosition');
                 Route::get('/{city}/schedule/get-items', 'AdminController@scheduleGetItems');
                 Route::get('/{city}/{subscription_id}', 'AdminController@subscription');
-
-
-
-                
             });
         });
 
@@ -169,11 +159,10 @@ Route::namespace('Api')->group(function () {
                
         //     });
         // });
-
+        Route::get('/payments', 'QuickbooksController@getPayments');
 
         Route::prefix('states')->group(function () {
             Route::get('/getByCountryID/{country_id}', 'StatesController@getByCountryID');
         });
     });
-
 });

@@ -31,9 +31,11 @@ const actions = {
         return Admin.event(event).then(data => commit("subscriptions", data));
     },
     subscription({ commit }, args) {
-        return Admin.subscription(args.event, args.subscription_id).then(data =>
-            commit("subscription", data)
-        );
+        return Admin.subscription(
+            args.event,
+            args.subscription_id,
+            args.year
+        ).then(data => commit("subscription", data));
     },
     addPayment({ commit }, inputs) {
         return Admin.addPayment(inputs).then(data => {});
@@ -60,6 +62,12 @@ const actions = {
     resetSearch({ commit }, event) {
         return Admin.event(event).then(data => {
             commit("subscriptions", data);
+        });
+    },
+    categoriesByYear({ commit }, data) {
+        console.log(data);
+        return Admin.categoriesByYear(data).then(data => {
+            // commit("subscriptions", data);
         });
     }
 };

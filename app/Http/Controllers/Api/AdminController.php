@@ -336,8 +336,9 @@ class AdminController extends Controller
      * @param  int  $subscription_id
      * @return \Illuminate\Http\Response
      */
-    public function subscription($event, $subscription_id)
+    public function subscription(Request $request, $event, $subscription_id)
     {
+        $year = $request->query('year') == 'undefined' ? now()->year: $request->query('year');
         $organizations = Organization::orderBy('name')->whereHas('subscriptions', function ($query) use ($subscription_id) {
             $query->where('subscriptions.id', $subscription_id);
         })
@@ -364,7 +365,9 @@ class AdminController extends Controller
         )
         ->first();
 
-        $categories = Category::groupBy('id')->where('id', '!=', 7)
+        $categories = Category::whereHas('price', function ($query) use ($year) {
+            $query->where('year', $year);
+        })->groupBy('id')->where('id', '!=', 7)
         ->where('event_type_id', config('EVENT_TYPE_ID'))
         ->with([
             'routines' => function ($query) use ($subscription_id) {
@@ -709,6 +712,14 @@ class AdminController extends Controller
         return response()->json($data, 200);
     }
 
+    public function getCategoriesByPriceYear(Request $request, $year)
+    {
+        $categories = Category::whereHas('price', function ($query) use ($year) {
+            $query->where('year', $year);
+        })->get();
+
+        return response()->json($categories, 200);
+    }
 
     private function getEventInfos($eventSlug)
     {

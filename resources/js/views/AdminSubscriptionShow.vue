@@ -553,6 +553,20 @@
                             </li>
                         </ul>
                         <div class="export-actions">
+                            <select
+                                class="btn btn-primary btn-inverted"
+                                @change="changeCategoryPrice"
+                            >
+                                <option disabled selected
+                                    >PRICE LIST (2020)</option
+                                >
+                                <option value="2020">2020</option>
+                                <option value="2019">2019</option>
+                                <option value="2018">2018</option>
+                                <option value="2017">2017</option>
+                                <option value="2016">2016</option>
+                                <option value="2015">2015</option>
+                            </select>
                             <a
                                 class="btn btn-primary btn-inverted"
                                 :href="authUrl"
@@ -1681,8 +1695,23 @@ export default {
             storeDancer: "dancers/store",
             destroyDancer: "dancers/destroy",
             setFeedback: "feedback/setFeedback",
-            addToSchedule: "schedules/addToSchedule"
+            addToSchedule: "schedules/addToSchedule",
+            getCategoriesByYear: "admin/categoriesByYear"
         }),
+        changeCategoryPrice(event) {
+            store
+                .dispatch("admin/subscription", {
+                    event: this.event,
+                    subscription_id: this.subscription_id,
+                    year: event.target.value
+                })
+                .catch(error =>
+                    store.dispatch("feedback/setFeedback", {
+                        message: error.data,
+                        type: "warning"
+                    })
+                );
+        },
         beforeOpenPayment(event) {
             this.payment.id = event.params.id;
         },
@@ -2169,6 +2198,9 @@ export default {
     },
 
     created() {
+        // const data = [];
+        // data.year = 2020;
+        // this.getCategoriesByYear(data);
         this.organization.user.name = this.content["organizations"].user.name;
         this.organization.user.email = this.content["organizations"].user.email;
         this.organization.id = this.content["organizations"].id;

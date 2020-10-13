@@ -14,9 +14,9 @@ export default {
             .then(response => response.data)
             .catch(error => Promise.reject(error.response));
     },
-    subscription(event, subscription_id) {
+    subscription(event, subscription_id, year) {
         return axios
-            .get(`/api/v1/admin/${event}/${subscription_id}`)
+            .get(`/api/v1/admin/${event}/${subscription_id}?year=${year}`)
             .then(response => response.data)
             .catch(error => Promise.reject(error.response));
     },
@@ -47,6 +47,12 @@ export default {
     updateStatus(data) {
         return axios
             .post("/api/v1/admin/update/status", data)
+            .then(response => response.data)
+            .catch(error => Promise.reject(error.response));
+    },
+    categoriesByYear(data) {
+        return axios
+            .get(`/api/v1/admin/categories/${data.year}`)
             .then(response => response.data)
             .catch(error => Promise.reject(error.response));
     }

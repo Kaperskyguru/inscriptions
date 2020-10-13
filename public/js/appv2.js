@@ -6589,6 +6589,20 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -6673,8 +6687,21 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     storeDancer: "dancers/store",
     destroyDancer: "dancers/destroy",
     setFeedback: "feedback/setFeedback",
-    addToSchedule: "schedules/addToSchedule"
+    addToSchedule: "schedules/addToSchedule",
+    getCategoriesByYear: "admin/categoriesByYear"
   })), {}, {
+    changeCategoryPrice: function changeCategoryPrice(event) {
+      _store__WEBPACK_IMPORTED_MODULE_2__["store"].dispatch("admin/subscription", {
+        event: this.event,
+        subscription_id: this.subscription_id,
+        year: event.target.value
+      })["catch"](function (error) {
+        return _store__WEBPACK_IMPORTED_MODULE_2__["store"].dispatch("feedback/setFeedback", {
+          message: error.data,
+          type: "warning"
+        });
+      });
+    },
     beforeOpenPayment: function beforeOpenPayment(event) {
       this.payment.id = event.params.id;
     },
@@ -7138,6 +7165,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     AdminFee: _components_partials_admin_fee__WEBPACK_IMPORTED_MODULE_4__["default"]
   },
   created: function created() {
+    // const data = [];
+    // data.year = 2020;
+    // this.getCategoriesByYear(data);
     this.organization.user.name = this.content["organizations"].user.name;
     this.organization.user.email = this.content["organizations"].user.email;
     this.organization.id = this.content["organizations"].id;
@@ -36002,6 +36032,45 @@ var render = function() {
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "export-actions" }, [
+                      _c(
+                        "select",
+                        {
+                          staticClass: "btn btn-primary btn-inverted",
+                          on: { change: _vm.changeCategoryPrice }
+                        },
+                        [
+                          _c(
+                            "option",
+                            { attrs: { disabled: "", selected: "" } },
+                            [_vm._v("PRICE LIST (2020)")]
+                          ),
+                          _vm._v(" "),
+                          _c("option", { attrs: { value: "2020" } }, [
+                            _vm._v("2020")
+                          ]),
+                          _vm._v(" "),
+                          _c("option", { attrs: { value: "2019" } }, [
+                            _vm._v("2019")
+                          ]),
+                          _vm._v(" "),
+                          _c("option", { attrs: { value: "2018" } }, [
+                            _vm._v("2018")
+                          ]),
+                          _vm._v(" "),
+                          _c("option", { attrs: { value: "2017" } }, [
+                            _vm._v("2017")
+                          ]),
+                          _vm._v(" "),
+                          _c("option", { attrs: { value: "2016" } }, [
+                            _vm._v("2016")
+                          ]),
+                          _vm._v(" "),
+                          _c("option", { attrs: { value: "2015" } }, [
+                            _vm._v("2015")
+                          ])
+                        ]
+                      ),
+                      _vm._v(" "),
                       _c(
                         "a",
                         {
@@ -66174,8 +66243,8 @@ __webpack_require__.r(__webpack_exports__);
       return Promise.reject(error.response);
     });
   },
-  subscription: function subscription(event, subscription_id) {
-    return axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("/api/v1/admin/".concat(event, "/").concat(subscription_id)).then(function (response) {
+  subscription: function subscription(event, subscription_id, year) {
+    return axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("/api/v1/admin/".concat(event, "/").concat(subscription_id, "?year=").concat(year)).then(function (response) {
       return response.data;
     })["catch"](function (error) {
       return Promise.reject(error.response);
@@ -66211,6 +66280,13 @@ __webpack_require__.r(__webpack_exports__);
   },
   updateStatus: function updateStatus(data) {
     return axios__WEBPACK_IMPORTED_MODULE_1___default.a.post("/api/v1/admin/update/status", data).then(function (response) {
+      return response.data;
+    })["catch"](function (error) {
+      return Promise.reject(error.response);
+    });
+  },
+  categoriesByYear: function categoriesByYear(data) {
+    return axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("/api/v1/admin/categories/".concat(data.year)).then(function (response) {
       return response.data;
     })["catch"](function (error) {
       return Promise.reject(error.response);
@@ -66840,7 +66916,7 @@ var actions = {
   },
   subscription: function subscription(_ref3, args) {
     var commit = _ref3.commit;
-    return _services_Admin__WEBPACK_IMPORTED_MODULE_0__["default"].subscription(args.event, args.subscription_id).then(function (data) {
+    return _services_Admin__WEBPACK_IMPORTED_MODULE_0__["default"].subscription(args.event, args.subscription_id, args.year).then(function (data) {
       return commit("subscription", data);
     });
   },
@@ -66878,6 +66954,12 @@ var actions = {
     var commit = _ref10.commit;
     return _services_Admin__WEBPACK_IMPORTED_MODULE_0__["default"].event(event).then(function (data) {
       commit("subscriptions", data);
+    });
+  },
+  categoriesByYear: function categoriesByYear(_ref11, data) {
+    var commit = _ref11.commit;
+    console.log(data);
+    return _services_Admin__WEBPACK_IMPORTED_MODULE_0__["default"].categoriesByYear(data).then(function (data) {// commit("subscriptions", data);
     });
   }
 };

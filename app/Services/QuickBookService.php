@@ -94,7 +94,6 @@ class QuickBookService
 
     private function getDataService()
     {
-        // session()->forget('QB_REFRESH_TOKEN');
         $dataService = DataService::Configure(array(
             'auth_mode' => 'oauth2',
             'ClientID' => env('QB_CLIENT_ID'),
@@ -285,13 +284,11 @@ class QuickBookService
     {
         $paymentArray = $this->getDataService()->Query("select * from Payment WHERE TxnDate >='" . now()->toDateString() . "'");
         $error = $this->getDataService()->getLastError();
-        dd($paymentArray);
         if ($error || is_null($paymentArray)) {
             return null;
         } else {
             if (is_array($paymentArray) && sizeof($paymentArray) > 0) {
                 // Store in Database
-                echo 'running';
                 return $this->storePayments($paymentArray);
             }
             return null;
@@ -301,7 +298,10 @@ class QuickBookService
     private function storePayments($payments)
     {
         foreach ($payments as $payment) {
-            $this->createOrUpdatePayment($payment);
+            if ($payment->Line && $payment->Line->LinkedTxn && $payment->Line->LinkedTxn->TxnType == "Invoice") {
+                $this->createOrUpdatePayment($payment);
+            }
+            continue;
         }
         return;
     }
@@ -309,6 +309,7 @@ class QuickBookService
     private function createOrUpdatePayment($payment)
     {
         $subscription_id = $this->findSubscriptionIDFromInvoice($payment->Line->LinkedTxn->TxnId);
+        
         if ($subscription_id) {
             $oldPayment = Payment::where('subscription_id', $subscription_id)->first();
         
