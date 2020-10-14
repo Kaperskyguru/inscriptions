@@ -7,6 +7,7 @@ use PDF;
 use Excel;
 use Session;
 use App\Level;
+use App\Price;
 use App\Style;
 use App\Status;
 use App\FeeType;
@@ -22,17 +23,17 @@ use App\Subscription;
 use App\ScheduleTitle;
 use App\Classification;
 use Illuminate\Http\Request;
-use App\Exports\ReportExport;
 //use App\Exports\RoutinesExport;
 //use Maatwebsite\Excel\Facades\Excel;
-use App\Services\QuickBookService;
+use App\Exports\ReportExport;
 
+use App\Services\QuickBookService;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use QuickBooksOnline\API\Facades\Customer;
 use QuickBooksOnline\API\Core\ServiceContext;
-use QuickBooksOnline\API\DataService\DataService;
 
+use QuickBooksOnline\API\DataService\DataService;
 use QuickBooksOnline\API\PlatformService\PlatformService;
 use QuickBooksOnline\API\Core\Http\Serialization\XmlObjectSerializer;
 
@@ -412,8 +413,10 @@ class AdminController extends Controller
         session(['organization_id' => $organizations['id']]);
         session(['subscription_id' => $subscription_id]);
 
+        $years = Price::distinct('year')->pluck('year');
+
         //$subscriptions = Subscription::where('event_id', $id)->get();
-        return response()->json(compact('organizations', 'categories', 'paymentTypes', 'feeTypes', 'authUrl'), 200);
+        return response()->json(compact('organizations', 'categories', 'paymentTypes', 'feeTypes', 'authUrl', 'years'), 200);
     }
 
     public function updateStatus(Request $request)

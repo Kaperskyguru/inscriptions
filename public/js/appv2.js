@@ -6601,8 +6601,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
 
 
 
@@ -6613,6 +6611,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      years: [],
       status_id: "",
       saving: false,
       organization: {
@@ -7179,6 +7178,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.organization.zipcode = this.content["organizations"].zipcode;
     this.organization.locale = this.content["organizations"].locale;
     this.authUrl = this.content["authUrl"];
+    this.years = this.content['years'];
   }
 });
 
@@ -36042,33 +36042,18 @@ var render = function() {
                           _c(
                             "option",
                             { attrs: { disabled: "", selected: "" } },
-                            [_vm._v("PRICE LIST (2020)")]
+                            [_vm._v("PRICE LIST")]
                           ),
                           _vm._v(" "),
-                          _c("option", { attrs: { value: "2020" } }, [
-                            _vm._v("2020")
-                          ]),
-                          _vm._v(" "),
-                          _c("option", { attrs: { value: "2019" } }, [
-                            _vm._v("2019")
-                          ]),
-                          _vm._v(" "),
-                          _c("option", { attrs: { value: "2018" } }, [
-                            _vm._v("2018")
-                          ]),
-                          _vm._v(" "),
-                          _c("option", { attrs: { value: "2017" } }, [
-                            _vm._v("2017")
-                          ]),
-                          _vm._v(" "),
-                          _c("option", { attrs: { value: "2016" } }, [
-                            _vm._v("2016")
-                          ]),
-                          _vm._v(" "),
-                          _c("option", { attrs: { value: "2015" } }, [
-                            _vm._v("2015")
-                          ])
-                        ]
+                          _vm._l(_vm.years, function(year, i) {
+                            return _c(
+                              "option",
+                              { key: i, domProps: { value: year } },
+                              [_vm._v(_vm._s(year))]
+                            )
+                          })
+                        ],
+                        2
                       ),
                       _vm._v(" "),
                       _c(
