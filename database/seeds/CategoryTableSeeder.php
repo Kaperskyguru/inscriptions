@@ -80,18 +80,20 @@ class CategoryTableSeeder extends Seeder
             ]
         ];
         foreach ($data as $item) {
-            $price = new Price();
-            $price->price = $item['price'];
-            $price->rebate_price = $item['rebate_price'];
-            if ($price->save()) {
-                $model = new Category();
-                $model->duration = $item['duration'];
-                $model->price_id = $price->id;
-                foreach ($item['name'] as $locale => $subitem) {
-                    app()->setLocale($locale);
-                    $model->name = $subitem;
-                }
-                $model->save();
+            $model = new Category();
+            $model->duration = $item['duration'];
+            
+            foreach ($item['name'] as $locale => $subitem) {
+                app()->setLocale($locale);
+                $model->name = $subitem;
+            }
+            
+            if ($model->save()) {
+                $price = new Price();
+                $price->price = $item['price'];
+                $price->rebate_price = $item['rebate_price'];
+                $price->category_id = $model->id;
+                $price->save();
             }
         }
     }

@@ -14,10 +14,11 @@ class Price extends Model
     protected $appends = ['formatted_price', 'formatted_rebate_price'];
 
 
-    public function categories()
+    public function Category()
     {
-        return $this->hasMany('App\Category');
+        return $this->belongsTo('App\Category');
     }
+
 
     public function getFormattedPriceAttribute()
     {

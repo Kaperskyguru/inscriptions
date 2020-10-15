@@ -128,7 +128,8 @@ class QuickbooksController extends Controller
             foreach ($category->routines as $routine) {
                 $entries += count($routine->dancers);
             }
-            $total = $entries *  $category->price->rebate_price;
+            $price = Price::where('category_id', $category->id)->where('year', now()->addYear()->year)->first();
+            $total = $entries *  $price->rebate_price;
 
             $itemRef = $this->getItemObj($dataService, $category->translate('en')->name);
             $LineObj = Line::create([

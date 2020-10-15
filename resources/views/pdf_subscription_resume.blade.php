@@ -201,7 +201,7 @@
               <span class="table-text text-body-display">{{$category->entries}}</span>
             </li>
             <li class="table-item grid-2">
-              <span class="table-text text-body-display">{{$category->price->formatted_rebate_price}} $</span>
+              <span class="table-text text-body-display">{{$category->formatted_rebate_price}} $</span>
             </li>
             <li class="table-item grid-2">
               <span class="table-text text-body-display">{{$category->total}} $</span>

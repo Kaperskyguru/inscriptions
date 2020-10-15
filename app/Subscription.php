@@ -3,6 +3,7 @@
 namespace App;
 
 // use NumberFormatter;
+use App\Price;
 use Illuminate\Database\Eloquent\Model;
 
 class Subscription extends Model
@@ -53,10 +54,13 @@ class Subscription extends Model
     }
     public function getSubTotalAttribute()
     {
+        $year = session()->get('YEAR') ? session()->get('YEAR'): now()->addYear()->year;
+
         $subtotal = 0;
 
         foreach ($this->routines as $routine) {
-            $total_cost = (count($routine->dancers) * $routine->category->price->rebate_price);
+            $price = Price::where('category_id', $routine->category->id)->where('year', $year)->first();
+            $total_cost = (count($routine->dancers) * $price->rebate_price);
             $subtotal += $total_cost;
         }
         foreach ($this->fees as $fee) {

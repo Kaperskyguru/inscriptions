@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Price;
 use NumberFormatter;
 use Illuminate\Database\Eloquent\Model;
 use Astrotomic\Translatable\Translatable;
@@ -21,10 +22,11 @@ class Category extends Model implements TranslatableContract
         return $this->belongsTo('App\EventType');
     }
 
-    public function Price()
+    public function prices()
     {
-        return $this->belongsTo('App\Price');
+        return $this->hasMany('App\Price');
     }
+
 
     public function routines()
     {
@@ -38,7 +40,8 @@ class Category extends Model implements TranslatableContract
 
     public function getFormattedRebatePriceAttribute()
     {
-        return $this->price->formatted_rebate_price;
+        $price = Price::where('category_id', $this->id)->where('year', now()->addYear()->year)->first();
+        return $price->formatted_rebate_price;
     }
 
     // public function getPriceAttribute()

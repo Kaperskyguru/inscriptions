@@ -94,6 +94,7 @@ class QuickBookService
 
     private function getDataService()
     {
+        // session()->forget('QB_REFRESH_TOKEN');
         $dataService = DataService::Configure(array(
             'auth_mode' => 'oauth2',
             'ClientID' => env('QB_CLIENT_ID'),
@@ -107,7 +108,7 @@ class QuickBookService
         $OAuth2LoginHelper = $dataService->getOAuth2LoginHelper();
         $refreshedAccessTokenObj = $OAuth2LoginHelper->refreshToken();
         session(['QB_REFRESH_TOKEN' => $refreshedAccessTokenObj->getRefreshToken()]);
-
+        $dataService->throwExceptionOnError(true);
         $error = $OAuth2LoginHelper->getLastError();
         if ($error) {
         } else {
@@ -155,8 +156,8 @@ class QuickBookService
         
         $invoiceObj = $this->generateInvoiceData($request, $v);
         $resultingInvoiceObj = $this->getDataService()->Add($invoiceObj);
-
         $error = $this->getDataService()->getLastError();
+        // dd($error);
         if ($error || \is_null($resultingInvoiceObj)) {
             $res['success'] = false;
             $res['message'] =  __("messages.global.fail");
@@ -172,10 +173,12 @@ class QuickBookService
 
     public function findOrCreateItem($name)
     {
-        if (!\is_null($item = $this->getItem($name))) {
+        $item = $this->getItem($name);
+        if (!\is_null($item)) {
             return $item;
         }
-        return $this->create_item($name);
+        $item = $this->create_item($name);
+        return $item;
     }
     
     private function create_item($name)
@@ -235,7 +238,7 @@ class QuickBookService
                 'SalesItemLineDetail' => [
                     'Qty' => $line['entries'],
                     'UnitPrice' => $line['formatted_rebate_price'],
-                    'TaxCodeRef' => ['value' => "TAX"],
+                    'TaxCodeRef' => ['value' => "TAX", 'name' => 'GST/QST QC - 9.975'],
                     'ItemRef' => $item
                     ],
                 ]);

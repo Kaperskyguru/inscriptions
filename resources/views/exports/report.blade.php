@@ -201,7 +201,7 @@
                 __('dashboard.table.title.routine') }}</td>
             <td style="font-family:Helvetica Neue; text-align:center;">{{$category->entries}}</td>
             <td style="font-family:Helvetica Neue; text-align:right;" data-format="0.00">
-                {{$category->price->formatted_rebate_price}} $</td>
+                {{$category->formatted_rebate_price}} $</td>
             <td style="font-family:Helvetica Neue; text-align:right;" data-format="0.00">{{$category->total}} $</td>
         </tr>
         @endforeach

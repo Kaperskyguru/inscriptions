@@ -339,7 +339,9 @@ class AdminController extends Controller
      */
     public function subscription(Request $request, $event, $subscription_id)
     {
-        $year = $request->query('year') == 'undefined' ? now()->year: $request->query('year');
+        $year = $request->query('year') == 'undefined' ? now()->addYear()->year: $request->query('year');
+        session()->put('YEAR', $year);
+        // Subscription::sub_total_year == $year;
         $organizations = Organization::orderBy('name')->whereHas('subscriptions', function ($query) use ($subscription_id) {
             $query->where('subscriptions.id', $subscription_id);
         })
@@ -352,7 +354,7 @@ class AdminController extends Controller
         ->with('user')
         ->with(
             [
-            'subscriptions' => function ($query) use ($subscription_id) {
+            'subscriptions' => function ($query) use ($subscription_id, $year) {
                 $query->where('subscriptions.id', $subscription_id)->withCount('routines');
             },
             'subscriptions.routines.category',
@@ -366,9 +368,9 @@ class AdminController extends Controller
         )
         ->first();
 
-        $categories = Category::whereHas('price', function ($query) use ($year) {
-            $query->where('year', $year);
-        })->groupBy('id')->where('id', '!=', 7)
+        // dd($organizations->subscriptions);
+
+        $categories = Category::groupBy('id')->where('id', '!=', 7)
         ->where('event_type_id', config('EVENT_TYPE_ID'))
         ->with([
             'routines' => function ($query) use ($subscription_id) {
@@ -385,29 +387,17 @@ class AdminController extends Controller
 
         foreach ($categories as $key => $category) {
             $entries = 0;
+            $price = Price::where('category_id', $category->id)->where('year', $year)->first();
             foreach ($category->routines as $routine) {
                 $entries += count($routine->dancers);
             }
             $categories[$key]['entries'] =  $entries;
-            $total = $entries *  $category->price->rebate_price;
+            $total = $entries *  $price->rebate_price;
             $categories[$key]['total'] = number_format(($total / 100), 2, '.', '');
+            $categories[$key]['price'] = $price;
         }
         $paymentTypes = PaymentType::all();
         $feeTypes = FeeType::all();
-
-        // $dataService = DataService::Configure(array(
-        //     'auth_mode' => 'oauth2',
-        //     'ClientID' => env('QB_CLIENT_ID'),
-        //     'ClientSecret' =>  env('QB_CLIENT_SECRET'),
-        //     'RedirectURI' => env('QB_OAUTH_REDIRECT_URI'),
-        //     'scope' => env('QB_OAUTH_SCOPE'),
-        //     'baseUrl' => env('QB_ENV')
-        // ));
-        
-        // $OAuth2LoginHelper = $dataService->getOAuth2LoginHelper();
-        
-        // // Get the Authorization URL from the SDK
-        // $authUrl = $OAuth2LoginHelper->getAuthorizationCodeURL();
         $authUrl = '';
 
         session(['organization_id' => $organizations['id']]);
@@ -415,7 +405,6 @@ class AdminController extends Controller
 
         $years = Price::distinct('year')->pluck('year');
 
-        //$subscriptions = Subscription::where('event_id', $id)->get();
         return response()->json(compact('organizations', 'categories', 'paymentTypes', 'feeTypes', 'authUrl', 'years'), 200);
     }
 
