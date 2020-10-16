@@ -2,9 +2,10 @@
 
 namespace App;
 
+use NumberFormatter;
 use Illuminate\Database\Eloquent\Model;
-use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
+use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 
 class Category extends Model implements TranslatableContract
 {
@@ -27,11 +28,14 @@ class Category extends Model implements TranslatableContract
 
     public function getFormattedPriceAttribute()
     {
-        return money_format('%i', ($this->attributes['price'] / 100));
+        // return NumberFormatter('en_US', NumberFormatter::CURRENCY)::formatCurrency(($this->attributes['price'] / 100));
+
+        return number_format(($this->attributes['price'] / 100), 2, '.', ',');
     }
     public function getFormattedRebatePriceAttribute()
     {
-        return money_format('%i', ($this->attributes['rebate_price'] / 100));
+        // return $formatter =  NumberFormatter('en_US', NumberFormatter::CURRENCY)::formatCurrency(($this->attributes['rebate_price'] / 100));
+
+        return number_format(($this->attributes['rebate_price'] / 100), 2, '.', ',');
     }
-    
 }

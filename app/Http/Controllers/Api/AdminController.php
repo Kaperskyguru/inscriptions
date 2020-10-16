@@ -35,7 +35,6 @@ use QuickBooksOnline\API\Facades\Customer;
 
 use Session;
 
-
 class AdminController extends Controller
 {
     /**
@@ -45,85 +44,85 @@ class AdminController extends Controller
      */
     public function index()
     {
-        if(config('EVENT_TYPE_ID') == 2) {
+        if (config('EVENT_TYPE_ID') == 2) {
             $ids = [1];
 
-        // TODO change to 1 request
+            // TODO change to 1 request
 
-        $gatineau = [];
+            $gatineau = [];
        
-        $toronto = [];
-        $levis = [];
-        $saintehyacinthe = [];
+            $toronto = [];
+            $levis = [];
+            $saintehyacinthe = [];
 
-        $flofest = Status::withCount(['subscriptions' => function($query){
-            $query->where('event_id', 4);
-        }])->orderByRaw('FIELD (id, ' . implode(', ', $ids) . ') ASC')->get();
+            $flofest = Status::withCount(['subscriptions' => function ($query) {
+                $query->where('event_id', 4);
+            }])->orderByRaw('FIELD (id, ' . implode(', ', $ids) . ') ASC')->get();
 
-        //  $sainte_hyacinthe = Status::with(['subscriptions' => function($query){
-        //     $query->where('event_id', 4);
-        //  }])->orderByRaw('FIELD (id, ' . implode(', ', $ids) . ') ASC')->get();
+            //  $sainte_hyacinthe = Status::with(['subscriptions' => function($query){
+            //     $query->where('event_id', 4);
+            //  }])->orderByRaw('FIELD (id, ' . implode(', ', $ids) . ') ASC')->get();
 
         
 
-            return response()->json(compact('gatineau', 'toronto','levis', 'flofest', 'saintehyacinthe'), 200);
+            return response()->json(compact('gatineau', 'toronto', 'levis', 'flofest', 'saintehyacinthe'), 200);
         }
         $ids = [2,1,3,4,5];
 
         // TODO change to 1 request
 
-        $gatineau = Status::withCount(['subscriptions' => function($query){
+        $gatineau = Status::withCount(['subscriptions' => function ($query) {
             $query->where('event_id', 1);
-         }])->orderByRaw('FIELD (id, ' . implode(', ', $ids) . ') ASC')->get();
-         $toronto = Status::withCount(['subscriptions' => function($query){
+        }])->orderByRaw('FIELD (id, ' . implode(', ', $ids) . ') ASC')->get();
+        $toronto = Status::withCount(['subscriptions' => function ($query) {
             $query->where('event_id', 2);
-         }])->orderByRaw('FIELD (id, ' . implode(', ', $ids) . ') ASC')->get();
-         $levis = Status::withCount(['subscriptions' => function($query){
+        }])->orderByRaw('FIELD (id, ' . implode(', ', $ids) . ') ASC')->get();
+        $levis = Status::withCount(['subscriptions' => function ($query) {
             $query->where('event_id', 3);
-         }])->orderByRaw('FIELD (id, ' . implode(', ', $ids) . ') ASC')->get();
-         $saintehyacinthe = Status::withCount(['subscriptions' => function($query){
+        }])->orderByRaw('FIELD (id, ' . implode(', ', $ids) . ') ASC')->get();
+        $saintehyacinthe = Status::withCount(['subscriptions' => function ($query) {
             $query->where('event_id', 5);
-         }])->orderByRaw('FIELD (id, ' . implode(', ', $ids) . ') ASC')->get();
+        }])->orderByRaw('FIELD (id, ' . implode(', ', $ids) . ') ASC')->get();
         //  $sainte_hyacinthe = Status::with(['subscriptions' => function($query){
         //     $query->where('event_id', 4);
         //  }])->orderByRaw('FIELD (id, ' . implode(', ', $ids) . ') ASC')->get();
 
         
 
-        return response()->json(compact('gatineau', 'toronto','levis', 'saintehyacinthe'), 200);
+        return response()->json(compact('gatineau', 'toronto', 'levis', 'saintehyacinthe'), 200);
     }
 
-   /**
-     * Display the specified resource.
-     *
-     * @param  string  $event
-     * @return \Illuminate\Http\Response
-     */
+    /**
+      * Display the specified resource.
+      *
+      * @param  string  $event
+      * @return \Illuminate\Http\Response
+      */
     public function event($event)
     {
         //
-        if($event === 'gatineau') {
+        if ($event === 'gatineau') {
             $city = 'Gatineau';
             $id = 1;
-        }else if($event === 'toronto') {
+        } elseif ($event === 'toronto') {
             $city = 'Toronto';
             $id = 2;
-        }else if($event === 'levis'){
+        } elseif ($event === 'levis') {
             $city = 'Lévis';
             $id = 3;
-        }else if($event === 'flofest'){
+        } elseif ($event === 'flofest') {
             $city = 'FLOFEST';
             $id = 4;
-        }else if($event === 'saintehyacinthe'){
+        } elseif ($event === 'saintehyacinthe') {
             $city = 'Sainte-Hyacinthe';
             $id = 5;
         }
         
-        $organizations = Organization::orderBy('name')->whereHas('subscriptions', function ($query) use ($id) { 
-            $query->where('subscriptions.event_id', $id); 
+        $organizations = Organization::orderBy('name')->whereHas('subscriptions', function ($query) use ($id) {
+            $query->where('subscriptions.event_id', $id);
         })
         ->with('organizationType')
-        ->with(['subscriptions' => function($query) use ($id) {
+        ->with(['subscriptions' => function ($query) use ($id) {
             $query->where('subscriptions.event_id', $id)->withCount('routines');
         }, 'subscriptions.routines.category','subscriptions.routines.level','subscriptions.routines.style', 'subscriptions.routines.dancers', 'subscriptions.status'])
         ->orderBy('name', 'ASC')
@@ -136,19 +135,19 @@ class AdminController extends Controller
         $data = $request->toArray();
         $event = $data['event'];
 
-        if($event === 'gatineau') {
+        if ($event === 'gatineau') {
             $city = 'Gatineau';
             $id = 1;
-        }else if($event === 'toronto') {
+        } elseif ($event === 'toronto') {
             $city = 'Toronto';
             $id = 2;
-        }else if($event === 'levis'){
+        } elseif ($event === 'levis') {
             $city = 'Lévis';
             $id = 3;
-        }else if($event === 'flofest'){
+        } elseif ($event === 'flofest') {
             $city = 'FLOFEST';
             $id = 4;
-        }else if($event === 'saintehyacinthe'){
+        } elseif ($event === 'saintehyacinthe') {
             $city = 'Sainte-Hyacinthe';
             $id = 5;
         }
@@ -156,23 +155,21 @@ class AdminController extends Controller
         $filters = $data['filters'];
 
         
-        $organizations = Organization::orderBy('name')->whereHas('subscriptions', function ($query) use ($id, $filters) { 
+        $organizations = Organization::orderBy('name')->whereHas('subscriptions', function ($query) use ($id, $filters) {
             $query->where('subscriptions.event_id', $id);
-            if(count($filters) > 0) {
+            if (count($filters) > 0) {
                 $query->whereIn('subscriptions.status_id', $filters);
             }
-            
         })
         ->with('organizationType')
-        ->with(['subscriptions' => function($query) use ($id) {
+        ->with(['subscriptions' => function ($query) use ($id) {
             $query->where('subscriptions.event_id', $id)->withCount('routines');
-        }, 
+        },
         'subscriptions.status',
         ])
-        ->where('name','like','%'.$data['query'].'%')
+        ->where('name', 'like', '%'.$data['query'].'%')
         ->get();
         return response()->json(compact('city', 'organizations'), 200);
-       
     }
     public function addPayment(Request $request)
     {
@@ -181,8 +178,7 @@ class AdminController extends Controller
             'receive_on' => 'required',
             'amount' => 'required|string'
         ]);
-        if ($v->fails())
-        {
+        if ($v->fails()) {
             return response()->json([
                 'status' => 'error',
                 'errors' => $v->errors()
@@ -194,7 +190,7 @@ class AdminController extends Controller
 
         $payment = Payment::create($data);
         
-        if(!$payment) {
+        if (!$payment) {
             return response()->json([
                 'status' => 'error',
                 'msg' => __('messages.global.fail'),
@@ -211,7 +207,7 @@ class AdminController extends Controller
             ], 400);
         }
 
-        if($subscription->balance <= 0) {
+        if ($subscription->balance <= 0) {
             $subscription->status_id = 4;
         
             if (!$subscription->save()) {
@@ -225,7 +221,6 @@ class AdminController extends Controller
             'status' => 'sucess',
             'msg' => __('messages.global.success'),
         ], 200);
-
     }
     public function updatePayment(Request $request)
     {
@@ -234,8 +229,7 @@ class AdminController extends Controller
             'receive_on' => 'required',
             'amount' => 'required|string'
         ]);
-        if ($v->fails())
-        {
+        if ($v->fails()) {
             return response()->json([
                 'status' => 'error',
                 'errors' => $v->errors()
@@ -247,7 +241,7 @@ class AdminController extends Controller
 
         $payment = Payment::find($data['id']);
         
-        if(!$payment) {
+        if (!$payment) {
             return response()->json([
                 'status' => 'error',
                 'msg' => __('messages.global.fail'),
@@ -255,7 +249,7 @@ class AdminController extends Controller
             ], 400);
         }
 
-        if(!$payment->update($data)) {
+        if (!$payment->update($data)) {
             return response()->json([
                 'status' => 'error',
                 'msg' => __('messages.global.fail')
@@ -271,9 +265,9 @@ class AdminController extends Controller
             ], 400);
         }
 
-        if($subscription->balance <= 0) {
+        if ($subscription->balance <= 0) {
             $subscription->status_id = 4;
-        }else {
+        } else {
             $subscription->status_id = 3;
         }
         if (!$subscription->save()) {
@@ -286,13 +280,13 @@ class AdminController extends Controller
             'status' => 'sucess',
             'msg' => __('messages.global.success'),
         ], 200);
-
     }
-    public function deletePayment($id) {
+    public function deletePayment($id)
+    {
         $payment = Payment::find($id);
 
         
-        if(!$payment) {
+        if (!$payment) {
             return response()->json([
                 'status' => 'error',
                 'msg' => __('messages.global.fail'),
@@ -301,7 +295,7 @@ class AdminController extends Controller
         }
         $subscription_id = $payment->subscription_id;
 
-        if(!$payment->delete()) {
+        if (!$payment->delete()) {
             return response()->json([
                 'status' => 'error',
                 'msg' => __('messages.global.fail')
@@ -317,9 +311,9 @@ class AdminController extends Controller
             ], 400);
         }
 
-        if($subscription->balance <= 0) {
+        if ($subscription->balance <= 0) {
             $subscription->status_id = 4;
-        }else {
+        } else {
             $subscription->status_id = 3;
         }
         if (!$subscription->save()) {
@@ -343,18 +337,19 @@ class AdminController extends Controller
      */
     public function subscription($event, $subscription_id)
     {
-        $organizations = Organization::orderBy('name')->whereHas('subscriptions', function ($query) use ($subscription_id) { 
-            $query->where('subscriptions.id', $subscription_id); 
+        $organizations = Organization::orderBy('name')->whereHas('subscriptions', function ($query) use ($subscription_id) {
+            $query->where('subscriptions.id', $subscription_id);
         })
         ->with('organizationType')
         ->with([
-            'dancers' => function($query) {
+            'dancers' => function ($query) {
                 $query->orderBy('first_name', 'ASC');
             },
         ])
         ->with('user')
-        ->with([
-            'subscriptions' => function($query) use ($subscription_id) {
+        ->with(
+            [
+            'subscriptions' => function ($query) use ($subscription_id) {
                 $query->where('subscriptions.id', $subscription_id)->withCount('routines');
             },
             'subscriptions.routines.category',
@@ -371,26 +366,26 @@ class AdminController extends Controller
         $categories = Category::groupBy('id')->where('id', '!=', 7)
         ->where('event_type_id', config('EVENT_TYPE_ID'))
         ->with([
-            'routines' => function($query) use ($subscription_id) {
+            'routines' => function ($query) use ($subscription_id) {
                 $query->where('subscription_id', $subscription_id);
-            },        
+            },
         ])
         ->withCount([
-            'routines' => function($query) use ($subscription_id) {
+            'routines' => function ($query) use ($subscription_id) {
                 $query->where('subscription_id', $subscription_id);
             },
             
         ])
         ->get();
 
-        foreach($categories as $key => $category) {
+        foreach ($categories as $key => $category) {
             $entries = 0;
-            foreach($category->routines as $routine) {
+            foreach ($category->routines as $routine) {
                 $entries += count($routine->dancers);
             }
             $categories[$key]['entries'] =  $entries;
             $total = $entries *  $category['rebate_price'];
-            $categories[$key]['total'] = money_format('%i', ($total / 100));
+            $categories[$key]['total'] = number_format(($total / 100), 2, '.', ',');
         }
         $paymentTypes = PaymentType::all();
         $feeTypes = FeeType::all();
@@ -451,22 +446,21 @@ class AdminController extends Controller
             'msg' => __('messages.global.success'),
             'subscription' => $subscription
         ], 200);
-       
     }
 
     public function exportSubscription($subscription_id)
     {
-
         $data = [];
-        $organizations = Organization::orderBy('name')->whereHas('subscriptions', function ($query) use ($subscription_id) { 
-            $query->where('subscriptions.id', $subscription_id); 
+        $organizations = Organization::orderBy('name')->whereHas('subscriptions', function ($query) use ($subscription_id) {
+            $query->where('subscriptions.id', $subscription_id);
         })
         ->with('organizationType')
-        ->with([
-            'subscriptions' => function($query) use ($subscription_id) {
+        ->with(
+            [
+            'subscriptions' => function ($query) use ($subscription_id) {
                 $query->where('subscriptions.id', $subscription_id)->withCount('routines');
             },
-            'subscriptions.routines' => function($query) use ($subscription_id) {
+            'subscriptions.routines' => function ($query) use ($subscription_id) {
                 $query->where('routines.subscription_id', $subscription_id);
             },
             // 'subscriptions.event',
@@ -482,44 +476,42 @@ class AdminController extends Controller
 
         $categories = Category::groupBy('id')->where('id', '!=', 7)->where('event_type_id', config('EVENT_TYPE_ID'))
         ->with([
-            'routines' => function($query) use ($subscription_id) {
+            'routines' => function ($query) use ($subscription_id) {
                 $query->where('subscription_id', $subscription_id);
-            },        
+            },
         ])
         ->withCount([
-            'routines' => function($query) use ($subscription_id) {
+            'routines' => function ($query) use ($subscription_id) {
                 $query->where('subscription_id', $subscription_id);
             },
             
         ])
         ->get();
 
-        foreach($categories as $i => $category) {
+        foreach ($categories as $i => $category) {
             $entries = 0;
-            foreach($category->routines as $routine) {
+            foreach ($category->routines as $routine) {
                 $entries += count($routine->dancers);
             }
             $categories[$i]['entries'] =  $entries;
             $total = $entries *  $category['rebate_price'];
-            $categories[$i]['total'] = money_format('%i', ($total / 100));
+            $categories[$i]['total'] = number_format(($total / 100), 2, '.', ',');
 
-            foreach($category->routines as $j => $routine) {
+            foreach ($category->routines as $j => $routine) {
                 $dancers_age = [];
 
                 foreach ($routine->dancers as $k => $dancer) {
                     $dancers_age[] = $dancer['age'];
                 }
 
-                if(count($dancers_age)) {
+                if (count($dancers_age)) {
                     $dancerAverageAge = round(array_sum($dancers_age) / count($dancers_age));
-                }else {
+                } else {
                     $dancerAverageAge = 0;
                 }
 
                 $categories[$i]['routines'][$j]['average'] = $dancerAverageAge;
             }
-
-
         }
         $data['export_time'] = Carbon::now();
         $data['organization'] = [
@@ -546,23 +538,22 @@ class AdminController extends Controller
 
     
         return Excel::download(new ReportExport($data), $title. '.xlsx');
-
     }
 
-        /**
-         * Display the specified resource.
-         *
-         * @param  string  $event
-         * @return \Illuminate\Http\Response
-         */
-        public function schedule($event)
-        {
-            $event = $this->getEventInfos($event);
+    /**
+     * Display the specified resource.
+     *
+     * @param  string  $event
+     * @return \Illuminate\Http\Response
+     */
+    public function schedule($event)
+    {
+        $event = $this->getEventInfos($event);
            
-            $city = $event['city'];
-            $id = $event['id'];
+        $city = $event['city'];
+        $id = $event['id'];
             
-            $data = ScheduleTitle::with([
+        $data = ScheduleTitle::with([
                 // 'scheduleItems.routine.subscription.organization',
                 'scheduleItems.routine.dancers',
                 'scheduleItems.routine.category',
@@ -577,25 +568,24 @@ class AdminController extends Controller
             ->where('schedule_id', $id)
             ->get();
 
-            foreach($data as $k => $schedule) {
-                foreach($schedule->scheduleItems as $j => $item) {
-                    $dancers_age = [];
-                    foreach ($item->routine->dancers as $dancer) {
-                        $dancers_age[] = $dancer['age'];
-                    }
-                    if(count($dancers_age)) {
-                        $dancerAverageAge = round(array_sum($dancers_age) / count($dancers_age));
-                    }else {
-                        $dancerAverageAge = 0;
-                    }
-
-                    $data[$k]['scheduleItems'][$j]['routine']['average'] = $dancerAverageAge;
-                    
+        foreach ($data as $k => $schedule) {
+            foreach ($schedule->scheduleItems as $j => $item) {
+                $dancers_age = [];
+                foreach ($item->routine->dancers as $dancer) {
+                    $dancers_age[] = $dancer['age'];
                 }
+                if (count($dancers_age)) {
+                    $dancerAverageAge = round(array_sum($dancers_age) / count($dancers_age));
+                } else {
+                    $dancerAverageAge = 0;
+                }
+
+                $data[$k]['scheduleItems'][$j]['routine']['average'] = $dancerAverageAge;
             }
-            $dataArr = $data->toArray();
+        }
+        $dataArr = $data->toArray();
            
-            $noCategory = [
+        $noCategory = [
                 'id' => '',
                 'name' =>  __('admin.title.uncategorized'),
                 'schedule_items' => ScheduleItem::with([
@@ -608,34 +598,33 @@ class AdminController extends Controller
                     // 'scheduleItems.routine.dancersCount',
                 ])->where(['schedule_title_id' => null, 'event_id' => $id])->get()
             ];
-            foreach($noCategory['schedule_items'] as $j => $item) {
-                $dancers_age = [];
-                foreach ($item->routine->dancers as $dancer) {
-                    $dancers_age[] = $dancer['age'];
-                }
-                if(count($dancers_age)) {
-                    $dancerAverageAge = round(array_sum($dancers_age) / count($dancers_age));
-                }else {
-                    $dancerAverageAge = 0;
-                }
-
-                $noCategory['schedule_items'][$j]['routine']['average'] = $dancerAverageAge;
-                
+        foreach ($noCategory['schedule_items'] as $j => $item) {
+            $dancers_age = [];
+            foreach ($item->routine->dancers as $dancer) {
+                $dancers_age[] = $dancer['age'];
+            }
+            if (count($dancers_age)) {
+                $dancerAverageAge = round(array_sum($dancers_age) / count($dancers_age));
+            } else {
+                $dancerAverageAge = 0;
             }
 
-            array_unshift($dataArr, $noCategory);
-            
-            return response()->json($dataArr, 200);
+            $noCategory['schedule_items'][$j]['routine']['average'] = $dancerAverageAge;
         }
-        public function scheduleOrderByPosition($event)
-        {
-            $event = $this->getEventInfos($event);
-           
-            $city = $event['city'];
-            $id = $event['id'];
+
+        array_unshift($dataArr, $noCategory);
             
-            $data = ScheduleTitle::with([
-                    'scheduleItems' => function($query) {
+        return response()->json($dataArr, 200);
+    }
+    public function scheduleOrderByPosition($event)
+    {
+        $event = $this->getEventInfos($event);
+           
+        $city = $event['city'];
+        $id = $event['id'];
+            
+        $data = ScheduleTitle::with([
+                    'scheduleItems' => function ($query) {
                         $query->orderBy(DB::raw('ISNULL(position), position'), 'ASC');
                     },
                     'scheduleItems.routine.dancers',
@@ -650,28 +639,27 @@ class AdminController extends Controller
                 ->whereHas('scheduleItems')
                 ->where('schedule_id', $id)
                 ->get();
-                foreach($data as $k => $schedule) {
-                    $item_ids = [];
-                    foreach($schedule->scheduleItems as $j => $item) {
-                        $dancers_age = [];
-                        $item_ids[] = $item->id;
-                        foreach ($item->routine->dancers as $dancer) {
-                            $dancers_age[] = $dancer['age'];
-                        }
-                        if(count($dancers_age)) {
-                            $dancerAverageAge = round(array_sum($dancers_age) / count($dancers_age));
-                        }else {
-                            $dancerAverageAge = 0;
-                        }
-    
-                        $data[$k]['scheduleItems'][$j]['routine']['average'] = $dancerAverageAge;
-                        
-                    }
+        foreach ($data as $k => $schedule) {
+            $item_ids = [];
+            foreach ($schedule->scheduleItems as $j => $item) {
+                $dancers_age = [];
+                $item_ids[] = $item->id;
+                foreach ($item->routine->dancers as $dancer) {
+                    $dancers_age[] = $dancer['age'];
                 }
-                //ScheduleItem::whereNotIn('id', $item_ids)->delete();
-            $dataArr = $data->toArray();
+                if (count($dancers_age)) {
+                    $dancerAverageAge = round(array_sum($dancers_age) / count($dancers_age));
+                } else {
+                    $dancerAverageAge = 0;
+                }
+    
+                $data[$k]['scheduleItems'][$j]['routine']['average'] = $dancerAverageAge;
+            }
+        }
+        //ScheduleItem::whereNotIn('id', $item_ids)->delete();
+        $dataArr = $data->toArray();
               
-            $noCategory = [
+        $noCategory = [
                 'id' => '',
                 'name' =>  __('admin.title.uncategorized'),
                 'schedule_items' => ScheduleItem::with([
@@ -685,44 +673,43 @@ class AdminController extends Controller
                 ])->where(['schedule_title_id' => null, 'event_id' => $id])->get()
             ];
 
-            foreach($noCategory['schedule_items'] as $j => $item) {
-                $dancers_age = [];
-                foreach ($item->routine->dancers as $dancer) {
-                    $dancers_age[] = $dancer['age'];
-                }
-                if(count($dancers_age)) {
-                    $dancerAverageAge = round(array_sum($dancers_age) / count($dancers_age));
-                }else {
-                    $dancerAverageAge = 0;
-                }
-
-                $noCategory['schedule_items'][$j]['routine']['average'] = $dancerAverageAge;
-                
+        foreach ($noCategory['schedule_items'] as $j => $item) {
+            $dancers_age = [];
+            foreach ($item->routine->dancers as $dancer) {
+                $dancers_age[] = $dancer['age'];
+            }
+            if (count($dancers_age)) {
+                $dancerAverageAge = round(array_sum($dancers_age) / count($dancers_age));
+            } else {
+                $dancerAverageAge = 0;
             }
 
-            array_unshift($dataArr, $noCategory);
-            
-            return response()->json($dataArr, 200);
+            $noCategory['schedule_items'][$j]['routine']['average'] = $dancerAverageAge;
         }
-        public function scheduleGetItems($event)
-        {
-            $event = $this->getEventInfos($event);
+
+        array_unshift($dataArr, $noCategory);
+            
+        return response()->json($dataArr, 200);
+    }
+    public function scheduleGetItems($event)
+    {
+        $event = $this->getEventInfos($event);
            
-            $city = $event['city'];
-            $id = $event['id'];
-            $data = ScheduleItem::with(['scheduleTitle', 'routine', 'routine.category'])
+        $city = $event['city'];
+        $id = $event['id'];
+        $data = ScheduleItem::with(['scheduleTitle', 'routine', 'routine.category'])
             ->where('event_id', $id)
             ->orderBy(DB::raw('ISNULL(position), position'), 'ASC')
             ->get();
            
             
-            return response()->json($data, 200);
-        }
+        return response()->json($data, 200);
+    }
 
 
-        private function getEventInfos($eventSlug) {
-            
-            $events = [
+    private function getEventInfos($eventSlug)
+    {
+        $events = [
                 'gatineau' => [
                     'city' => 'Gatineau',
                     'id' => 1
@@ -744,8 +731,6 @@ class AdminController extends Controller
                     'id' => 5
                 ]
             ];
-            return $events[$eventSlug];
-
-        }
-
+        return $events[$eventSlug];
+    }
 }
