@@ -238,7 +238,7 @@ class QuickBookService
                 'SalesItemLineDetail' => [
                     'Qty' => $line['entries'],
                     'UnitPrice' => $line['formatted_rebate_price'],
-                    'TaxCodeRef' => ['value' => "TAX", 'name' => 'GST/QST QC - 9.975'],
+                    'TaxCodeRef' => ['value' => "8"],
                     'ItemRef' => $item
                     ],
                 ]);
@@ -265,10 +265,6 @@ class QuickBookService
                 ]
             ];
             $data["CustomField"] = $customField;
-
-            // Add Tax
-            $data["TxnTaxDetail"]['TxnTaxCodeRef']['value'] = '7';
-            $data['TxnTaxDetail']['TxnTaxCodeRef']['name'] = 'GST/QST QC - 9.975';
 
             $invoiceObj = Invoice::create($data);
 
