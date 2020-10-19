@@ -64951,10 +64951,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 axios__WEBPACK_IMPORTED_MODULE_14___default.a.interceptors.request.use(_interceptors_Jwt__WEBPACK_IMPORTED_MODULE_15__["beforeRequestSuccess"], _interceptors_Jwt__WEBPACK_IMPORTED_MODULE_15__["beforeRequestError"]);
-axios__WEBPACK_IMPORTED_MODULE_14___default.a.interceptors.response.use(_interceptors_Jwt__WEBPACK_IMPORTED_MODULE_15__["onSuccess"], _interceptors_Jwt__WEBPACK_IMPORTED_MODULE_15__["onError"]);
+axios__WEBPACK_IMPORTED_MODULE_14___default.a.interceptors.response.use(_interceptors_Jwt__WEBPACK_IMPORTED_MODULE_15__["onSuccess"], _interceptors_Jwt__WEBPACK_IMPORTED_MODULE_15__["onError"]); // localStorage.setItem("default_year", new Date().getFullYear() + 1);
+
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vee_validate__WEBPACK_IMPORTED_MODULE_2__["default"], {
   locale: window.locale,
-  fieldsBagName: 'vvFields'
+  fieldsBagName: "vvFields"
 });
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vee_validate_laravel__WEBPACK_IMPORTED_MODULE_3___default.a);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]);
@@ -64962,21 +64963,21 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_js_modal__WEBPACK_IMPORTED_MO
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_cleave_component__WEBPACK_IMPORTED_MODULE_5___default.a);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_excel_export__WEBPACK_IMPORTED_MODULE_9__["default"]); // Vue.use(Vuex);
 
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('default-layout', _views_layouts_Default__WEBPACK_IMPORTED_MODULE_6__["default"]);
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('admin-layout', _views_layouts_Admin__WEBPACK_IMPORTED_MODULE_8__["default"]);
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('dashboard-layout', _views_layouts_Dashboard__WEBPACK_IMPORTED_MODULE_7__["default"]);
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.component("default-layout", _views_layouts_Default__WEBPACK_IMPORTED_MODULE_6__["default"]);
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.component("admin-layout", _views_layouts_Admin__WEBPACK_IMPORTED_MODULE_8__["default"]);
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.component("dashboard-layout", _views_layouts_Dashboard__WEBPACK_IMPORTED_MODULE_7__["default"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.prototype.$appTheme = window.appConfigs.theme;
 var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
-  el: '#app',
+  el: "#app",
   components: {
     App: _views_App__WEBPACK_IMPORTED_MODULE_10__["default"]
   },
   i18n: _plugins_i18n_js__WEBPACK_IMPORTED_MODULE_13__["i18n"],
   router: _router__WEBPACK_IMPORTED_MODULE_11__["default"],
   watch: {
-    '$route': function $route(to, from) {
+    $route: function $route(to, from) {
       // Code
-      _store__WEBPACK_IMPORTED_MODULE_12__["store"].dispatch('feedback/clearFeedback');
+      _store__WEBPACK_IMPORTED_MODULE_12__["store"].dispatch("feedback/clearFeedback");
     }
   },
   store: _store__WEBPACK_IMPORTED_MODULE_12__["store"]
@@ -66901,7 +66902,18 @@ var actions = {
   },
   subscription: function subscription(_ref3, args) {
     var commit = _ref3.commit;
-    return _services_Admin__WEBPACK_IMPORTED_MODULE_0__["default"].subscription(args.event, args.subscription_id, args.year).then(function (data) {
+    var savedYear = localStorage.getItem("default_year") || undefined;
+    var year = args.year;
+
+    if (year == undefined) {
+      if (savedYear !== undefined) {
+        year = savedYear;
+      }
+    } else {
+      localStorage.setItem("default_year", year);
+    }
+
+    return _services_Admin__WEBPACK_IMPORTED_MODULE_0__["default"].subscription(args.event, args.subscription_id, year).then(function (data) {
       return commit("subscription", data);
     });
   },

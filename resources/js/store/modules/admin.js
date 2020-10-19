@@ -31,10 +31,20 @@ const actions = {
         return Admin.event(event).then(data => commit("subscriptions", data));
     },
     subscription({ commit }, args) {
+        const savedYear = localStorage.getItem("default_year") || undefined;
+        let year = args.year;
+        if (year == undefined) {
+            if (savedYear !== undefined) {
+                year = savedYear;
+            }
+        } else {
+            localStorage.setItem("default_year", year);
+        }
+
         return Admin.subscription(
             args.event,
             args.subscription_id,
-            args.year
+            year
         ).then(data => commit("subscription", data));
     },
     addPayment({ commit }, inputs) {
