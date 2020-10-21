@@ -410,38 +410,36 @@ class AdminController extends Controller
 
     public function updateStatus(Request $request)
     {
-        $invoice = QuickBookService::getInstance()->create_invoice($request);
+        $data = $request->toArray();
 
-        if ($invoice['success']) {
-            $data = $request->toArray();
-            $subscription = Subscription::find($data['subscription_id']);
+        if ($data['status_id'] == 3) {
+            $invoice = QuickBookService::getInstance()->create_invoice($request);
 
-
-            if (!$subscription) {
-                return response()->json([
+            if ($invoice['success']) {
+                return $this->updateSubscription($data, true);
+            }
+            return response()->json([
                 'status' => 'error',
+                'error' => $invoice['error'],
                 'msg' => __('messages.global.fail')
             ], 400);
-            }
-       
-            // if((int)$subscription->balance <= 0.00) {
-            //     $subscription->status_id = 4; // Paid
-            // }else {
-            //     $subscription->status_id = $data['status_id'];
-            // }
+        }
+        $this->updateSubscription($data);
+    }
 
-            $subscription->status_id = $data['status_id'];
-            if ($subscription->save()) {
-                return response()->json([
-                    'status' => 'success',
-                    'msg' => __('messages.global.QBO_created'),
-                    'subscription' => $subscription
-                ], 200);
-            }
+    private function updateSubscription($data, $invoice = false)
+    {
+        $subscription = Subscription::find($data['subscription_id']);
+        $subscription->status_id = $data['status_id'];
+        if ($subscription->save()) {
+            return response()->json([
+                'status' => 'success',
+                'msg' => $invoice == true ? __('messages.global.QBO_created') : __('messages.global.success'),
+                'subscription' => $subscription
+            ], 200);
         }
         return response()->json([
             'status' => 'error',
-            'error' => $invoice['error'],
             'msg' => __('messages.global.fail')
         ], 400);
     }
@@ -485,14 +483,15 @@ class AdminController extends Controller
             
         ])
         ->get();
-
+        $year = session()->get('YEAR');
         foreach ($categories as $i => $category) {
             $entries = 0;
             foreach ($category->routines as $routine) {
                 $entries += count($routine->dancers);
             }
+            $price = Price::where('category_id', $category->id)->where('year', $year)->first();
             $categories[$i]['entries'] =  $entries;
-            $total = $entries *  $category->price->rebate_price;
+            $total = $entries *  $price->rebate_price;
             $categories[$i]['total'] = number_format(($total / 100), 2, '.', '');
 
             foreach ($category->routines as $j => $routine) {
@@ -534,7 +533,18 @@ class AdminController extends Controller
         $separator = '-';
         $title = $data['organization']['name'] . '_' . 'HTF ' . $data['event'] . '_' . date('d-m-Y', strtotime($data['export_time']));
 
-    
+        $dancers = [];
+        foreach ($data['dancers'] as $dancer) {
+            $levels = [];
+            foreach ($dancer->routines as $routine) {
+                $name = $routine->level->name;
+                \array_push($levels, $name);
+                $dancer['level'] = implode('/', $levels);
+            }
+            \array_push($dancers, $dancer);
+        }
+        
+        $data['dancers'] = $dancers;
         return Excel::download(new ReportExport($data), $title. '.xlsx');
     }
 

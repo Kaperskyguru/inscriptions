@@ -40,7 +40,9 @@ class Category extends Model implements TranslatableContract
 
     public function getFormattedRebatePriceAttribute()
     {
-        $price = Price::where('category_id', $this->id)->where('year', now()->addYear()->year)->first();
+        $year = session()->get('YEAR', now()->addYear()->year);
+
+        $price = Price::where('category_id', $this->id)->where('year', $year)->first();
         return $price->formatted_rebate_price;
     }
 

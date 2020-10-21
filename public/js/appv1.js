@@ -6336,271 +6336,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -7178,7 +6913,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.organization.zipcode = this.content["organizations"].zipcode;
     this.organization.locale = this.content["organizations"].locale;
     this.authUrl = this.content["authUrl"];
-    this.years = this.content['years'];
+    this.years = this.content["years"];
   }
 });
 
@@ -34959,9 +34694,7 @@ var render = function() {
           _vm._v(" "),
           _c("h1", { staticClass: "title-primary" }, [
             _vm._v(
-              "\n            " +
-                _vm._s(this.content["organizations"].name) +
-                "\n        "
+              "\n      " + _vm._s(this.content["organizations"].name) + "\n    "
             )
           ]),
           _vm._v(" "),
@@ -35014,9 +34747,9 @@ var render = function() {
                       [
                         _c("span", { staticClass: "text-subhead" }, [
                           _vm._v(
-                            "\n                                " +
+                            "\n                " +
                               _vm._s(_vm.$t("admin.label.not_submitted")) +
-                              "\n                            "
+                              "\n              "
                           )
                         ])
                       ]
@@ -35045,9 +34778,9 @@ var render = function() {
                       [
                         _c("span", { staticClass: "text-subhead" }, [
                           _vm._v(
-                            "\n                                " +
+                            "\n                " +
                               _vm._s(_vm.$t("admin.label.to_be_reviewed")) +
-                              "\n                            "
+                              "\n              "
                           )
                         ])
                       ]
@@ -35076,9 +34809,9 @@ var render = function() {
                       [
                         _c("span", { staticClass: "text-subhead" }, [
                           _vm._v(
-                            "\n                                " +
+                            "\n                " +
                               _vm._s(_vm.$t("admin.label.waiting_payment")) +
-                              "\n                            "
+                              "\n              "
                           )
                         ])
                       ]
@@ -35107,9 +34840,9 @@ var render = function() {
                       [
                         _c("span", { staticClass: "text-subhead" }, [
                           _vm._v(
-                            "\n                                " +
+                            "\n                " +
                               _vm._s(_vm.$t("admin.label.paid")) +
-                              "\n                            "
+                              "\n              "
                           )
                         ])
                       ]
@@ -35138,9 +34871,9 @@ var render = function() {
                       [
                         _c("span", { staticClass: "text-subhead" }, [
                           _vm._v(
-                            "\n                                " +
+                            "\n                " +
                               _vm._s(_vm.$t("admin.label.waiting")) +
-                              "\n                            "
+                              "\n              "
                           )
                         ])
                       ]
@@ -35164,9 +34897,9 @@ var render = function() {
               _c("div", { staticClass: "card-info card-col" }, [
                 _c("h2", { staticClass: "title-headline" }, [
                   _vm._v(
-                    "\n                        " +
+                    "\n            " +
                       _vm._s(_vm.$t("dashboard.title.totalSubscriptions")) +
-                      "\n                    "
+                      "\n          "
                   )
                 ]),
                 _vm._v(" "),
@@ -35183,9 +34916,9 @@ var render = function() {
               _c("div", { staticClass: "card-info card-col" }, [
                 _c("h2", { staticClass: "title-headline" }, [
                   _vm._v(
-                    "\n                        " +
+                    "\n            " +
                       _vm._s(_vm.$t("dashboard.table.title.routine")) +
-                      "\n                    "
+                      "\n          "
                   )
                 ]),
                 _vm._v(" "),
@@ -35202,9 +34935,9 @@ var render = function() {
               _c("div", { staticClass: "card-info card-col" }, [
                 _c("h2", { staticClass: "title-headline" }, [
                   _vm._v(
-                    "\n                        " +
+                    "\n            " +
                       _vm._s(_vm.$t("dashboard.title.debt")) +
-                      "\n                    "
+                      "\n          "
                   )
                 ]),
                 _vm._v(" "),
@@ -35212,7 +34945,7 @@ var render = function() {
                   _vm._v(
                     _vm._s(
                       this.content["organizations"].subscriptions[0].balance
-                    ) + "\n                        $"
+                    ) + "\n            $"
                   )
                 ])
               ])
@@ -35232,7 +34965,7 @@ var render = function() {
                   }
                 }
               },
-              [_vm._v("\n                Inscriptions\n            ")]
+              [_vm._v("\n        Inscriptions\n      ")]
             ),
             _vm._v(" "),
             _c(
@@ -35247,7 +34980,7 @@ var render = function() {
                   }
                 }
               },
-              [_vm._v("\n                Informations\n            ")]
+              [_vm._v("\n        Informations\n      ")]
             ),
             _vm._v(" "),
             _c(
@@ -35262,7 +34995,7 @@ var render = function() {
                   }
                 }
               },
-              [_vm._v("\n                Danseurs\n            ")]
+              [_vm._v("\n        Danseurs\n      ")]
             )
           ]),
           _vm._v(" "),
@@ -35313,9 +35046,9 @@ var render = function() {
                   [
                     _c("h1", { staticClass: "title-tertiary" }, [
                       _vm._v(
-                        "\n                        " +
+                        "\n            " +
                           _vm._s(_vm.$t("admin.title.routines")) +
-                          "\n                    "
+                          "\n          "
                       )
                     ]),
                     _vm._v(" "),
@@ -35326,9 +35059,9 @@ var render = function() {
                             { staticClass: "alert-text text-body-display" },
                             [
                               _vm._v(
-                                "\n                            " +
+                                "\n              " +
                                   _vm._s(_vm.$t("admin.text.noRoutines")) +
-                                  "\n                        "
+                                  "\n            "
                               )
                             ]
                           )
@@ -35742,9 +35475,9 @@ var render = function() {
                   [
                     _c("h1", { staticClass: "title-tertiary" }, [
                       _vm._v(
-                        "\n                        " +
+                        "\n            " +
                           _vm._s(_vm.$t("admin.title.invoice")) +
-                          "\n                    "
+                          "\n          "
                       )
                     ]),
                     _vm._v(" "),
@@ -35755,9 +35488,9 @@ var render = function() {
                             { staticClass: "alert-text text-body-display" },
                             [
                               _vm._v(
-                                "\n                            " +
+                                "\n              " +
                                   _vm._s(_vm.$t("admin.text.noInvoice")) +
-                                  "\n                        "
+                                  "\n            "
                               )
                             ]
                           )
@@ -35899,8 +35632,7 @@ var render = function() {
                                             _vm._s(
                                               category.price
                                                 .formatted_rebate_price
-                                            ) +
-                                              "\n                                        $"
+                                            ) + " $"
                                           )
                                         ]
                                       )
@@ -36049,7 +35781,13 @@ var render = function() {
                             return _c(
                               "option",
                               { key: i, domProps: { value: year } },
-                              [_vm._v(_vm._s(year))]
+                              [
+                                _vm._v(
+                                  "\n                " +
+                                    _vm._s(year) +
+                                    "\n              "
+                                )
+                              ]
                             )
                           })
                         ],
@@ -36110,11 +35848,11 @@ var render = function() {
                                 },
                                 [
                                   _vm._v(
-                                    "\n                                " +
+                                    "\n                " +
                                       _vm._s(
                                         _vm.$t("admin.actions.add.waiting")
                                       ) +
-                                      "\n                            "
+                                      "\n              "
                                   )
                                 ]
                               )
@@ -36152,9 +35890,9 @@ var render = function() {
                                 },
                                 [
                                   _vm._v(
-                                    "\n                                " +
+                                    "\n                " +
                                       _vm._s(_vm.$t("admin.actions.approve")) +
-                                      "\n                            "
+                                      "\n              "
                                   )
                                 ]
                               )
@@ -36179,9 +35917,9 @@ var render = function() {
                   [
                     _c("h1", { staticClass: "title-tertiary" }, [
                       _vm._v(
-                        "\n                        " +
+                        "\n            " +
                           _vm._s(_vm.$t("admin.title.payments")) +
-                          "\n                    "
+                          "\n          "
                       )
                     ]),
                     _vm._v(" "),
@@ -36192,9 +35930,9 @@ var render = function() {
                             { staticClass: "alert-text text-body-display" },
                             [
                               _vm._v(
-                                "\n                            " +
+                                "\n              " +
                                   _vm._s(_vm.$t("admin.text.noPayments")) +
-                                  "\n                        "
+                                  "\n            "
                               )
                             ]
                           )
@@ -36566,9 +36304,9 @@ var render = function() {
                         },
                         [
                           _vm._v(
-                            "\n                            " +
+                            "\n              " +
                               _vm._s(_vm.$t("admin.actions.add.payment")) +
-                              "\n                        "
+                              "\n            "
                           )
                         ]
                       )
@@ -36675,9 +36413,9 @@ var render = function() {
                                 },
                                 [
                                   _vm._v(
-                                    "\n                                        " +
+                                    "\n                    " +
                                       _vm._s(_vm.errors.first("name")) +
-                                      "\n                                    "
+                                      "\n                  "
                                   )
                                 ]
                               )
@@ -36703,8 +36441,7 @@ var render = function() {
                                         name: "model",
                                         rawName: "v-model",
                                         value: _vm.organization.user.email,
-                                        expression:
-                                          "\n                                                organization.user.email\n                                            "
+                                        expression: "organization.user.email"
                                       }
                                     ],
                                     staticClass: "form-text-field-input",
@@ -36764,9 +36501,9 @@ var render = function() {
                                 },
                                 [
                                   _vm._v(
-                                    "\n                                        " +
+                                    "\n                    " +
                                       _vm._s(_vm.errors.first("email")) +
-                                      "\n                                    "
+                                      "\n                  "
                                   )
                                 ]
                               )
@@ -36877,9 +36614,9 @@ var render = function() {
                                 },
                                 [
                                   _vm._v(
-                                    "\n                                    " +
+                                    "\n                  " +
                                       _vm._s(_vm.errors.first("name")) +
-                                      "\n                                "
+                                      "\n                "
                                   )
                                 ]
                               )
@@ -36968,9 +36705,9 @@ var render = function() {
                                 },
                                 [
                                   _vm._v(
-                                    "\n                                    " +
+                                    "\n                  " +
                                       _vm._s(_vm.errors.first("accronyme")) +
-                                      "\n                                "
+                                      "\n                "
                                   )
                                 ]
                               )
@@ -37059,9 +36796,9 @@ var render = function() {
                                 },
                                 [
                                   _vm._v(
-                                    "\n                                    " +
+                                    "\n                  " +
                                       _vm._s(_vm.errors.first("address")) +
-                                      "\n                                "
+                                      "\n                "
                                   )
                                 ]
                               )
@@ -37146,9 +36883,9 @@ var render = function() {
                                 },
                                 [
                                   _vm._v(
-                                    "\n                                    " +
+                                    "\n                  " +
                                       _vm._s(_vm.errors.first("city")) +
-                                      "\n                                "
+                                      "\n                "
                                   )
                                 ]
                               )
@@ -37237,9 +36974,9 @@ var render = function() {
                                 },
                                 [
                                   _vm._v(
-                                    "\n                                    " +
+                                    "\n                  " +
                                       _vm._s(_vm.errors.first("zipcode")) +
-                                      "\n                                "
+                                      "\n                "
                                   )
                                 ]
                               )
@@ -37326,9 +37063,9 @@ var render = function() {
                                 },
                                 [
                                   _vm._v(
-                                    "\n                                    " +
+                                    "\n                  " +
                                       _vm._s(_vm.errors.first("phone")) +
-                                      "\n                                "
+                                      "\n                "
                                   )
                                 ]
                               )
@@ -37430,9 +37167,9 @@ var render = function() {
                           },
                           [
                             _vm._v(
-                              "\n                                " +
+                              "\n                " +
                                 _vm._s(_vm.$t("forms.actions.save")) +
-                                "\n                            "
+                                "\n              "
                             )
                           ]
                         )
@@ -37466,9 +37203,9 @@ var render = function() {
                             { staticClass: "alert-text text-body-display" },
                             [
                               _vm._v(
-                                "\n                            " +
+                                "\n              " +
                                   _vm._s(_vm.$t("dashboard.text.noDancers")) +
-                                  "\n                        "
+                                  "\n            "
                               )
                             ]
                           )
@@ -37717,9 +37454,9 @@ var render = function() {
                         },
                         [
                           _vm._v(
-                            "\n                            " +
+                            "\n              " +
                               _vm._s(_vm.$t("dashboard.label.add.dancer")) +
-                              "\n                        "
+                              "\n            "
                           )
                         ]
                       )
@@ -37744,9 +37481,9 @@ var render = function() {
             _c("header", { staticClass: "modal-header" }, [
               _c("h1", { staticClass: "modal-title title-primary" }, [
                 _vm._v(
-                  "\n                    " +
+                  "\n          " +
                     _vm._s(_vm.$t("forms.title.add.payment")) +
-                    "\n                "
+                    "\n        "
                 )
               ]),
               _vm._v(" "),
@@ -37857,9 +37594,9 @@ var render = function() {
                             },
                             [
                               _vm._v(
-                                "\n                                " +
+                                "\n                " +
                                   _vm._s(_vm.errors.first("receive_on")) +
-                                  "\n                            "
+                                  "\n              "
                               )
                             ]
                           ),
@@ -37928,7 +37665,13 @@ var render = function() {
                                       key: option.id,
                                       domProps: { value: option.id }
                                     },
-                                    [_vm._v(_vm._s(option.name))]
+                                    [
+                                      _vm._v(
+                                        "\n                    " +
+                                          _vm._s(option.name) +
+                                          "\n                  "
+                                      )
+                                    ]
                                   )
                                 }),
                                 0
@@ -38016,9 +37759,9 @@ var render = function() {
                             },
                             [
                               _vm._v(
-                                "\n                                " +
+                                "\n                " +
                                   _vm._s(_vm.errors.first("amount")) +
-                                  "\n                            "
+                                  "\n              "
                               )
                             ]
                           )
@@ -38094,9 +37837,9 @@ var render = function() {
                             },
                             [
                               _vm._v(
-                                "\n                                " +
+                                "\n                " +
                                   _vm._s(_vm.errors.first("note")) +
-                                  "\n                            "
+                                  "\n              "
                               )
                             ]
                           )
@@ -38117,9 +37860,9 @@ var render = function() {
                           },
                           [
                             _vm._v(
-                              "\n                                " +
+                              "\n                " +
                                 _vm._s(_vm.$t("forms.actions.cancel")) +
-                                "\n                            "
+                                "\n              "
                             )
                           ]
                         ),
@@ -38132,9 +37875,9 @@ var render = function() {
                           },
                           [
                             _vm._v(
-                              "\n                                " +
+                              "\n                " +
                                 _vm._s(_vm.$t("forms.actions.save")) +
-                                "\n                            "
+                                "\n              "
                             )
                           ]
                         )
@@ -38159,9 +37902,9 @@ var render = function() {
             _c("header", { staticClass: "modal-header" }, [
               _c("h1", { staticClass: "modal-title title-primary" }, [
                 _vm._v(
-                  "\n                    " +
+                  "\n          " +
                     _vm._s(_vm.$t("forms.title.add.dancer")) +
-                    "\n                "
+                    "\n        "
                 )
               ]),
               _vm._v(" "),
@@ -38275,9 +38018,9 @@ var render = function() {
                             },
                             [
                               _vm._v(
-                                "\n                                " +
+                                "\n                " +
                                   _vm._s(_vm.errors.first("first_name")) +
-                                  "\n                            "
+                                  "\n              "
                               )
                             ]
                           )
@@ -38353,9 +38096,9 @@ var render = function() {
                             },
                             [
                               _vm._v(
-                                "\n                                " +
+                                "\n                " +
                                   _vm._s(_vm.errors.first("last_name")) +
-                                  "\n                            "
+                                  "\n              "
                               )
                             ]
                           )
@@ -38435,9 +38178,9 @@ var render = function() {
                             },
                             [
                               _vm._v(
-                                "\n                                " +
+                                "\n                " +
                                   _vm._s(_vm.errors.first("date_of_birth")) +
-                                  "\n                            "
+                                  "\n              "
                               )
                             ]
                           )
@@ -38458,9 +38201,9 @@ var render = function() {
                           },
                           [
                             _vm._v(
-                              "\n                                " +
+                              "\n                " +
                                 _vm._s(_vm.$t("forms.actions.cancel")) +
-                                "\n                            "
+                                "\n              "
                             )
                           ]
                         ),
@@ -38473,9 +38216,9 @@ var render = function() {
                           },
                           [
                             _vm._v(
-                              "\n                                " +
+                              "\n                " +
                                 _vm._s(_vm.$t("forms.actions.done")) +
-                                "\n                            "
+                                "\n              "
                             )
                           ]
                         )

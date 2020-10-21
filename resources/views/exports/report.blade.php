@@ -81,8 +81,11 @@
             <td style="font-family:Helvetica Neue; background:#212529; color:#ffffff; font-weight:bold;">#</td>
             <td style=" font-family:Helvetica Neue; background:#212529; color:#ffffff; font-weight:bold;">{{
                 __('dashboard.table.title.name') }}</td>
-            <td colspan="4" style=" font-family:Helvetica Neue;background:#212529; color:#ffffff; font-weight:bold;">{{
+            <td style=" font-family:Helvetica Neue;background:#212529; color:#ffffff; font-weight:bold;">{{
                 __('dashboard.table.title.age') }}</td>
+            <td colspan="4" style=" font-family:Helvetica Neue;background:#212529; color:#ffffff; font-weight:bold;">{{
+                __('dashboard.table.title.level') }}</td>
+
         </tr>
         @foreach ($data['dancers'] as $dancer)
         <tr>
@@ -96,6 +99,10 @@
 
             <td align="center" style="font-family:Helvetica Neue;">
                 {{$dancer->age}}
+            </td>
+
+            <td align="center" style="font-family:Helvetica Neue;">
+                {{$dancer->level}}
             </td>
         </tr>
         @endforeach
@@ -201,46 +208,47 @@
                 __('dashboard.table.title.routine') }}</td>
             <td style="font-family:Helvetica Neue; text-align:center;">{{$category->entries}}</td>
             <td style="font-family:Helvetica Neue; text-align:right;" data-format="0.00">
-                {{$category->formatted_rebate_price}} $</td>
-            <td style="font-family:Helvetica Neue; text-align:right;" data-format="0.00">{{$category->total}} $</td>
+                {{number_format($category->formatted_rebate_price, 2, ',', ' ')}} $</td>
+            <td style="font-family:Helvetica Neue; text-align:right;" data-format="0.00">
+                {{number_format($category->total, 2, ',', ' ')}} $</td>
         </tr>
         @endforeach
         <tr>
             <td style="font-family:Helvetica Neue; background:#D4D8DB; color:#212529; font-weight:bold; text-align:right;"
                 colspan="5" data-format="0.00">Sous-total</td>
             <td style="font-family:Helvetica Neue; background:#D4D8DB; color:#212529; font-weight:bold; text-align:right;"
-                colspan="1" data-format="0.00">{{$data['subscription']['subtotal']}} $</td>
+                colspan="1" data-format="0.00">{{number_format($data['subscription']['subtotal'], 2, ',', ' ')}} $</td>
         </tr>
         @if($data['state_id'] == 57)
         <tr>
             <td colspan="5" style="font-family:Helvetica Neue; text-align:right;">TPS 737664490 RT 0001 (5%)</td>
             <td colspan="1" style="font-family:Helvetica Neue; text-align:right;" data-format="0.00">
-                {{$data['subscription']['tps']}} $</td>
+                {{number_format($data['subscription']['tps'], 2, ',', ' ')}} $</td>
         </tr>
         <tr>
             <td colspan="5" style="font-family:Helvetica Neue; text-align:right;">TVQ 1224260896 TQ 0001 (9,975%)</td>
             <td colspan="1" style="font-family:Helvetica Neue; text-align:right;" data-format="0.00">
-                {{$data['subscription']['tvq']}} $</td>
+                {{number_format($data['subscription']['tvq'], 2, ',', ' ') }} $</td>
         </tr>
         @elseif($data['state_id'] == 58)
         <tr>
             <td colspan="5" style="font-family:Helvetica Neue; text-align:right;">TVH 737664490 RT 0001 (13%)</td>
             <td colspan="1" style="font-family:Helvetica Neue; text-align:right;" data-format="0.00">
-                {{$data['subscription']['tvh']}} $</td>
+                {{number_format($data['subscription']['tvh'], 2, ',', ' ')}} $</td>
         </tr>
         @endif
         <tr>
             <td style="font-family:Helvetica Neue; background:#D4D8DB; color:#212529; font-weight:bold; text-align:right;"
                 colspan="5">{{ __('admin.text.totalToPay') }}</td>
             <td style="font-family:Helvetica Neue; background:#D4D8DB; color:#212529; font-weight:bold; text-align:right;"
-                colspan="1" data-format="0.00">{{$data['subscription']['total']}} $</td>
+                colspan="1" data-format="0.00">{{number_format($data['subscription']['total'], 2, ',', ' ') }} $</td>
         </tr>
         @foreach($data['subscription']->payments as $payment)
         <tr>
             <td colspan="5" style="font-family:Helvetica Neue; text-align:right;">{{ __('admin.export.payment') }} {{
                 $payment['paymentType']['name'] }} {{ __('admin.export.receive_on') }} {{ $payment['receive_on']}}</td>
             <td colspan="1" style="font-family:Helvetica Neue; text-align:right;" data-format="0.00">{{
-                $payment['formatted_amount']}} $</td>
+                number_format($payment['formatted_amount'], 2, ',', ' ')}} $</td>
         </tr>
         @endforeach
         <tr>
@@ -248,13 +256,13 @@
                 colspan="5">{{ __('admin.text.totalPayments') }}</td>
             <td colspan="1"
                 style="font-family:Helvetica Neue; background:#D4D8DB; color:#212529; font-weight:bold; text-align:right;"
-                data-format="0.00">{{ $data['subscription']['sum_payments']}} $</td>
+                data-format="0.00">{{ number_format($data['subscription']['sum_payments'], 2, ',', ' ') }} $</td>
         </tr>
         <tr>
             <td style="font-family:Helvetica Neue; background:#e5e5e5; color:#212529; font-weight:bold; text-align:right;"
                 colspan="5">{{ __('admin.text.balance') }}</td>
             <td style="font-family:Helvetica Neue; background:#e5e5e5; color:#212529; font-weight:bold; text-align:right;"
-                colspan="1" data-format="0.00">{{ $data['subscription']['balance']}} $</td>
+                colspan="1" data-format="0.00">{{ number_format($data['subscription']['balance'], 2, ',', ' ') }} $</td>
         </tr>
         <tr>
             <td style="text-align:center;" colspan="6"></td>

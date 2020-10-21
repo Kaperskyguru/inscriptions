@@ -30,6 +30,10 @@ class Price extends Model
     {
         // return $formatter =  NumberFormatter('en_US', NumberFormatter::CURRENCY)::formatCurrency(($this->attributes['rebate_price'] / 100));
         // dd($this->price->rebate_price);
-        return number_format(($this->attributes['rebate_price'] / 100), 2, '.', '');
+        $locale = app()->getLocale();
+        if ($locale == 'en') {
+            return number_format(($this->attributes['rebate_price'] / 100), 2, '.', '');
+        }
+        return number_format(($this->attributes['rebate_price'] / 100), 2, '.', ' ');
     }
 }
