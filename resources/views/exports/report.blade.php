@@ -83,7 +83,7 @@
                 __('dashboard.table.title.name') }}</td>
             <td style=" font-family:Helvetica Neue;background:#212529; color:#ffffff; font-weight:bold;">{{
                 __('dashboard.table.title.age') }}</td>
-            <td colspan="4" style=" font-family:Helvetica Neue;background:#212529; color:#ffffff; font-weight:bold;">{{
+            <td colspan="3" style=" font-family:Helvetica Neue;background:#212529; color:#ffffff; font-weight:bold;">{{
                 __('dashboard.table.title.level') }}</td>
 
         </tr>
@@ -97,13 +97,15 @@
                 {{$dancer->last_name}}, {{$dancer->first_name}}
             </td>
 
-            <td align="center" style="font-family:Helvetica Neue;">
+            <td style="font-family:Helvetica Neue;">
                 {{$dancer->age}}
             </td>
 
-            <td align="center" style="font-family:Helvetica Neue;">
+            @if(isset($dancer->level) || $dancer->level != '')
+            <td style="font-family:Helvetica Neue;">
                 {{$dancer->level}}
             </td>
+            @endif
         </tr>
         @endforeach
 

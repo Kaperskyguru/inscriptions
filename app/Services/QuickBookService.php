@@ -216,7 +216,11 @@ class QuickBookService
     {
         $customerObj = $this->findOrCreateCustomer($request);
         $res = [];
-
+        $events = [
+            'gatineau' => 'Gatineau',
+            'levis' => 'Lévis',
+            'saintehyacinthe' => 'Saint-Hyacinthe'
+        ];
 
         if ($customerObj['status']) {
             $customer = $customerObj['data'];
@@ -249,11 +253,13 @@ class QuickBookService
             $data["BillEmail"]["Address"] = $validatedData['customer']['user']['email'];
             $data['Line'] = $lines;
 
+            
+
             // Add Custom Field
             $customField = [
                 [
                     "DefinitionId" => "1",
-                    "StringValue" =>  $validatedData['event_name'],
+                    "StringValue" =>  $events[$validatedData['event_name']],
                     "Type" => "StringType",
                     "Name" => "EventName"
                 ],

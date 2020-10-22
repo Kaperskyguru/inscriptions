@@ -468,18 +468,19 @@
             </ul>
             <div class="export-actions">
               <select
-                class="btn btn-primary btn-inverted"
+              style="text-align-last: center;"
+                v-if="
+                  this.content['organizations'].subscriptions[0].status_id !== 3
+                "
+                class="btn btn-primary btn-inverted text-center"
                 @change="changeCategoryPrice"
               >
-                <option disabled selected>PRICE LIST</option>
+                <option disabled selected>
+                  {{ $t("admin.label.price_list") }}
+                </option>
                 <option :value="year" v-for="(year, i) in years" :key="i">
                   {{ year }}
                 </option>
-                <!-- <option value="2019">2019</option>
-                                <option value="2018">2018</option>
-                                <option value="2017">2017</option>
-                                <option value="2016">2016</option>
-                                <option value="2015">2015</option> -->
               </select>
               <a
                 class="btn btn-primary btn-inverted"
@@ -1946,7 +1947,9 @@ export default {
 .modal-header {
   background-color: #212529;
 }
-.btn-change-status,
+.btn-change-status {
+  margin-left: 1.6rem;
+}
 .btn-generate-invoice {
   margin-top: 2.4rem;
 }

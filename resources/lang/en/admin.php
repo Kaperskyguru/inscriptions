@@ -30,6 +30,7 @@ return [
         'waiting_payment' => 'Wating for paiement',
         'paid' => 'Paid',
         'waiting' => 'Waiting list',
+        'price_list' => 'PRICE LIST'
     ],
     'actions' => [
         'approve' => 'Approve',
