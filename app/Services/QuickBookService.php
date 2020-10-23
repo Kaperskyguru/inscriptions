@@ -94,7 +94,7 @@ class QuickBookService
 
     private function getDataService()
     {
-        // session()->forget('QB_REFRESH_TOKEN');
+        session()->forget('QB_REFRESH_TOKEN');
         $dataService = DataService::Configure(array(
             'auth_mode' => 'oauth2',
             'ClientID' => env('QB_CLIENT_ID'),
@@ -138,7 +138,7 @@ class QuickBookService
 
     public function create_invoice(Request $request)
     {
-
+        // dd(Subscription::find($request->subscription_id)->routines);
         // Run validation
         $v = Validator::make($request->all(), [
             'invoices' => 'required|array',
@@ -163,6 +163,12 @@ class QuickBookService
             $res['message'] =  __("messages.global.fail");
             $res['error'] = $error;
             return $res;
+        }
+
+        $routines = Subscription::find($request->subscription_id)->routines;
+        foreach ($routines as $routine) {
+            $routine->doc_number = $resultingInvoiceObj->DocNumber;
+            $routine->save();
         }
         
         $res['success'] = true;

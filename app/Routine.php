@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Routine extends Model
 {
     protected $fillable = [
-        'name', 'teacher', 'music', 'organization_id', 'subscription_id', 'category_id', 'style_id', 'level_id', 'classification_id'
+        'name', 'teacher', 'music', 'organization_id', 'subscription_id', 'category_id', 'style_id', 'level_id', 'classification_id', 'doc_number'
     ];
     protected $attributes = [
         'music' => 'default.mp3',
@@ -55,12 +55,11 @@ class Routine extends Model
     //     // $related = $this->getRelation('dancersCount')->first();
 
     //     // return ($related) ? $related->dancersCount->aggregate : 0;
-    //     // //return 
+    //     // //return
     //     return 0;
     // }
     public function scheduleItem()
     {
         return $this->hasOne('App\ScheduleItem');
     }
-
 }

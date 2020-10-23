@@ -71,7 +71,8 @@ return [
             'note' => 'Note',
             'amount' => 'Amount',
             'routine' => 'Routine(s)',
-            'music' => 'Musique'
+            'music' => 'Musique',
+            'qbo' => 'QBO'
         ]
     ],
     'error' => [

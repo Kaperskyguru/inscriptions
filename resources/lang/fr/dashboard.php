@@ -73,6 +73,7 @@ return [
             'amount' => 'Montant',
             'routine' => 'Routine(s)',
             'music' => 'Musique',
+            'qbo' => 'QBO'
         ]
     ],
     'error' => [

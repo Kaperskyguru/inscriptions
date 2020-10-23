@@ -13,8 +13,8 @@ class AddQboDocNumberToRoutineTable extends Migration
      */
     public function up()
     {
-        Schema::table('routine', function (Blueprint $table) {
-            //
+        Schema::table('routines', function (Blueprint $table) {
+            $table->bigInteger('doc_number')->nullable();
         });
     }
 
@@ -25,7 +25,7 @@ class AddQboDocNumberToRoutineTable extends Migration
      */
     public function down()
     {
-        Schema::table('routine', function (Blueprint $table) {
+        Schema::table('routines', function (Blueprint $table) {
             //
         });
     }
