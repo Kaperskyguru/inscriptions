@@ -6337,6 +6337,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -35766,7 +35770,11 @@ var render = function() {
                     _vm._v(" "),
                     _c("div", { staticClass: "export-actions" }, [
                       this.content["organizations"].subscriptions[0]
-                        .status_id !== 3
+                        .status_id == 1 ||
+                      this.content["organizations"].subscriptions[0]
+                        .status_id == 2 ||
+                      this.content["organizations"].subscriptions[0]
+                        .status_id == 5
                         ? _c(
                             "select",
                             {

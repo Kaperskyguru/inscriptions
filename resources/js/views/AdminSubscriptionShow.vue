@@ -468,9 +468,13 @@
             </ul>
             <div class="export-actions">
               <select
-              style="text-align-last: center;"
+                style="text-align-last: center"
                 v-if="
-                  this.content['organizations'].subscriptions[0].status_id !== 3
+                  this.content['organizations'].subscriptions[0].status_id ==
+                    1 ||
+                  this.content['organizations'].subscriptions[0].status_id ==
+                    2 ||
+                  this.content['organizations'].subscriptions[0].status_id == 5
                 "
                 class="btn btn-primary btn-inverted text-center"
                 @change="changeCategoryPrice"
