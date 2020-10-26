@@ -79,7 +79,7 @@ return [
         'duplicateRoutine' => 'Duplicate a routine from another event',
         'cancel' => 'Cancel',
         'send' => 'Send',
-        'addRoutine' => 'Ajouter une routine',
+        'addRoutine' => 'Add a routine',
         'cut' => 'Cut',
         'upload' => 'Choose a file',
     ],

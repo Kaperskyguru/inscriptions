@@ -17,7 +17,7 @@ class Subscription extends Model
         'consent_rules' => 0,
     ];
 
-    protected $appends = ['total_dancer', 'sub_total', 'tps', 'tvq', 'tvh', 'total', 'sum_payments', 'balance'];
+    protected $appends = ['total_dancer', 'sub_total', 'sub_total_payment', 'tps', 'tps_payment', 'tvq', 'tvq_payment', 'tvh', 'tvh_payment', 'total', 'total_payment', 'sum_payments', 'balance'];
 
    
     public function event()
@@ -60,8 +60,10 @@ class Subscription extends Model
 
         foreach ($this->routines as $routine) {
             $price = Price::where('category_id', $routine->category->id)->where('year', $year)->first();
-            $total_cost = (count($routine->dancers) * $price->rebate_price);
-            $subtotal += $total_cost;
+            if (!$routine->doc_number) {
+                $total_cost = (count($routine->dancers) * $price->rebate_price);
+                $subtotal += $total_cost;
+            }
         }
         foreach ($this->fees as $fee) {
             $total_cost = ($fee->feeType->price * $fee->entries);
@@ -106,12 +108,63 @@ class Subscription extends Model
     }
     public function getBalanceAttribute()
     {
-        $total = $this->getTotalAttribute();
+        $total = $this->getTotalPaymentAttribute();
         $payments = $this->getSumPaymentsAttribute();
 
         //$balance = (($total - $payments) < 0) ? 0 : ($total - $payments);
         $balance = ($total - $payments);
 
         return number_format(round($balance, 2), 2, '.', '');
+    }
+
+    // Re write all Payment calculations here without using Doc_number
+
+    public function getSubTotalPaymentAttribute()
+    {
+        $year = session()->get('YEAR') ? session()->get('YEAR'): now()->addYear()->year;
+
+        $subtotal = 0;
+
+        foreach ($this->routines as $routine) {
+            $price = Price::where('category_id', $routine->category->id)->where('year', $year)->first();
+            // if (!$routine->doc_number) {
+            $total_cost = (count($routine->dancers) * $price->rebate_price);
+            $subtotal += $total_cost;
+            // }
+        }
+        foreach ($this->fees as $fee) {
+            $total_cost = ($fee->feeType->price * $fee->entries);
+            $subtotal += $total_cost;
+        }
+        return number_format(($subtotal / 100), 2, '.', '');
+    }
+
+    public function getTpsPaymentAttribute()
+    {
+        $tps = $this->getSubTotalPaymentAttribute() * env('TAX_TPS');
+        
+        return number_format(($tps), 2, '.', '');
+    }
+    public function getTvqPaymentAttribute()
+    {
+        $tvq = $this->getSubTotalPaymentAttribute() * env('TAX_TVQ');
+        return number_format(($tvq), 2, '.', '');
+    }
+    public function getTvhPaymentAttribute()
+    {
+        $tvq = $this->getSubTotalPaymentAttribute() * env('TAX_TVH');
+        return number_format(($tvq), 2, '.', '');
+    }
+
+    public function getTotalPaymentAttribute()
+    {
+        // TODO Better way handle taxes
+        if ($this->event->state_id == 58) { // Ontario
+
+            $total = $this->getSubTotalPaymentAttribute() + $this->getTvhPaymentAttribute();
+        } elseif ($this->event->state_id == 57) {
+            $total = $this->getSubTotalPaymentAttribute() + $this->getTpsPaymentAttribute() + $this->getTvqPaymentAttribute();
+        }
+        return round($total, 2);
     }
 }

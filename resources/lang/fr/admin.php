@@ -15,7 +15,7 @@ return [
         'noRoutines' => 'Aucun résultat',
         'noFees' => 'Aucun frais enregistré.',
         'no' => 'Aucun paiement enregistré.',
-        'noInvoice' => 'Aucune facture',
+        'noInvoice' => 'Pas de nouvelle facture',
         'totalPayments' => 'Total des paiements',
         'totalToPay' => 'Total à payer',
         'balance' => 'Solde',

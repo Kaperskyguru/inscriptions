@@ -238,7 +238,7 @@
                   </li>
                   <li class="table-item grid-2">
                     <span class="table-text text-body-display">{{
-                      routine.doc_number || 1001
+                      routine.doc_number || ""
                     }}</span>
                     <!-- </li> -->
                     <div class="table-menu" @click.prevent="openActions">
@@ -311,6 +311,70 @@
               </div>
             </div>
 
+            <section
+              style="margin-bottom: 3rem; margin-top: 3rem"
+              class="invoice-container"
+              :set="
+                (subscription = this.content['organizations'].subscriptions[0])
+              "
+            >
+              <h1 class="title-tertiary">
+                {{ "Total" }}
+              </h1>
+              <div
+                class="alert alert-no-data"
+                v-if="!subscription.routines.length"
+              >
+                <p class="alert-text text-body-display">
+                  {{ $t("admin.text.noInvoice") }}
+                </p>
+              </div>
+              <div class="table" v-if="subscription.routines.length">
+                <div class="table-header">
+                  <ul class="table-list">
+                    <li class="table-item grid-4">
+                      <span class="text-subhead">{{
+                        $t("dashboard.table.title.category")
+                      }}</span>
+                    </li>
+                    <li class="table-item grid-2">
+                      <span class="text-subhead">{{
+                        $t("dashboard.table.title.routine")
+                      }}</span>
+                    </li>
+                    <li class="table-item grid-2">
+                      <span class="text-subhead">{{
+                        $t("dashboard.table.title.totalSubscription")
+                      }}</span>
+                    </li>
+                  </ul>
+                </div>
+                <div class="table-body">
+                  <ul
+                    class="table-list table-list-body"
+                    v-for="category in this.content['allCategories']"
+                    v-bind:key="category.id"
+                  >
+                    <li class="table-item grid-4">
+                      <span class="table-text text-body-display">{{
+                        category.name
+                      }}</span>
+                    </li>
+                    <li class="table-item grid-2">
+                      <span class="table-text text-body-display">{{
+                        category.routines_count
+                      }}</span>
+                    </li>
+                    <li class="table-item grid-2">
+                      <span class="table-text text-body-display">{{
+                        category.entries
+                      }}</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+
             <div class="export-actions">
               <!-- <export-excel
                 :name="'routines_' + this.content['organizations'].name + '.xls'"
@@ -357,13 +421,13 @@
             </h1>
             <div
               class="alert alert-no-data"
-              v-if="!subscription.routines.length"
+              v-if="!this.content['categories'].length"
             >
               <p class="alert-text text-body-display">
                 {{ $t("admin.text.noInvoice") }}
               </p>
             </div>
-            <div class="table" v-if="subscription.routines.length">
+            <div class="table" v-else>
               <div class="table-header">
                 <ul class="table-list">
                   <li class="table-item grid-4">
@@ -650,7 +714,7 @@
               <li class="invoice-item text-body-display">
                 <span class="invoice-data grid-4">Sous-total</span>
                 <span class="invoice-int grid-3"
-                  >{{ subscription.sub_total }} $</span
+                  >{{ subscription.sub_total_payment }} $</span
                 >
               </li>
               <li
@@ -660,7 +724,7 @@
                 <span class="invoice-data grid-4"
                   >TPS 737664490 RT 0001 (5%)</span
                 >
-                <span class="invoice-int grid-3">{{ subscription.tps }} $</span>
+                <span class="invoice-int grid-3">{{ subscription.tps_payment }} $</span>
               </li>
               <li
                 class="invoice-item text-body-display"
@@ -669,7 +733,7 @@
                 <span class="invoice-data grid-4"
                   >TVQ 1224260896 TQ 0001 (9,975%)</span
                 >
-                <span class="invoice-int grid-3">{{ subscription.tvq }} $</span>
+                <span class="invoice-int grid-3">{{ subscription.tvq_payment }} $</span>
               </li>
               <li
                 class="invoice-item text-body-display"
@@ -678,14 +742,14 @@
                 <span class="invoice-data grid-4"
                   >TVH 737664490 RT 0001 (13%)</span
                 >
-                <span class="invoice-int grid-3">{{ subscription.tvh }} $</span>
+                <span class="invoice-int grid-3">{{ subscription.tvh_payment }} $</span>
               </li>
               <li class="invoice-item text-body-display">
                 <span class="invoice-data grid-4">{{
                   $t("admin.text.totalToPay")
                 }}</span>
                 <span class="invoice-int grid-3"
-                  >{{ subscription.total }} $</span
+                  >{{ subscription.total_payment }} $</span
                 >
               </li>
               <li class="invoice-item text-body-display">

@@ -368,9 +368,29 @@ class AdminController extends Controller
         )
         ->first();
 
-        // dd($organizations->subscriptions);
+        // dd($subscription_id);
 
         $categories = Category::groupBy('id')->where('id', '!=', 7)
+        ->where('event_type_id', config('EVENT_TYPE_ID'))
+        ->whereHas('routines', function ($query) use ($subscription_id) {
+            $query->whereNull('doc_number')->where('subscription_id', $subscription_id);
+        })
+        ->with([
+            'routines' => function ($query) use ($subscription_id) {
+                $query->where('subscription_id', $subscription_id);
+            },
+        ])
+        ->withCount([
+            'routines' => function ($query) use ($subscription_id) {
+                $query->where('subscription_id', $subscription_id)->whereNull('doc_number');
+            },
+            
+        ])
+        ->get();
+
+        // dd($categories);
+
+        $allCategories = Category::groupBy('id')->where('id', '!=', 7)
         ->where('event_type_id', config('EVENT_TYPE_ID'))
         ->with([
             'routines' => function ($query) use ($subscription_id) {
@@ -385,11 +405,25 @@ class AdminController extends Controller
         ])
         ->get();
 
-        foreach ($categories as $key => $category) {
+        foreach ($allCategories as $key => $category) {
             $entries = 0;
             $price = Price::where('category_id', $category->id)->where('year', $year)->first();
             foreach ($category->routines as $routine) {
                 $entries += count($routine->dancers);
+            }
+            $allCategories[$key]['entries'] =  $entries;
+            $total = $entries *  $price->rebate_price;
+            $allCategories[$key]['total'] = number_format(($total / 100), 2, '.', '');
+            $allCategories[$key]['price'] = $price;
+        }
+
+        foreach ($categories as $key => $category) {
+            $entries = 0;
+            $price = Price::where('category_id', $category->id)->where('year', $year)->first();
+            foreach ($category->routines as $routine) {
+                if (!$routine->doc_number) {
+                    $entries += count($routine->dancers);
+                }
             }
             $categories[$key]['entries'] =  $entries;
             $total = $entries *  $price->rebate_price;
@@ -405,7 +439,7 @@ class AdminController extends Controller
 
         $years = Price::distinct('year')->pluck('year');
 
-        return response()->json(compact('organizations', 'categories', 'paymentTypes', 'feeTypes', 'authUrl', 'years'), 200);
+        return response()->json(compact('organizations', 'categories', 'paymentTypes', 'feeTypes', 'authUrl', 'years', 'allCategories'), 200);
     }
 
     public function updateStatus(Request $request)
@@ -415,12 +449,12 @@ class AdminController extends Controller
         if ($data['status_id'] == 3) {
             $invoice = QuickBookService::getInstance()->create_invoice($request);
 
-            if ($invoice['success']) {
+            if (\is_array($invoice) && $invoice['success']) {
                 return $this->updateSubscription($data, true);
             }
             return response()->json([
                 'status' => 'error',
-                'error' => $invoice['error'],
+                'error' => $invoice,
                 'msg' => __('messages.global.fail')
             ], 400);
         }

@@ -94,7 +94,6 @@ class QuickBookService
 
     private function getDataService()
     {
-        session()->forget('QB_REFRESH_TOKEN');
         $dataService = DataService::Configure(array(
             'auth_mode' => 'oauth2',
             'ClientID' => env('QB_CLIENT_ID'),
@@ -103,11 +102,12 @@ class QuickBookService
             'scope' => env('QB_OAUTH_SCOPE'),
             'baseUrl' => env('QB_ENV'),
             'QBORealmID' => env('QB_REALMID'),
-            'refreshTokenKey' => session()->get('QB_REFRESH_TOKEN', env('QB_REFRESH_TOKEN'))
+            'refreshTokenKey' =>env('QB_REFRESH_TOKEN')
         ));
         $OAuth2LoginHelper = $dataService->getOAuth2LoginHelper();
         $refreshedAccessTokenObj = $OAuth2LoginHelper->refreshToken();
-        session(['QB_REFRESH_TOKEN' => $refreshedAccessTokenObj->getRefreshToken()]);
+        // session(['QB_REFRESH_TOKEN' => $refreshedAccessTokenObj->getRefreshToken()]);
+        // dd($refreshedAccessTokenObj->getRefreshToken());
         $dataService->throwExceptionOnError(true);
         $error = $OAuth2LoginHelper->getLastError();
         if ($error) {
@@ -167,8 +167,10 @@ class QuickBookService
 
         $routines = Subscription::find($request->subscription_id)->routines;
         foreach ($routines as $routine) {
-            $routine->doc_number = $resultingInvoiceObj->DocNumber;
-            $routine->save();
+            if (!$routine->doc_number) {
+                $routine->doc_number = $resultingInvoiceObj->DocNumber;
+                $routine->save();
+            }
         }
         
         $res['success'] = true;

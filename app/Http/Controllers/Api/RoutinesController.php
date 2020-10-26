@@ -17,8 +17,6 @@ use App\ScheduleItem;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Storage;
 
-
-
 class RoutinesController extends Controller
 {
     /**
@@ -54,6 +52,9 @@ class RoutinesController extends Controller
      */
     public function store(Request $request)
     {
+        // Add if new invoice that has doc_numer
+        // Update if none.
+        
         //
         $v = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -87,7 +88,7 @@ class RoutinesController extends Controller
         }
         $data = $request->toArray();
 
-        if($user->roles->first()->name == 'public') {
+        if ($user->roles->first()->name == 'public') {
             $organization_id = $user->organization()->first()->id;
             $organization = Organization::find($organization_id)->where('user_id', $user_id);
 
@@ -118,7 +119,6 @@ class RoutinesController extends Controller
         $dancers_filtered = [];
         $dancers_age = [];
         foreach ($dancers as $key => $dancer) {
-           
             if (count($dancers) === 1 && (int) $data['level_id'] === 1 && (int) $dancer['age'] > 15 && config('EVENT_TYPE_ID') == 1) {
                 return response()->json([
                     'status' => 'error',
@@ -136,9 +136,9 @@ class RoutinesController extends Controller
 
         $total_dancer = count($dancers_filtered);
 
-        if(count($dancers_age)) {
+        if (count($dancers_age)) {
             $dancerAverageAge = round(array_sum($dancers_age) / count($dancers_age));
-        }else {
+        } else {
             $dancerAverageAge = 0;
         }
 
@@ -149,7 +149,7 @@ class RoutinesController extends Controller
             ], 400);
         }
 
-        if(count($dancers_age)) {
+        if (count($dancers_age)) {
             $classification = Classification::where('event_type_id', config('EVENT_TYPE_ID'))->where('minage', '<=', $dancerAverageAge)->where('maxage', '>=', $dancerAverageAge)->first();
 
             if (!$classification) {
@@ -159,44 +159,42 @@ class RoutinesController extends Controller
                 ], 400);
             }
             $data['classification_id'] = $classification->id;
-
-        }else {
+        } else {
             $data['classification_id'] = 7;
         }
 
 
         // The category is define with the total of dancers
-        if(config('EVENT_TYPE_ID') == 2) {
-
+        if (config('EVENT_TYPE_ID') == 2) {
             if ($total_dancer >= 16) {
                 $data['category_id'] = 11; // Production
-            } else if ($total_dancer <= 15 && $total_dancer >= 10) {
+            } elseif ($total_dancer <= 15 && $total_dancer >= 10) {
                 $data['category_id'] = 10; // Grand Group
-            } else if ($total_dancer <= 9 && $total_dancer >= 4) {
+            } elseif ($total_dancer <= 9 && $total_dancer >= 4) {
                 $data['category_id'] = 9; // Petit Group
-            } else if($total_dancer == 3){
+            } elseif ($total_dancer == 3) {
                 $data['category_id'] = 12; // Duo/Trio
-            }else if($total_dancer == 2){
+            } elseif ($total_dancer == 2) {
                 $data['category_id'] = 12; // Duo/Trio
-            }else if($total_dancer == 1){
+            } elseif ($total_dancer == 1) {
                 $data['category_id'] = 8; // Solo
-            }else {
+            } else {
                 $data['category_id'] = 7; // Unclassified
             }
-        }else {
+        } else {
             if ($total_dancer >= 16) {
                 $data['category_id'] = 6; // Production
-            } else if ($total_dancer <= 15 && $total_dancer >= 10) {
+            } elseif ($total_dancer <= 15 && $total_dancer >= 10) {
                 $data['category_id'] = 5; // Grand Group
-            } else if ($total_dancer <= 9 && $total_dancer >= 4) {
+            } elseif ($total_dancer <= 9 && $total_dancer >= 4) {
                 $data['category_id'] = 4; // Petit Group
-            } else if ($total_dancer == 3) {
+            } elseif ($total_dancer == 3) {
                 $data['category_id'] = 2; // Duo/Trio
-            } else if ($total_dancer == 2) {
+            } elseif ($total_dancer == 2) {
                 $data['category_id'] = 2; // Duo/Trio
-            } else if($total_dancer == 1){
+            } elseif ($total_dancer == 1) {
                 $data['category_id'] = 1; // Solo
-            }else {
+            } else {
                 $data['category_id'] = 7; // Unclassified
             }
         }
@@ -254,7 +252,7 @@ class RoutinesController extends Controller
             ], 400);
         }
 
-        if($user->roles->first()->name == 'public') {
+        if ($user->roles->first()->name == 'public') {
             $organization_id = $user->organization()->first()->id;
             $organization = Organization::find($organization_id)->where('user_id', $user_id)->first();
 
@@ -269,7 +267,7 @@ class RoutinesController extends Controller
                 'id' => $id,
                 'organization_id' => $organization_id,
             ];
-        }else {
+        } else {
             $conditions = [
                 'id' => $id,
             ];
@@ -332,30 +330,30 @@ class RoutinesController extends Controller
         }
         $data = $request->toArray();
 
-        if($user->roles->first()->name == 'public') {
+        if ($user->roles->first()->name == 'public') {
             $organization_id = $user->organization()->first()->id;
-        $organization = Organization::find($organization_id)->where('user_id', $user_id);
+            $organization = Organization::find($organization_id)->where('user_id', $user_id);
 
-        if (!$organization) {
-            return response()->json([
+            if (!$organization) {
+                return response()->json([
                 'status' => 'error',
                 'msg' => __('messages.organization.notFound')
             ], 400);
-        }
+            }
 
-        $data['organization_id'] = $organization_id;
+            $data['organization_id'] = $organization_id;
 
-        $subscription = Subscription::where([
+            $subscription = Subscription::where([
             'id' => $data['subscription_id'],
             'organization_id' => $organization_id,
         ])->first();
 
-        if (!$subscription) {
-            return response()->json([
+            if (!$subscription) {
+                return response()->json([
                 'status' => 'error',
                 'msg' => __('messages.subscription.notFound')
             ], 400);
-        }
+            }
         }
         
 
@@ -368,7 +366,6 @@ class RoutinesController extends Controller
         $dancers_age = [];
 
         foreach ($dancers as $key => $dancer) {
-
             if (count($dancers) === 1 && (int) $data['level_id'] === 1 && (int) $dancer['age'] > 15 && config('EVENT_TYPE_ID') == 1) {
                 return response()->json([
                     'status' => 'error',
@@ -387,9 +384,9 @@ class RoutinesController extends Controller
 
         //$classification = Classification::where('minage', '<=', $dancerAverageAge)->where('maxage', '>=',$dancerAverageAge)->first();
 
-        if(count($dancers_age)) {
+        if (count($dancers_age)) {
             $dancerAverageAge = round(array_sum($dancers_age) / count($dancers_age));
-        }else {
+        } else {
             $dancerAverageAge = 0;
         }
         
@@ -401,7 +398,7 @@ class RoutinesController extends Controller
             ], 400);
         }
 
-        if(count($dancers_age)) {
+        if (count($dancers_age)) {
             $classification = Classification::where('event_type_id', config('EVENT_TYPE_ID'))->where('minage', '<=', $dancerAverageAge)->where('maxage', '>=', $dancerAverageAge)->first();
 
             if (!$classification) {
@@ -411,8 +408,7 @@ class RoutinesController extends Controller
                 ], 400);
             }
             $data['classification_id'] = $classification->id;
-
-        }else {
+        } else {
             $data['classification_id'] = 7;
         }
 
@@ -420,37 +416,36 @@ class RoutinesController extends Controller
 
         // The category is define with the total of dancers
 
-        if(config('EVENT_TYPE_ID') == 2) {
-
+        if (config('EVENT_TYPE_ID') == 2) {
             if ($total_dancer >= 16) {
                 $data['category_id'] = 11; // Production
-            } else if ($total_dancer <= 15 && $total_dancer >= 10) {
+            } elseif ($total_dancer <= 15 && $total_dancer >= 10) {
                 $data['category_id'] = 10; // Grand Group
-            } else if ($total_dancer <= 9 && $total_dancer >= 4) {
+            } elseif ($total_dancer <= 9 && $total_dancer >= 4) {
                 $data['category_id'] = 9; // Petit Group
-            } else if($total_dancer == 3){
+            } elseif ($total_dancer == 3) {
                 $data['category_id'] = 12; // Duo/Trio
-            }else if($total_dancer == 2){
+            } elseif ($total_dancer == 2) {
                 $data['category_id'] = 12; // Duo/Trio
-            }else if($total_dancer == 1){
+            } elseif ($total_dancer == 1) {
                 $data['category_id'] = 8; // Solo
-            }else {
+            } else {
                 $data['category_id'] = 7; // Unclassified
             }
-        }else {
+        } else {
             if ($total_dancer >= 16) {
                 $data['category_id'] = 6; // Production
-            } else if ($total_dancer <= 15 && $total_dancer >= 10) {
+            } elseif ($total_dancer <= 15 && $total_dancer >= 10) {
                 $data['category_id'] = 5; // Grand Group
-            } else if ($total_dancer <= 9 && $total_dancer >= 4) {
+            } elseif ($total_dancer <= 9 && $total_dancer >= 4) {
                 $data['category_id'] = 4; // Petit Group
-            } else if ($total_dancer == 3) {
+            } elseif ($total_dancer == 3) {
                 $data['category_id'] = 2; // Duo/Trio
-            } else if ($total_dancer == 2) {
+            } elseif ($total_dancer == 2) {
                 $data['category_id'] = 2; // Duo/Trio
-            } else if($total_dancer == 1){
+            } elseif ($total_dancer == 1) {
                 $data['category_id'] = 1; // Solo
-            }else {
+            } else {
                 $data['category_id'] = 7; // Unclassified
             }
         }
@@ -469,22 +464,22 @@ class RoutinesController extends Controller
         
         $resetSchedule = false;
 
-        if($data['classification_id'] != $routine->classification_id) {
+        if ($data['classification_id'] != $routine->classification_id) {
             $resetSchedule = true;
         }
-        if($data['category_id'] != $routine->category_id) {
+        if ($data['category_id'] != $routine->category_id) {
             $resetSchedule = true;
         }
-        if($data['level_id'] != $routine->level_id) {
+        if ($data['level_id'] != $routine->level_id) {
             $resetSchedule = true;
         }
-        if($data['style_id'] != $routine->style_id) {
+        if ($data['style_id'] != $routine->style_id) {
             $resetSchedule = true;
         }
 
 
         $scheduleItem = ScheduleItem::where('routine_id', $routine->id)->first();
-        if( $scheduleItem && $resetSchedule) {
+        if ($scheduleItem && $resetSchedule) {
             $scheduleItem->schedule_title_id = null;
             $scheduleItem->save();
         }
@@ -501,8 +496,8 @@ class RoutinesController extends Controller
 
         ], 200);
     }
-    public function uploadSong(Request $request) {
-
+    public function uploadSong(Request $request)
+    {
         $v = Validator::make($request->all(), [
             'song' => 'required'
         ]);
@@ -529,7 +524,7 @@ class RoutinesController extends Controller
 
 
 
-        if( $request->hasFile('song')) {
+        if ($request->hasFile('song')) {
             $file = $request->file('song');
             $originalFilename = $file->getClientOriginalName();
             $extension = $file->extension($originalFilename);
@@ -541,7 +536,7 @@ class RoutinesController extends Controller
                 Storage::disk($disk)->delete($filename);
             }
 
-            if(Storage::disk($disk)->putFileAs($path,  $file, $filename)) {
+            if (Storage::disk($disk)->putFileAs($path, $file, $filename)) {
                 $routine->music = $filename;
                 if (!$routine->save()) {
                     return response()->json([
@@ -556,7 +551,6 @@ class RoutinesController extends Controller
         
                 ], 200);
             }
-            
         }
     }
 
@@ -571,7 +565,7 @@ class RoutinesController extends Controller
         //
         $routine = Routine::find($id);
 
-        if(count($routine->dancers) > 0) {
+        if (count($routine->dancers) > 0) {
             if (!$routine->dancers()->detach()) {
                 return response()->json([
                     'status' => 'error',
@@ -592,7 +586,8 @@ class RoutinesController extends Controller
         ], 200);
     }
 
-    public function getSubscriptionRoutines($id) {
+    public function getSubscriptionRoutines($id)
+    {
         $routines = Routine::where('subscription_id', $id)->get();
 
         return response()->json($routines, 200);
