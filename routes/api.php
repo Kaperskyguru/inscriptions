@@ -160,6 +160,7 @@ Route::namespace('Api')->group(function () {
         //     });
         // });
         Route::get('/payments', 'QuickbooksController@getPayments');
+        Route::get('/creditnotes', 'QuickbooksController@getCreditNotes');
 
         Route::prefix('states')->group(function () {
             Route::get('/getByCountryID/{country_id}', 'StatesController@getByCountryID');

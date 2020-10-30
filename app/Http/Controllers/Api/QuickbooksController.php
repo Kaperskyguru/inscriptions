@@ -280,4 +280,9 @@ class QuickbooksController extends Controller
     {
         return QuickBookService::getInstance()->get_daily_payments();
     }
+
+    public function getCreditNotes(Request $request)
+    {
+        return QuickBookService::getInstance()->get_daily_creditNotes();
+    }
 }

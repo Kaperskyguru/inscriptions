@@ -1,7 +1,9 @@
 <?php
 namespace App\Services;
 
+use App\Event;
 use App\Payment;
+use App\Organization;
 use App\Subscription;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -40,6 +42,7 @@ class QuickBookService
         $data['FullyQualifiedName'] = $validatedData['user']['name'];
         $data['FamilyName'] = $names[1];
         $data['GivenName'] = $names[0];
+        $data['DisplayName'] = $validatedData['name'];
         $data['PrimaryEmailAddr']['Address'] = $validatedData['user']['email'];
         $data['PrimaryPhone']['FreeFormNumber'] = $validatedData['phone'];
         $data['CompanyName'] = $validatedData['name'];
@@ -84,7 +87,8 @@ class QuickBookService
        
         $validatedData = $v->validated();
 
-        if ($customer = $this->findCustomer($validatedData['invoices']['customer']['user']['name'])) {
+
+        if ($customer = $this->findCustomerByName($validatedData['invoices']['customer']['user']['name'])) {
             return $customer;
         }
 
@@ -118,7 +122,7 @@ class QuickBookService
         return $dataService;
     }
 
-    private function findCustomer($name)
+    private function findCustomerByName($name)
     {
         $customerArray = $this->getDataService()->Query("select * from Customer where DisplayName='" . $name . "'");
         $error = $this->getDataService()->getLastError();
@@ -308,22 +312,95 @@ class QuickBookService
         }
     }
 
+
+    public function get_daily_creditNotes()
+    {
+        $paymentArray = $this->getDataService()->Query("select * from CreditMemo WHERE TxnDate >='" . now()->toDateString() . "'");
+        $error = $this->getDataService()->getLastError();
+        if ($error || is_null($paymentArray)) {
+            return null;
+        } else {
+            if (is_array($paymentArray) && sizeof($paymentArray) > 0) {
+                // Store in Database
+                return $this->storePayments($paymentArray);
+            }
+            return null;
+        }
+    }
+
     private function storePayments($payments)
     {
         foreach ($payments as $payment) {
-            if ($payment->Line && $payment->Line->LinkedTxn && $payment->Line->LinkedTxn->TxnType == "Invoice") {
-                $this->createOrUpdatePayment($payment);
+            if (isset($payment->Line) && isset($payment->Line->LinkedTxn) && $payment->Line->LinkedTxn->TxnType == "Invoice") {
+                $this->createOrUpdatePayment($payment, 'invoice');
+            } else {
+                $this->createOrUpdatePayment($payment, 'creditnote');
             }
             continue;
         }
         return;
     }
 
-    private function createOrUpdatePayment($payment)
+    private function findCustomer($id)
     {
-        $subscription_id = $this->findSubscriptionIDFromInvoice($payment->Line->LinkedTxn->TxnId);
+        $customer = $this->getDataService()->FindById("Customer", $id);
+        $error = $this->getDataService()->getLastError();
+        if ($error) {
+            return null;
+        } else {
+            return $customer;
+        }
+    }
+
+    private function findClass($id)
+    {
+        $class = $this->getDataService()->FindById("Class", $id);
+        $error = $this->getDataService()->getLastError();
+        if ($error) {
+            return null;
+        } else {
+            return $class;
+        }
+    }
+
+    private function findOrganizationIDByName($name)
+    {
+        $org = Organization::where('name', $name)->first();
+        if ($org) {
+            return $org->id;
+        }
+        return null;
+    }
+
+    private function findIDEventByName($name)
+    {
+        $event = Event::getEventInfos(\strtolower($name));
+        if ($event) {
+            return $event['id'];
+        }
+        return null;
+    }
+
+    private function createOrUpdatePayment($payment, $type)
+    {
+        $note = '';
+        $subscription_id = null;
+
+        if ($type == 'invoice') {
+            $subscription_id = $this->findSubscriptionIDFromInvoice($payment->Line->LinkedTxn->TxnId);
+            // set note here
+            $note = 'PAYMENT QBO '.$payment->DocNumber;
+        } else {
+            $customer = $this->findCustomer($payment->CustomerRef);
+            $event = $this->findClass($payment->ClassRef);
+            if ($customer && $event) {
+                $subscription_id = $this->findSubscriptionIDFromEventAndOrganization($this->findIDEventByName($event->Name), $this->findOrganizationIDByName($customer->CompanyName));
+            }
+            // Set Note here
+            $note = 'CREDIT QBO '.$payment->DocNumber;
+        }
         
-        if ($subscription_id) {
+        if (!is_null($subscription_id)) {
             $oldPayment = Payment::where('subscription_id', $subscription_id)->first();
         
             if (!$oldPayment) {
@@ -332,20 +409,31 @@ class QuickBookService
                 $newpayment->subscription_id = $subscription_id;
                 $newpayment->receive_on = $payment->TxnDate;
                 $newpayment->amount = $payment->TotalAmt;
-                $newpayment->note = "Payment recieved from QBO ". now()->year;
+                $newpayment->note = $note;
                 $newpayment->save();
             } else {
                 $oldPayment->payment_type_id = 3; // Transfer
                 $oldPayment->subscription_id = $subscription_id;
                 $oldPayment->receive_on = $payment->TxnDate;
                 $oldPayment->amount = $payment->TotalAmt;
-                $oldPayment->note = "Payment recieved from QBO ". now()->year;
+                $oldPayment->note = $note;
                 $oldPayment->save();
             }
 
             // Update Subscription Payment status
             $this->updateSubscriptionStatus($subscription_id, 4 /* Paid */);
         }
+        return;
+    }
+
+    private function findSubscriptionIDFromEventAndOrganization($event, $organization)
+    {
+        $subscription = Subscription::where('event_id', $event)->where('organization_id', $organization)->first();
+        // dd($subscription, $event, $organization);
+        if ($subscription) {
+            return $subscription->id;
+        }
+        return null;
     }
 
     private function updateSubscriptionStatus($id, $status)

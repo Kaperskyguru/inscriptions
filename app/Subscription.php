@@ -127,10 +127,10 @@ class Subscription extends Model
 
         foreach ($this->routines as $routine) {
             $price = Price::where('category_id', $routine->category->id)->where('year', $year)->first();
-            // if (!$routine->doc_number) {
-            $total_cost = (count($routine->dancers) * $price->rebate_price);
-            $subtotal += $total_cost;
-            // }
+            if ($routine->doc_number) {
+                $total_cost = (count($routine->dancers) * $price->rebate_price);
+                $subtotal += $total_cost;
+            }
         }
         foreach ($this->fees as $fee) {
             $total_cost = ($fee->feeType->price * $fee->entries);

@@ -724,7 +724,9 @@
                 <span class="invoice-data grid-4"
                   >TPS 737664490 RT 0001 (5%)</span
                 >
-                <span class="invoice-int grid-3">{{ subscription.tps_payment }} $</span>
+                <span class="invoice-int grid-3"
+                  >{{ subscription.tps_payment }} $</span
+                >
               </li>
               <li
                 class="invoice-item text-body-display"
@@ -733,7 +735,9 @@
                 <span class="invoice-data grid-4"
                   >TVQ 1224260896 TQ 0001 (9,975%)</span
                 >
-                <span class="invoice-int grid-3">{{ subscription.tvq_payment }} $</span>
+                <span class="invoice-int grid-3"
+                  >{{ subscription.tvq_payment }} $</span
+                >
               </li>
               <li
                 class="invoice-item text-body-display"
@@ -742,7 +746,9 @@
                 <span class="invoice-data grid-4"
                   >TVH 737664490 RT 0001 (13%)</span
                 >
-                <span class="invoice-int grid-3">{{ subscription.tvh_payment }} $</span>
+                <span class="invoice-int grid-3"
+                  >{{ subscription.tvh_payment }} $</span
+                >
               </li>
               <li class="invoice-item text-body-display">
                 <span class="invoice-data grid-4">{{
