@@ -19,10 +19,7 @@
         </div>
       </form>
       <section class="organization-container">
-        <div
-          class="alert-no-data"
-          v-if="!this.content['organizations'].length"
-        >
+        <div class="alert-no-data" v-if="!this.content['organizations'].length">
           <p class="alert-text text-body-display">
             {{ $t("admin.text.noSubscriptions") }}
           </p>
