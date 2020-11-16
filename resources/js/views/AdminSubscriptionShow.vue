@@ -347,6 +347,14 @@
                         $t("dashboard.table.title.totalSubscription")
                       }}</span>
                     </li>
+
+                    <li class="table-item grid-2">
+                      <span class="text-subhead">Factured</span>
+                    </li>
+
+                    <li class="table-item grid-2">
+                      <span class="text-subhead">Credit</span>
+                    </li>
                   </ul>
                 </div>
                 <div class="table-body">
@@ -365,6 +373,18 @@
                         category.routines_count
                       }}</span>
                     </li>
+                    <li class="table-item grid-2">
+                      <span class="table-text text-body-display">{{
+                        category.entries
+                      }}</span>
+                    </li>
+
+                    <li class="table-item grid-2">
+                      <span class="table-text text-body-display">{{
+                        category.entries
+                      }}</span>
+                    </li>
+
                     <li class="table-item grid-2">
                       <span class="table-text text-body-display">{{
                         category.entries

@@ -6423,6 +6423,26 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -35616,7 +35636,11 @@ var render = function() {
                                         ]
                                       )
                                     ]
-                                  )
+                                  ),
+                                  _vm._v(" "),
+                                  _vm._m(0),
+                                  _vm._v(" "),
+                                  _vm._m(1)
                                 ])
                               ]),
                               _vm._v(" "),
@@ -35663,6 +35687,36 @@ var render = function() {
                                                 _vm._s(category.routines_count)
                                               )
                                             ]
+                                          )
+                                        ]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "li",
+                                        { staticClass: "table-item grid-2" },
+                                        [
+                                          _c(
+                                            "span",
+                                            {
+                                              staticClass:
+                                                "table-text text-body-display"
+                                            },
+                                            [_vm._v(_vm._s(category.entries))]
+                                          )
+                                        ]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "li",
+                                        { staticClass: "table-item grid-2" },
+                                        [
+                                          _c(
+                                            "span",
+                                            {
+                                              staticClass:
+                                                "table-text text-body-display"
+                                            },
+                                            [_vm._v(_vm._s(category.entries))]
                                           )
                                         ]
                                       ),
@@ -38555,7 +38609,24 @@ var render = function() {
     1
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("li", { staticClass: "table-item grid-2" }, [
+      _c("span", { staticClass: "text-subhead" }, [_vm._v("Factured")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("li", { staticClass: "table-item grid-2" }, [
+      _c("span", { staticClass: "text-subhead" }, [_vm._v("Credit")])
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -70717,9 +70788,9 @@ module.exports = "<svg xmlns=http://www.w3.org/2000/svg height=24 viewBox=\"0 0 
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/kaperskyguru/Projects/PHPProjects/inscriptions/resources/js/appv1.js */"./resources/js/appv1.js");
-__webpack_require__(/*! /home/kaperskyguru/Projects/PHPProjects/inscriptions/resources/sass/appv1.scss */"./resources/sass/appv1.scss");
-module.exports = __webpack_require__(/*! /home/kaperskyguru/Projects/PHPProjects/inscriptions/resources/sass/print.scss */"./resources/sass/print.scss");
+__webpack_require__(/*! /Users/solomon/Documents/workspace/PHPProjects/inscriptions/resources/js/appv1.js */"./resources/js/appv1.js");
+__webpack_require__(/*! /Users/solomon/Documents/workspace/PHPProjects/inscriptions/resources/sass/appv1.scss */"./resources/sass/appv1.scss");
+module.exports = __webpack_require__(/*! /Users/solomon/Documents/workspace/PHPProjects/inscriptions/resources/sass/print.scss */"./resources/sass/print.scss");
 
 
 /***/ })
