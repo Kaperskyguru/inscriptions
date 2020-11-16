@@ -340,6 +340,11 @@ textarea {
   text-align: center;
 }
 
+.vsa-item__trigger {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
 .layout-wrapper {
   display: flex;
   justify-content: center;

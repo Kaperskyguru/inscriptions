@@ -152,8 +152,8 @@ class Subscription extends Model
     }
     public function getTvhPaymentAttribute()
     {
-        $tvq = $this->getSubTotalPaymentAttribute() * env('TAX_TVH');
-        return number_format(($tvq), 2, '.', '');
+        $tvh = $this->getSubTotalPaymentAttribute() * env('TAX_TVH');
+        return number_format(($tvh), 2, '.', '');
     }
 
     public function getTotalPaymentAttribute()

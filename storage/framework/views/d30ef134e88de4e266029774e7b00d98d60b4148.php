@@ -16,7 +16,7 @@
     <meta name="msapplication-TileImage" content="<?php echo e(asset('img/logo-1-300x300.png')); ?>" />
     <?php endif; ?>
 
-
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous"> -->
     <link href="<?php echo e(asset('css/normalize.css?v=1.1')); ?>" rel="stylesheet">
     <link href="<?php echo e(asset('css/appv1.css?v=1.1')); ?>" rel="stylesheet">
 </head>

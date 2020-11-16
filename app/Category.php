@@ -51,4 +51,9 @@ class Category extends Model implements TranslatableContract
     //     dd($this->price);
     //     return $this->price->price;
     // }
+
+    public function invoices()
+    {
+        return $this->belongsToMany('App\Invoice', 'category_invoices', 'category_id', 'invoice_id');
+    }
 }

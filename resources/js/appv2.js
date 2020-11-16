@@ -1,3 +1,4 @@
+require("./bootstrap");
 import Vue from "vue";
 import VueRouter from "vue-router";
 import VeeValidate from "vee-validate";
@@ -8,6 +9,9 @@ import DefaultLayout from "./views/layouts/Default";
 import DashboardLayout from "./views/layouts/Dashboard";
 import AdminLayout from "./views/layouts/Admin";
 import excel from "vue-excel-export";
+import VueSimpleAccordion from "vue-simple-accordion";
+// import "vue-simple-accordion/dist/vue-simple-accordion.css";
+Vue.component("pagination", require("laravel-vue-pagination"));
 
 import App from "./views/App";
 
@@ -28,7 +32,16 @@ axios.interceptors.request.use(beforeRequestSuccess, beforeRequestError);
 axios.interceptors.response.use(onSuccess, onError);
 
 // localStorage.setItem("default_year", new Date().getFullYear() + 1);
-
+Vue.use(VueSimpleAccordion, {
+    tags: {
+        list: "dl",
+        list__item: "div",
+        item__heading: "dt",
+        heading__content: "span",
+        heading__icon: "span",
+        item__content: "div"
+    }
+});
 Vue.use(VeeValidate, {
     locale: window.locale,
     fieldsBagName: "vvFields"

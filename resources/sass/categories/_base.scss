@@ -1,34 +1,36 @@
 html {
-    font-size:62.5%;
+    font-size: 62.5%;
     box-sizing: border-box;
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
     font-weight: 400;
-    overflow-x:hidden;
-    height:100%;
+    overflow-x: hidden;
+    height: 100%;
 }
-*, *:before, *:after {
+*,
+*:before,
+*:after {
     box-sizing: inherit;
 }
 /**
  * Firefox specific rule
  */
 
- @-moz-document url-prefix() {
+@-moz-document url-prefix() {
     body {
-      font-weight: lighter !important;
+        font-weight: lighter !important;
     }
-  }
+}
 
 body {
-    background-color:$catskill;
-    color:$requin;
-    font-family:$default-font;
-    font-size:1.8rem;
-    font-weight:400;
-    margin:0;
-    padding:0;
-    position:relative;
+    background-color: $catskill;
+    color: $requin;
+    font-family: $default-font;
+    font-size: 1.8rem;
+    font-weight: 400;
+    margin: 0;
+    padding: 0;
+    position: relative;
     // &:before {
     //     content:"V 0.1.6";
     //     color:white;
@@ -44,20 +46,25 @@ body {
     //     background-color:$porto;
     // }
 }
-h1, h2, h3, h4, h5, h6 {
-    line-height:1;
-    margin-top:0;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    line-height: 1;
+    margin-top: 0;
 }
 
 a {
-    position:relative;
-    text-decoration:none;
+    position: relative;
+    text-decoration: none;
 }
 a[href^="tel"] {
     color: inherit; /* Inherit text color of parent element. */
     text-decoration: none; /* Remove underline. */
     /* Additional css `propery: value;` pairs here */
-  }
+}
 a[x-apple-data-detectors] {
     color: inherit !important;
     text-decoration: none !important;
@@ -67,38 +74,39 @@ a[x-apple-data-detectors] {
     line-height: inherit !important;
 }
 button {
-     // Normalize (<button>)
-     font: inherit;
-     color: inherit;
-     text-transform: none;
-     background-color: transparent;
-     border: 0;
-     margin: 0;
-     overflow: visible;
+    // Normalize (<button>)
+    font: inherit;
+    color: inherit;
+    text-transform: none;
+    background-color: transparent;
+    border: 0;
+    margin: 0;
+    overflow: visible;
 }
-button:focus {outline:0;}
+button:focus {
+    outline: 0;
+}
 
 img {
     &.responsive-img {
-        display:block;
-        width:100%;
-        outline:0;
-        height:auto;
+        display: block;
+        width: 100%;
+        outline: 0;
+        height: auto;
     }
 }
 select {
-    background:none;
-    border:none;
-    color:white;
+    background: none;
+    border: none;
+    color: white;
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
     -ms-appearance: none; /* get rid of default appearance for IE8, 9 and 10*/
-    border-radius:0;
+    border-radius: 0;
     outline: none;
     &:focus {
         outline: none;
-
     }
 }
 
@@ -126,13 +134,13 @@ select {
 
 ::-moz-selection {
     background: black;
-    color:white;
+    color: white;
     text-shadow: none;
 }
 
 ::selection {
-    background:black;
-    color:white;
+    background: black;
+    color: white;
     text-shadow: none;
 }
 
@@ -193,8 +201,6 @@ textarea {
     padding: 0.2em 0;
 }
 
-
-
 /* ==========================================================================
    Helper classes
    ========================================================================== */
@@ -234,7 +240,7 @@ textarea {
  * https://www.drupal.org/node/897638
  */
 
- .visuallyhidden:active,
+.visuallyhidden:active,
 .visuallyhidden.focusable:focus {
     clip: auto;
     height: auto;
@@ -276,6 +282,10 @@ textarea {
 }
 
 .c-align {
-    text-align:center;
+    text-align: center;
+}
 
+.vsa-item__trigger {
+    width: 100% !important;
+    max-width: 100% !important;
 }

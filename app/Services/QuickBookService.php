@@ -5,6 +5,8 @@ use App\Event;
 use App\Payment;
 use App\Organization;
 use App\Subscription;
+use App\CategoryInvoice;
+use App\Invoice as InvoiceModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use QuickBooksOnline\API\Facades\Item;
@@ -157,17 +159,46 @@ class QuickBookService
                 'errors' => $v->errors()
             ], 422);
         }
+
+        // dd($v->validated()['invoices']['data']);
         
         $invoiceObj = $this->generateInvoiceData($request, $v);
         $resultingInvoiceObj = $this->getDataService()->Add($invoiceObj);
         $error = $this->getDataService()->getLastError();
-        // dd($error);
         if ($error || \is_null($resultingInvoiceObj)) {
             $res['success'] = false;
             $res['message'] =  __("messages.global.fail");
             $res['error'] = $error;
             return $res;
         }
+
+        // Store this new Invoice and the data some where and display
+
+        // dd($resultingInvoiceObj);
+
+        $newInvoice = new InvoiceModel;
+        $newInvoice->doc_number = $resultingInvoiceObj->DocNumber;
+        $newInvoice->amount = $resultingInvoiceObj->TotalAmt;
+        $newInvoice->subscription_id = $request->subscription_id;
+        $newInvoice->save();
+
+        // select * from `newinvoice` where subscription_id = $subscription_id.
+        // loop through all `newinvoice`
+        // select * `newCategory` where invoice_id = $newinvoice_id
+        // with category
+        // with routine where doc_number = newinvoice->qbo
+            
+
+        $validatedData = $v->validated()['invoices'];
+
+        foreach ($validatedData['data'] as $line) {
+            CategoryInvoice::create([
+                'invoice_id' => $newInvoice->id,
+                'category_id' => $line['id']
+
+            ]) ;
+        }
+
 
         $routines = Subscription::find($request->subscription_id)->routines;
         foreach ($routines as $routine) {
