@@ -317,6 +317,11 @@ textarea {
   text-align: center;
 }
 
+.vsa-item__trigger {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
 .text-body-display {
   font-size: 1.6rem;
   line-height: 1.5;

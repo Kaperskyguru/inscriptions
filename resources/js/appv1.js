@@ -1,3 +1,4 @@
+require("./bootstrap");
 import Vue from "vue";
 import VueRouter from "vue-router";
 import VeeValidate from "vee-validate";
@@ -8,6 +9,7 @@ import DefaultLayout from "./views/layouts/Default";
 import DashboardLayout from "./views/layouts/Dashboard";
 import AdminLayout from "./views/layouts/Admin";
 import excel from "vue-excel-export";
+Vue.component("pagination", require("laravel-vue-pagination"));
 
 import App from "./views/App";
 

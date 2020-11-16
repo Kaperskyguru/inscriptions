@@ -11,6 +11,7 @@ use App\Price;
 use App\Style;
 use App\Status;
 use App\FeeType;
+use App\Invoice;
 use App\Payment;
 use App\Routine;
 use App\Category;
@@ -22,17 +23,17 @@ use App\ScheduleItem;
 use App\Subscription;
 use App\ScheduleTitle;
 use App\Classification;
-use Illuminate\Http\Request;
 //use App\Exports\RoutinesExport;
 //use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\ReportExport;
+use Illuminate\Http\Request;
 
+use App\Exports\ReportExport;
 use App\Services\QuickBookService;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use QuickBooksOnline\API\Facades\Customer;
-use QuickBooksOnline\API\Core\ServiceContext;
 
+use QuickBooksOnline\API\Core\ServiceContext;
 use QuickBooksOnline\API\DataService\DataService;
 use QuickBooksOnline\API\PlatformService\PlatformService;
 use QuickBooksOnline\API\Core\Http\Serialization\XmlObjectSerializer;
@@ -127,9 +128,10 @@ class AdminController extends Controller
         ->with(['subscriptions' => function ($query) use ($id) {
             $query->where('subscriptions.event_id', $id)->withCount('routines');
         }, 'subscriptions.routines.category','subscriptions.routines.level','subscriptions.routines.style', 'subscriptions.routines.dancers', 'subscriptions.status'])
-        ->orderBy('name', 'ASC')
-        ->get();
+        ->orderBy('name', 'ASC')->get();
+        //->paginate(5);
         //$subscriptions = Subscription::where('event_id', $id)->get();
+        // $organizations = $organizations->toAr;
         return response()->json(compact('city', 'organizations'), 200);
     }
     public function search(Request $request)
@@ -388,7 +390,7 @@ class AdminController extends Controller
         ])
         ->get();
 
-        // dd($categories);
+       
 
         $allCategories = Category::groupBy('id')->where('id', '!=', 7)
         ->where('event_type_id', config('EVENT_TYPE_ID'))
@@ -405,6 +407,39 @@ class AdminController extends Controller
         ])
         ->get();
 
+        $allinvoices = Invoice::whereHas('categories')->groupBy('doc_number')->where('subscription_id', $subscription_id)->get();
+        $invoices = [];
+        foreach ($allinvoices as $key => $invoice) {
+            $payment = [];
+            foreach ($invoice->categories as $key => $category) {
+                $entries = 0;
+                $routine_count = count($category->routines->where('subscription_id', $subscription_id));
+                $price = Price::where('category_id', $category->id)->where('year', $year)->first();
+                $routines = $category->routines->where('subscription_id', $subscription_id);
+                foreach ($routines as $routine) {
+                    $entries += count($routine->dancers);
+                }
+                $invoice->categories[$key]['entries'] =  $entries;
+                $total = $entries *  $price->rebate_price;
+                $invoice->categories[$key]['total'] = number_format(($total / 100), 2, '.', '');
+                $invoice->categories[$key]['price'] = $price;
+                $invoice->categories[$key]['routines_count'] = $routine_count;
+            }
+            $cats = $invoice->categories;
+            $doc_number = $invoice->doc_number;
+            $payment['sub_total'] = $this->getSubTotal($subscription_id, $doc_number);
+            $payment['tps'] = $this->getTps($subscription_id, $doc_number);
+            $payment['tvq'] = $this->getTvq($subscription_id, $doc_number);
+            $payment['tvh'] = $this->getTvh($subscription_id, $doc_number) ;
+            $payment['total'] = $this->getTotal($subscription_id, $doc_number);
+
+            $grouped = [
+                'invoice' => $invoice,
+                'payment' => $payment
+            ];
+            \array_push($invoices, $grouped);
+        }
+        
         foreach ($allCategories as $key => $category) {
             $entries = 0;
             $price = Price::where('category_id', $category->id)->where('year', $year)->first();
@@ -439,7 +474,60 @@ class AdminController extends Controller
 
         $years = Price::distinct('year')->pluck('year');
 
-        return response()->json(compact('organizations', 'categories', 'paymentTypes', 'feeTypes', 'authUrl', 'years', 'allCategories'), 200);
+        return response()->json(compact('organizations', 'invoices', 'categories', 'paymentTypes', 'feeTypes', 'authUrl', 'years', 'allCategories'), 200);
+    }
+
+    private function getTotal($subscription_id, $number)
+    {
+        $event = Subscription::find($subscription_id)->event;
+
+        // TODO Better way handle taxes
+        if ($event->state_id == 58) { // Ontario
+
+            $total = $this->getSubTotal($subscription_id, $number) +  $this->getTvh($subscription_id, $number);
+        } elseif ($event->state_id == 57) {
+            $total = $this->getSubTotal($subscription_id, $number) + $this->getTps($subscription_id, $number) + $this->getTvq($subscription_id, $number);
+        }
+        return round($total, 2);
+    }
+
+    private function getTvh($subscription_id, $number)
+    {
+        return number_format(($this->getSubTotal($subscription_id, $number)  * env('TAX_TVH')), 2, '.', '');
+    }
+
+    private function getTps($subscription_id, $number)
+    {
+        return number_format(($this->getSubTotal($subscription_id, $number)  * env('TAX_TPS')), 2, '.', '');
+    }
+
+    private function getTvq($subscription_id, $number)
+    {
+        return number_format(($this->getSubTotal($subscription_id, $number)  * env('TAX_TVQ')), 2, '.', '');
+    }
+
+
+    public function getSubTotal($subscription_id, $number)
+    {
+        $year = session()->get('YEAR') ? session()->get('YEAR'): now()->addYear()->year;
+
+        $subtotal = 0;
+        $subscription = Subscription::find($subscription_id);
+        $routines = $subscription->routines->where('doc_number', $number);
+        // dd($routines, $subscription);
+        foreach ($routines as $routine) {
+            $price = Price::where('category_id', $routine->category->id)->where('year', $year)->first();
+            if ($routine->doc_number) {
+                $total_cost = (count($routine->dancers) * $price->rebate_price);
+                $subtotal += $total_cost;
+            }
+        }
+
+        foreach ($subscription->fees as $fee) {
+            $total_cost = ($fee->feeType->price * $fee->entries);
+            $subtotal += $total_cost;
+        }
+        return number_format(($subtotal / 100), 2, '.', '');
     }
 
     public function updateStatus(Request $request)
