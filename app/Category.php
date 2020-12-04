@@ -56,4 +56,16 @@ class Category extends Model implements TranslatableContract
     {
         return $this->belongsToMany('App\Invoice', 'category_invoices', 'category_id', 'invoice_id');
     }
+
+    public function dancerRoutines()
+    {
+        return $this->hasManyThrough(
+            'App\DancerRoutine',
+            'App\Routine',
+            'category_id', // Foreign key on DancerRoutine table...
+            'routine_id', // Foreign key on Routine table...
+            'id', // Local key on categories table...
+            'id' // Local key on DancerRoutine table...
+        );
+    }
 }

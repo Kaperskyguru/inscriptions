@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\User;
+use App\Level;
+use App\Style;
+use App\Routine;
+use App\Organization;
+use App\ScheduleItem;
+use App\Subscription;
+use App\Classification;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
-use Auth;
-use App\Style;
-use App\Level;
-use App\User;
-use App\Classification;
-use App\Subscription;
-use App\Organization;
-use App\Routine;
-use App\ScheduleItem;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class RoutinesController extends Controller
 {
@@ -37,7 +37,7 @@ class RoutinesController extends Controller
     public function create()
     {
         //
-        
+
         $styles = Style::where('event_type_id', config('EVENT_TYPE_ID'))->get();
         $levels = Level::where('event_type_id', config('EVENT_TYPE_ID'))->get();
 
@@ -54,7 +54,7 @@ class RoutinesController extends Controller
     {
         // Add if new invoice that has doc_numer
         // Update if none.
-        
+
         //
         $v = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -98,14 +98,14 @@ class RoutinesController extends Controller
                     'msg' => __('messages.organization.notFound')
                 ], 400);
             }
-            
+
 
             $data['organization_id'] = $organization_id;
             $subscription = Subscription::where([
                 'id' => $data['subscription_id'],
                 'organization_id' => $organization_id,
             ])->first();
-    
+
             if (!$subscription) {
                 return response()->json([
                     'status' => 'error',
@@ -113,7 +113,7 @@ class RoutinesController extends Controller
                 ], 400);
             }
         }
-        
+
         $dancers = $data['dancers'];
         $whitelist = ['id'];
         $dancers_filtered = [];
@@ -198,7 +198,7 @@ class RoutinesController extends Controller
                 $data['category_id'] = 7; // Unclassified
             }
         }
-        
+
 
         $routine = Routine::create($data);
 
@@ -272,8 +272,8 @@ class RoutinesController extends Controller
                 'id' => $id,
             ];
         }
-        
-       
+
+
         $routine = Routine::with('Dancers')->where($conditions)->first();
         //
         if (!$routine) {
@@ -336,26 +336,26 @@ class RoutinesController extends Controller
 
             if (!$organization) {
                 return response()->json([
-                'status' => 'error',
-                'msg' => __('messages.organization.notFound')
-            ], 400);
+                    'status' => 'error',
+                    'msg' => __('messages.organization.notFound')
+                ], 400);
             }
 
             $data['organization_id'] = $organization_id;
 
             $subscription = Subscription::where([
-            'id' => $data['subscription_id'],
-            'organization_id' => $organization_id,
-        ])->first();
+                'id' => $data['subscription_id'],
+                'organization_id' => $organization_id,
+            ])->first();
 
             if (!$subscription) {
                 return response()->json([
-                'status' => 'error',
-                'msg' => __('messages.subscription.notFound')
-            ], 400);
+                    'status' => 'error',
+                    'msg' => __('messages.subscription.notFound')
+                ], 400);
             }
         }
-        
+
 
         $dancers = $data['dancers'];
 
@@ -389,7 +389,7 @@ class RoutinesController extends Controller
         } else {
             $dancerAverageAge = 0;
         }
-        
+
 
         if ((int) $data['level_id'] === 4 && (int) $dancerAverageAge < 13) {
             return response()->json([
@@ -412,7 +412,7 @@ class RoutinesController extends Controller
             $data['classification_id'] = 7;
         }
 
-        
+
 
         // The category is define with the total of dancers
 
@@ -461,7 +461,7 @@ class RoutinesController extends Controller
                 'msg' => __('messages.global.fail')
             ], 400);
         }
-        
+
         $resetSchedule = false;
 
         if ($data['classification_id'] != $routine->classification_id) {
@@ -483,7 +483,7 @@ class RoutinesController extends Controller
             $scheduleItem->schedule_title_id = null;
             $scheduleItem->save();
         }
-            
+
 
         $routine->dancers()->detach();
         $routine->dancers()->attach($dancers_filtered);
@@ -513,7 +513,7 @@ class RoutinesController extends Controller
         $routine_id = $data['routine_id'];
         $routine = Routine::whereHas('scheduleItem')->with(['scheduleItem.event', 'scheduleItem.organization'])->where('id', $routine_id)->first();
 
-    
+
 
         if (!$routine) {
             return response()->json([
@@ -544,11 +544,11 @@ class RoutinesController extends Controller
                         'msg' => __('messages.global.fail')
                     ], 400);
                 }
-    
+
                 return response()->json([
                     'status' => 'success',
                     'msg' => __('messages.global.success'),
-        
+
                 ], 200);
             }
         }
@@ -573,7 +573,7 @@ class RoutinesController extends Controller
                 ], 400);
             }
         }
-       
+
         if (!$routine->delete()) {
             return response()->json([
                 'status' => 'error',

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,13 +31,13 @@ Route::namespace('Api')->group(function () {
 
             // Send reset password mail
             Route::post('reset-password', 'AuthController@sendPasswordResetLink');
-        
+
             // handle reset password form process
             Route::post('reset/password', 'AuthController@callResetPassword');
-            
+
             // Refresh the JWT Token
             //Route::get('refresh', 'AuthController@refresh');
-            
+
             // Below mention routes are available only for the authenticated users.
             Route::middleware('auth:api')->group(function () {
                 // Get user info
@@ -46,7 +47,7 @@ Route::namespace('Api')->group(function () {
                 Route::post('update', 'AuthController@update');
             });
         });
-       
+
         Route::prefix('organization')->group(function () {
             Route::middleware('auth:api')->group(function () {
                 // Organization
@@ -123,19 +124,19 @@ Route::namespace('Api')->group(function () {
                 Route::delete('fee/delete/{id}', 'FeesController@delete');
 
                 Route::get('export/schedule/organization/{event_name}', 'SchedulesController@exportScheduleOrganizations');
-                
+
                 Route::get('export/schedule/organization/{event_name}/{organization_id}', 'SchedulesController@exportScheduleByOrganization');
 
-                
+
 
                 Route::get('export/schedule-item/{schedule_id}', 'SchedulesController@exportScheduleItem');
                 Route::get('export/schedule-item/by-position/{event}', 'SchedulesController@exportScheduleOrderPosition');
-                
+
 
 
                 Route::post('schedule-item/updateAll', 'ScheduleItemsController@updateAllItems');
                 Route::post('schedule-item/addToSchedule', 'ScheduleItemsController@addToSchedule');
-
+                Route::post('creditnote/create', "QuickbooksController@createCreditNotes");
 
                 //Route::post('schedule-title/update/{id}', 'ScheduleTitlesController@update');
 
@@ -152,11 +153,11 @@ Route::namespace('Api')->group(function () {
             });
         });
 
-       
+
 
         // Route::prefix('export')->group(function () {
         //     Route::middleware('auth:api')->group(function () {
-               
+
         //     });
         // });
         Route::get('/payments', 'QuickbooksController@getPayments');

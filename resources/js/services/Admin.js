@@ -2,6 +2,12 @@ import Vue from "vue";
 import axios from "axios";
 
 export default {
+    creditNote(data) {
+        return axios
+            .post(`/api/v1/admin/creditnote/create`, data)
+            .then(response => response.data)
+            .catch(error => Promise.reject(error.response));
+    },
     index() {
         return axios
             .get(`/api/v1/admin`)

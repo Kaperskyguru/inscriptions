@@ -358,40 +358,17 @@
                   </ul>
                 </div>
                 <div class="table-body">
-                  <ul
-                    class="table-list table-list-body"
+                  <TotalTable
                     v-for="category in this.content['allCategories']"
                     v-bind:key="category.id"
-                  >
-                    <li class="table-item grid-4">
-                      <span class="table-text text-body-display">{{
-                        category.name
-                      }}</span>
-                    </li>
-                    <li class="table-item grid-2">
-                      <span class="table-text text-body-display">{{
-                        category.routines_count
-                      }}</span>
-                    </li>
-                    <li class="table-item grid-2">
-                      <span class="table-text text-body-display">{{
-                        category.entries
-                      }}</span>
-                    </li>
-
-                    <li class="table-item grid-2">
-                      <span class="table-text text-body-display">{{
-                        category.entries
-                      }}</span>
-                    </li>
-
-                    <li class="table-item grid-2">
-                      <span class="table-text text-body-display">{{
-                        category.entries
-                      }}</span>
-                    </li>
-                  </ul>
+                    :category="category"
+                  />
                 </div>
+              </div>
+              <div class="export-actions" v-if="calculatedCredit.length">
+                <a @click.prevent="submitCreditNote" class="btn btn-primary"
+                  >Credit</a
+                >
               </div>
             </section>
 
@@ -524,7 +501,7 @@
               <li class="invoice-item text-body-display">
                 <span class="invoice-data grid-4">Sous-total</span>
                 <span class="invoice-int grid-3"
-                  >{{ subscription.sub_total }} $</span
+                  >{{ this.content["newpayment"].sub_total }} $</span
                 >
               </li>
               <li
@@ -534,7 +511,9 @@
                 <span class="invoice-data grid-4"
                   >TPS 737664490 RT 0001 (5%)</span
                 >
-                <span class="invoice-int grid-3">{{ subscription.tps }} $</span>
+                <span class="invoice-int grid-3"
+                  >{{ this.content["newpayment"].tps }} $</span
+                >
               </li>
               <li
                 class="invoice-item text-body-display"
@@ -543,7 +522,9 @@
                 <span class="invoice-data grid-4"
                   >TVQ 1224260896 TQ 0001 (9,975%)</span
                 >
-                <span class="invoice-int grid-3">{{ subscription.tvq }} $</span>
+                <span class="invoice-int grid-3"
+                  >{{ this.content["newpayment"].tvq }} $</span
+                >
               </li>
               <li
                 class="invoice-item text-body-display"
@@ -552,14 +533,16 @@
                 <span class="invoice-data grid-4"
                   >TVH 737664490 RT 0001 (13%)</span
                 >
-                <span class="invoice-int grid-3">{{ subscription.tvh }} $</span>
+                <span class="invoice-int grid-3"
+                  >{{ this.content["newpayment"].tvh }} $</span
+                >
               </li>
               <li class="invoice-item invoice-total text-body-display">
                 <span class="invoice-data grid-4">{{
                   $t("admin.label.total_cost")
                 }}</span>
                 <span class="invoice-int grid-3"
-                  >{{ subscription.total }} $</span
+                  >{{ this.content["newpayment"].total }} $</span
                 >
               </li>
             </ul>
@@ -640,7 +623,7 @@
             :set="(subscription = content['organizations'].subscriptions[0])"
           >
             <h1 class="title-tertiary">
-              {{ "Routined Invoice" }}
+              {{ "Invoice Routined" }}
             </h1>
             <div class="table">
               <div class="table-header">
@@ -1656,6 +1639,7 @@ import { mapActions, mapGetters } from "vuex";
 import { store } from "../store";
 import Feedback from "../components/Feedback";
 import AdminFee from "../components/partials/admin-fee";
+import TotalTable from "../components/partials/TotalTable";
 
 import { i18n } from "../plugins/i18n.js";
 import axios from "axios";
@@ -1729,6 +1713,15 @@ export default {
     event_name() {
       return this.$route.params.event;
     },
+
+    calculatedCredit() {
+      let categories = this.content["allCategories"];
+      let mappedCats = categories.filter((category) => {
+        return category.credit < 0;
+      });
+
+      return mappedCats;
+    },
   },
 
   mounted() {},
@@ -1744,6 +1737,7 @@ export default {
       updatePayment: "admin/updatePayment",
       deletePayment: "admin/deletePayment",
       updateStatus: "admin/updateStatus",
+      createCreditNote: "admin/createCreditNote",
       updateDancer: "dancers/update",
       storeDancer: "dancers/store",
       destroyDancer: "dancers/destroy",
@@ -1751,6 +1745,25 @@ export default {
       addToSchedule: "schedules/addToSchedule",
       getCategoriesByYear: "admin/categoriesByYear",
     }),
+    submitCreditNote() {
+      this.saving = true;
+      let mappedCats = this.calculatedCredit;
+
+      // .content["allCategories"].filter((category) => {
+      //   return category.credit < 0;
+      // });
+
+      const data = {};
+      data.invoices = {};
+      data.invoices.data = mappedCats;
+      data.invoices.customer = this.organization;
+      data.invoices.event_name = this.event_name;
+      data.status_id = this.status_id;
+      data.subscription_id = this.subscription_id;
+      this.createCreditNote(data);
+      // store.dispatch("admin/createCreditNote", data);
+      this.saving = false;
+    },
     changeCategoryPrice(event) {
       store
         .dispatch("admin/subscription", {
@@ -2232,6 +2245,7 @@ export default {
     Icon,
     Feedback,
     AdminFee,
+    TotalTable,
   },
 
   created() {

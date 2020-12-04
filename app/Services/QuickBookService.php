@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services;
 
 use App\Event;
@@ -6,6 +7,7 @@ use App\Payment;
 use App\Organization;
 use App\Subscription;
 use App\CategoryInvoice;
+use App\DancerRoutine;
 use App\Invoice as InvoiceModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -15,6 +17,8 @@ use Illuminate\Support\Facades\Validator;
 use QuickBooksOnline\API\Facades\Invoice;
 use QuickBooksOnline\API\Facades\Customer;
 use QuickBooksOnline\API\DataService\DataService;
+use QuickBooksOnline\API\Facades\CreditMemo;
+use QuickBooksOnline\API\Facades\QuickBookClass;
 
 class QuickBookService
 {
@@ -66,9 +70,23 @@ class QuickBookService
         return $res;
     }
 
+
+    private function create_class($name)
+    {
+        $data = [];
+        $data['name'] = $name;
+        $classObj = QuickBookClass::create($data);
+        $classResObj = $this->getDataService()->Add($classObj);
+        $error = $this->getDataService()->getLastError();
+        if ($error) {
+            return null;
+        }
+        return $classResObj;
+    }
+
     public function findOrCreateCustomer(Request $request)
     {
-       
+
         // Run validation
         $v = Validator::make($request->all(), [
             'invoices.customer.city' => 'string',
@@ -86,11 +104,11 @@ class QuickBookService
                 'errors' => $v->errors()
             ], 422);
         }
-       
+
         $validatedData = $v->validated();
 
 
-        if ($customer = $this->findCustomerByName($validatedData['invoices']['customer']['user']['name'])) {
+        if ($customer = $this->findCustomerByName($validatedData['invoices']['customer']['name'])) {
             return $customer;
         }
 
@@ -100,6 +118,17 @@ class QuickBookService
 
     private function getDataService()
     {
+        // dd(array(
+        //     'auth_mode' => 'oauth2',
+        //     'ClientID' => env('QB_CLIENT_ID'),
+        //     'ClientSecret' =>  env('QB_CLIENT_SECRET'),
+        //     'RedirectURI' => env('QB_OAUTH_REDIRECT_URI'),
+        //     'scope' => env('QB_OAUTH_SCOPE'),
+        //     'baseUrl' => env('QB_ENV'),
+        //     'QBORealmID' => env('QB_REALMID'),
+        //     'refreshTokenKey' => env('QB_REFRESH_TOKEN')
+        // ));
+
         $dataService = DataService::Configure(array(
             'auth_mode' => 'oauth2',
             'ClientID' => env('QB_CLIENT_ID'),
@@ -108,8 +137,10 @@ class QuickBookService
             'scope' => env('QB_OAUTH_SCOPE'),
             'baseUrl' => env('QB_ENV'),
             'QBORealmID' => env('QB_REALMID'),
-            'refreshTokenKey' =>env('QB_REFRESH_TOKEN')
+            'refreshTokenKey' => env('QB_REFRESH_TOKEN')
         ));
+
+
         $OAuth2LoginHelper = $dataService->getOAuth2LoginHelper();
         $refreshedAccessTokenObj = $OAuth2LoginHelper->refreshToken();
         // session(['QB_REFRESH_TOKEN' => $refreshedAccessTokenObj->getRefreshToken()]);
@@ -150,7 +181,7 @@ class QuickBookService
             'invoices' => 'required|array',
             'invoices.data' => 'required|array',
             'invoices.customer' => 'required|array',
-            'invoices.event_name'=> 'required|string',
+            'invoices.event_name' => 'required|string',
             'subscription_id' => 'required'
         ]);
         if ($v->fails()) {
@@ -161,7 +192,7 @@ class QuickBookService
         }
 
         // dd($v->validated()['invoices']['data']);
-        
+
         $invoiceObj = $this->generateInvoiceData($request, $v);
         $resultingInvoiceObj = $this->getDataService()->Add($invoiceObj);
         $error = $this->getDataService()->getLastError();
@@ -182,21 +213,16 @@ class QuickBookService
         $newInvoice->subscription_id = $request->subscription_id;
         $newInvoice->save();
 
-        // select * from `newinvoice` where subscription_id = $subscription_id.
-        // loop through all `newinvoice`
-        // select * `newCategory` where invoice_id = $newinvoice_id
-        // with category
-        // with routine where doc_number = newinvoice->qbo
-            
 
         $validatedData = $v->validated()['invoices'];
 
         foreach ($validatedData['data'] as $line) {
             CategoryInvoice::create([
                 'invoice_id' => $newInvoice->id,
-                'category_id' => $line['id']
-
-            ]) ;
+                'category_id' => $line['id'],
+                'factured' => $line['entries'],
+                'subscription_id' => $newInvoice->subscription_id
+            ]);
         }
 
 
@@ -206,11 +232,101 @@ class QuickBookService
                 $routine->doc_number = $resultingInvoiceObj->DocNumber;
                 $routine->save();
             }
+
+            $dancerRoutines = DancerRoutine::where('routine_id', $routine->id)->get();
+            foreach ($dancerRoutines as $dancerRoutine) {
+                $dancerRoutine->doc_number = $resultingInvoiceObj->DocNumber;
+                $dancerRoutine->save();
+            }
         }
-        
+
         $res['success'] = true;
         $res['message'] = __("messages.global.QBO_created");
         $res['data'] = $resultingInvoiceObj;
+        return $res;
+    }
+
+    public function create_creditmemo(Request $request)
+    {
+        // dd(Subscription::find($request->subscription_id)->routines);
+        // Run validation
+        $v = Validator::make($request->all(), [
+            'invoices' => 'required|array',
+            'invoices.data' => 'required|array',
+            'invoices.customer' => 'required|array',
+            'invoices.event_name' => 'required|string',
+            'subscription_id' => 'required'
+        ]);
+        if ($v->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $v->errors()
+            ], 422);
+        }
+
+        // dd($v->validated()['invoices']['data']);
+
+
+
+        // Get ABS(credit)
+
+        $creditmemoObj = $this->generateCreditData($request, $v);
+        $resultingCreditmemoObj = $this->getDataService()->Add($creditmemoObj);
+        $error = $this->getDataService()->getLastError();
+        if ($error || \is_null($resultingCreditmemoObj)) {
+            $res['success'] = false;
+            $res['message'] =  __("messages.global.fail");
+            $res['error'] = $error;
+            return $res;
+        }
+
+
+        $validatedData = $v->validated()['invoices'];
+        foreach ($validatedData['data'] as $line) {
+            $categoryInvoice = CategoryInvoice::groupBy('category_id')->where('category_id', $line['id'])->where('subscription_id', $request->subscription_id)->first();
+            $categoryInvoice->factured -= \abs($line['credit']);
+            $categoryInvoice->save();
+        }
+        // Store this new Invoice and the data some where and display
+
+        // dd($resultingInvoiceObj);
+
+        // $newInvoice = new InvoiceModel;
+        // $newInvoice->doc_number = $resultingInvoiceObj->DocNumber;
+        // $newInvoice->amount = $resultingInvoiceObj->TotalAmt;
+        // $newInvoice->subscription_id = $request->subscription_id;
+        // $newInvoice->save();
+
+
+        // $validatedData = $v->validated()['invoices'];
+
+        // foreach ($validatedData['data'] as $line) {
+        //     CategoryInvoice::create([
+        //         'invoice_id' => $newInvoice->id,
+        //         'category_id' => $line['id'],
+        //         'factured' => $line['entries'],
+        //         'subscription_id' => $newInvoice->subscription_id
+        //     ]);
+        // }
+
+
+        // $routines = Subscription::find($request->subscription_id)->routines;
+        // foreach ($routines as $routine) {
+        //     if (!$routine->doc_number) {
+        //         $routine->doc_number = $resultingInvoiceObj->DocNumber;
+        //         $routine->save();
+        //     }
+
+        //     $dancerRoutines = DancerRoutine::where('routine_id', $routine->id)->get();
+        //     foreach ($dancerRoutines as $dancerRoutine) {
+        //         $dancerRoutine->doc_number = $resultingInvoiceObj->DocNumber;
+        //         $dancerRoutine->save();
+        //     }
+        // }
+
+        $res['success'] = true;
+        $res['message'] = __("messages.global.QBO_created");
+        $res['data'] = $resultingCreditmemoObj;
         return $res;
     }
 
@@ -223,7 +339,7 @@ class QuickBookService
         $item = $this->create_item($name);
         return $item;
     }
-    
+
     private function create_item($name)
     {
         $data = [];
@@ -255,10 +371,19 @@ class QuickBookService
         }
     }
 
-    private function generateInvoiceData($request, $v)
+    private function findOrCreateClass($name)
+    {
+        $classRes = $this->findClass(null, $name);
+        if (is_null($classRes)) {
+            $classRes = $this->create_class($name);
+        }
+        return $classRes;
+    }
+
+    private function generateCreditData($request, $v)
     {
         $customerObj = $this->findOrCreateCustomer($request);
-        $res = [];
+        // $res = [];
         $events = [
             'gatineau' => 'Gatineau',
             'levis' => 'Lévis',
@@ -275,18 +400,19 @@ class QuickBookService
                 $itemObj = $this->findOrCreateItem($line['name']);
                 $item['name'] = $itemObj->Name;
                 $item['value'] =  $itemObj->Id;
-                
-                $routine = $line['routines_count'];
+
+                $credit = \abs($line['credit']);
+                $total = $line['formatted_rebate_price'] * $credit;
 
                 $lineItem = Line::create([
-                'DetailType' => 'SalesItemLineDetail',
-                'Amount' => $line['total'],
-                'Description' => $line['name'] . " ( Routine: $routine )",
-                'SalesItemLineDetail' => [
-                    'Qty' => $line['entries'],
-                    'UnitPrice' => $line['formatted_rebate_price'],
-                    'TaxCodeRef' => ['value' => "8"],
-                    'ItemRef' => $item
+                    'DetailType' => 'SalesItemLineDetail',
+                    'Amount' => $total,
+                    'Description' => $line['name'] . " ( Routine: $credit )",
+                    'SalesItemLineDetail' => [
+                        'Qty' => $credit,
+                        'UnitPrice' => $line['formatted_rebate_price'],
+                        'TaxCodeRef' => ['value' => "8"],
+                        'ItemRef' => $item
                     ],
                 ]);
                 \array_push($lines, $lineItem);
@@ -296,7 +422,88 @@ class QuickBookService
             $data["BillEmail"]["Address"] = $validatedData['customer']['user']['email'];
             $data['Line'] = $lines;
 
-            
+
+            //CreateOrRead Class
+            $class = [];
+            $classObj = $this->findOrCreateClass($events[$validatedData['event_name']]);
+            $class['name'] = $classObj->Name;
+            $class['value'] =  $classObj->Id;
+
+            $data['ClassRef'] = $class;
+
+
+            // Add Custom Field
+            $customField = [
+                [
+                    "DefinitionId" => "1",
+                    "StringValue" =>  $events[$validatedData['event_name']],
+                    "Type" => "StringType",
+                    "Name" => "EventName"
+                ],
+                [
+                    "DefinitionId" => "2",
+                    "StringValue" =>  $request->subscription_id,
+                    "Type" => "StringType",
+                    "Name" => "SubscriptionID"
+                ]
+            ];
+            $data["CustomField"] = $customField;
+
+            $creditObj = CreditMemo::create($data);
+
+            return $creditObj;
+        }
+
+        // Customer not found and cannot create new
+        return response()->json([
+            'status' => 'error',
+            'error' => $customerObj['error'],
+            'msg' => __('messages.global.fail')
+        ], 400);
+    }
+
+    private function generateInvoiceData($request, $v)
+    {
+        $customerObj = $this->findOrCreateCustomer($request);
+        // $res = [];
+        $events = [
+            'gatineau' => 'Gatineau',
+            'levis' => 'Lévis',
+            'saintehyacinthe' => 'Saint-Hyacinthe'
+        ];
+
+        if ($customerObj['status']) {
+            $customer = $customerObj['data'];
+
+            $validatedData = $v->validated()['invoices'];
+            $lines = [];
+            foreach ($validatedData['data'] as $line) {
+                $item = [];
+                $itemObj = $this->findOrCreateItem($line['name']);
+                $item['name'] = $itemObj->Name;
+                $item['value'] =  $itemObj->Id;
+
+                $routine = $line['routines_count'];
+
+                $lineItem = Line::create([
+                    'DetailType' => 'SalesItemLineDetail',
+                    'Amount' => $line['total'],
+                    'Description' => $line['name'] . " ( Routine: $routine )",
+                    'SalesItemLineDetail' => [
+                        'Qty' => $line['entries'],
+                        'UnitPrice' => $line['formatted_rebate_price'],
+                        'TaxCodeRef' => ['value' => "8"],
+                        'ItemRef' => $item
+                    ],
+                ]);
+                \array_push($lines, $lineItem);
+            }
+
+            $data['CustomerRef']['value'] = $customer->Id;
+            $data["BillEmail"]["Address"] = $validatedData['customer']['user']['email'];
+            $data['Line'] = $lines;
+
+
 
             // Add Custom Field
             $customField = [
@@ -383,14 +590,28 @@ class QuickBookService
         }
     }
 
-    private function findClass($id)
+    private function findClass($id, $name = null)
     {
-        $class = $this->getDataService()->FindById("Class", $id);
-        $error = $this->getDataService()->getLastError();
-        if ($error) {
-            return null;
+        if (!is_null($name)) {
+            $classArray = $this->getDataService()->Query("select * from Class WHERE Name='" . $name . "'");
+            $error = $this->getDataService()->getLastError();
+            if ($error) {
+                return null;
+            } else {
+                if (is_array($classArray) && sizeof($classArray) > 0) {
+                    return current($classArray);
+                }
+                return null;
+            }
         } else {
-            return $class;
+
+            $class = $this->getDataService()->FindById("Class", $id);
+            $error = $this->getDataService()->getLastError();
+            if ($error) {
+                return null;
+            } else {
+                return $class;
+            }
         }
     }
 
@@ -420,7 +641,7 @@ class QuickBookService
         if ($type == 'invoice') {
             $subscription_id = $this->findSubscriptionIDFromInvoice($payment->Line->LinkedTxn->TxnId);
             // set note here
-            $note = 'PAYMENT QBO '.$payment->DocNumber;
+            $note = 'PAYMENT QBO ' . $payment->DocNumber;
         } else {
             $customer = $this->findCustomer($payment->CustomerRef);
             $event = $this->findClass($payment->ClassRef);
@@ -428,12 +649,12 @@ class QuickBookService
                 $subscription_id = $this->findSubscriptionIDFromEventAndOrganization($this->findIDEventByName($event->Name), $this->findOrganizationIDByName($customer->CompanyName));
             }
             // Set Note here
-            $note = 'CREDIT QBO '.$payment->DocNumber;
+            $note = 'CREDIT QBO ' . $payment->DocNumber;
         }
-        
+
         if (!is_null($subscription_id)) {
             $oldPayment = Payment::where('subscription_id', $subscription_id)->first();
-        
+
             if (!$oldPayment) {
                 $newpayment = new Payment;
                 $newpayment->payment_type_id = 3; // Transfer

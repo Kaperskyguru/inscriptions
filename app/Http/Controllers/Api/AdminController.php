@@ -2,41 +2,32 @@
 
 namespace App\Http\Controllers\Api;
 
-use DB;
-use PDF;
-use Excel;
-use Session;
-use App\Level;
 use App\Price;
-use App\Style;
 use App\Status;
 use App\FeeType;
 use App\Invoice;
 use App\Payment;
-use App\Routine;
 use App\Category;
-use App\Schedule;
 use Carbon\Carbon;
 use App\PaymentType;
 use App\Organization;
 use App\ScheduleItem;
 use App\Subscription;
 use App\ScheduleTitle;
-use App\Classification;
+use App\CategoryInvoice;
+use App\DancerRoutine;
+use Illuminate\Http\Request;
+use App\Exports\ReportExport;
 //use App\Exports\RoutinesExport;
 //use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Http\Request;
-
-use App\Exports\ReportExport;
 use App\Services\QuickBookService;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
-use QuickBooksOnline\API\Facades\Customer;
 
-use QuickBooksOnline\API\Core\ServiceContext;
-use QuickBooksOnline\API\DataService\DataService;
-use QuickBooksOnline\API\PlatformService\PlatformService;
-use QuickBooksOnline\API\Core\Http\Serialization\XmlObjectSerializer;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Validator;
+
+use function PHPSTORM_META\type;
 
 class AdminController extends Controller
 {
@@ -53,7 +44,7 @@ class AdminController extends Controller
             // TODO change to 1 request
 
             $gatineau = [];
-       
+
             $toronto = [];
             $levis = [];
             $saintehyacinthe = [];
@@ -66,11 +57,11 @@ class AdminController extends Controller
             //     $query->where('event_id', 4);
             //  }])->orderByRaw('FIELD (id, ' . implode(', ', $ids) . ') ASC')->get();
 
-        
+
 
             return response()->json(compact('gatineau', 'toronto', 'levis', 'flofest', 'saintehyacinthe'), 200);
         }
-        $ids = [2,1,3,4,5];
+        $ids = [2, 1, 3, 4, 5];
 
         // TODO change to 1 request
 
@@ -90,17 +81,17 @@ class AdminController extends Controller
         //     $query->where('event_id', 4);
         //  }])->orderByRaw('FIELD (id, ' . implode(', ', $ids) . ') ASC')->get();
 
-        
+
 
         return response()->json(compact('gatineau', 'toronto', 'levis', 'saintehyacinthe'), 200);
     }
 
     /**
-      * Display the specified resource.
-      *
-      * @param  string  $event
-      * @return \Illuminate\Http\Response
-      */
+     * Display the specified resource.
+     *
+     * @param  string  $event
+     * @return \Illuminate\Http\Response
+     */
     public function event($event)
     {
         //
@@ -120,15 +111,15 @@ class AdminController extends Controller
             $city = 'Sainte-Hyacinthe';
             $id = 5;
         }
-        
+
         $organizations = Organization::orderBy('name')->whereHas('subscriptions', function ($query) use ($id) {
             $query->where('subscriptions.event_id', $id);
         })
-        ->with('organizationType')
-        ->with(['subscriptions' => function ($query) use ($id) {
-            $query->where('subscriptions.event_id', $id)->withCount('routines');
-        }, 'subscriptions.routines.category','subscriptions.routines.level','subscriptions.routines.style', 'subscriptions.routines.dancers', 'subscriptions.status'])
-        ->orderBy('name', 'ASC')->get();
+            ->with('organizationType')
+            ->with(['subscriptions' => function ($query) use ($id) {
+                $query->where('subscriptions.event_id', $id)->withCount('routines');
+            }, 'subscriptions.routines.category', 'subscriptions.routines.level', 'subscriptions.routines.style', 'subscriptions.routines.dancers', 'subscriptions.status'])
+            ->orderBy('name', 'ASC')->get();
         //->paginate(5);
         //$subscriptions = Subscription::where('event_id', $id)->get();
         // $organizations = $organizations->toAr;
@@ -158,21 +149,22 @@ class AdminController extends Controller
 
         $filters = $data['filters'];
 
-        
+
         $organizations = Organization::orderBy('name')->whereHas('subscriptions', function ($query) use ($id, $filters) {
             $query->where('subscriptions.event_id', $id);
             if (count($filters) > 0) {
                 $query->whereIn('subscriptions.status_id', $filters);
             }
         })
-        ->with('organizationType')
-        ->with(['subscriptions' => function ($query) use ($id) {
-            $query->where('subscriptions.event_id', $id)->withCount('routines');
-        },
-        'subscriptions.status',
-        ])
-        ->where('name', 'like', '%'.$data['query'].'%')
-        ->get();
+            ->with('organizationType')
+            ->with([
+                'subscriptions' => function ($query) use ($id) {
+                    $query->where('subscriptions.event_id', $id)->withCount('routines');
+                },
+                'subscriptions.status',
+            ])
+            ->where('name', 'like', '%' . $data['query'] . '%')
+            ->get();
         return response()->json(compact('city', 'organizations'), 200);
     }
     public function addPayment(Request $request)
@@ -190,15 +182,15 @@ class AdminController extends Controller
         }
         $data = $request->toArray();
 
-        $data['amount'] = number_format((float)$data['amount']*100., 0, '.', '');
+        $data['amount'] = number_format((float)$data['amount'] * 100., 0, '.', '');
 
         $payment = Payment::create($data);
-        
+
         if (!$payment) {
             return response()->json([
                 'status' => 'error',
                 'msg' => __('messages.global.fail'),
-    
+
             ], 400);
         }
 
@@ -213,7 +205,7 @@ class AdminController extends Controller
 
         if ($subscription->balance <= 0) {
             $subscription->status_id = 4;
-        
+
             if (!$subscription->save()) {
                 return response()->json([
                     'status' => 'error',
@@ -241,15 +233,15 @@ class AdminController extends Controller
         }
         $data = $request->toArray();
 
-        $data['amount'] = number_format((float)$data['amount']*100., 0, '.', '');
+        $data['amount'] = number_format((float)$data['amount'] * 100., 0, '.', '');
 
         $payment = Payment::find($data['id']);
-        
+
         if (!$payment) {
             return response()->json([
                 'status' => 'error',
                 'msg' => __('messages.global.fail'),
-    
+
             ], 400);
         }
 
@@ -289,12 +281,12 @@ class AdminController extends Controller
     {
         $payment = Payment::find($id);
 
-        
+
         if (!$payment) {
             return response()->json([
                 'status' => 'error',
                 'msg' => __('messages.global.fail'),
-    
+
             ], 400);
         }
         $subscription_id = $payment->subscription_id;
@@ -341,71 +333,72 @@ class AdminController extends Controller
      */
     public function subscription(Request $request, $event, $subscription_id)
     {
-        $year = $request->query('year') == 'undefined' ? now()->addYear()->year: $request->query('year');
+        $year = $request->query('year') == 'undefined' ? now()->addYear()->year : $request->query('year');
         session()->put('YEAR', $year);
         // Subscription::sub_total_year == $year;
         $organizations = Organization::orderBy('name')->whereHas('subscriptions', function ($query) use ($subscription_id) {
             $query->where('subscriptions.id', $subscription_id);
         })
-        ->with('organizationType')
-        ->with([
-            'dancers' => function ($query) {
-                $query->orderBy('first_name', 'ASC');
-            },
-        ])
-        ->with('user')
-        ->with(
-            [
-            'subscriptions' => function ($query) use ($subscription_id, $year) {
-                $query->where('subscriptions.id', $subscription_id)->withCount('routines');
-            },
-            'subscriptions.routines.category',
-            'subscriptions.routines.level',
-            'subscriptions.routines.style',
-            'subscriptions.routines.dancers',
-            'subscriptions.status',
-            'subscriptions.payments.paymentType',
-            'subscriptions.fees.feeType',
-        ]
-        )
-        ->first();
+            ->with('organizationType')
+            ->with([
+                'dancers' => function ($query) {
+                    $query->orderBy('first_name', 'ASC');
+                },
+            ])
+            ->with('user')
+            ->with(
+                [
+                    'subscriptions' => function ($query) use ($subscription_id, $year) {
+                        $query->where('subscriptions.id', $subscription_id)->withCount('routines');
+                    },
+                    'subscriptions.routines.category',
+                    'subscriptions.routines.level',
+                    'subscriptions.routines.style',
+                    'subscriptions.routines.dancers',
+                    'subscriptions.status',
+                    'subscriptions.payments.paymentType',
+                    'subscriptions.fees.feeType',
+                ]
+            )
+            ->first();
 
         // dd($subscription_id);
 
         $categories = Category::groupBy('id')->where('id', '!=', 7)
-        ->where('event_type_id', config('EVENT_TYPE_ID'))
-        ->whereHas('routines', function ($query) use ($subscription_id) {
-            $query->whereNull('doc_number')->where('subscription_id', $subscription_id);
-        })
-        ->with([
-            'routines' => function ($query) use ($subscription_id) {
-                $query->where('subscription_id', $subscription_id);
-            },
-        ])
-        ->withCount([
-            'routines' => function ($query) use ($subscription_id) {
-                $query->where('subscription_id', $subscription_id)->whereNull('doc_number');
-            },
-            
-        ])
-        ->get();
+            ->where('event_type_id', config('EVENT_TYPE_ID'))
+            // ->whereHas('routines', function ($query) use ($subscription_id) {
+            //     $query->whereNull('doc_number')->where('subscription_id', $subscription_id);
+            // })
+            // ->hasManyThrough()
+            ->with([
+                'routines' => function ($query) use ($subscription_id) {
+                    $query->where('subscription_id', $subscription_id);
+                },
+            ])
+            ->withCount([
+                'routines' => function ($query) use ($subscription_id) {
+                    $query->where('subscription_id', $subscription_id); //->whereNull('doc_number');
+                },
 
-       
+            ])
+            ->get();
+
+
 
         $allCategories = Category::groupBy('id')->where('id', '!=', 7)
-        ->where('event_type_id', config('EVENT_TYPE_ID'))
-        ->with([
-            'routines' => function ($query) use ($subscription_id) {
-                $query->where('subscription_id', $subscription_id);
-            },
-        ])
-        ->withCount([
-            'routines' => function ($query) use ($subscription_id) {
-                $query->where('subscription_id', $subscription_id);
-            },
-            
-        ])
-        ->get();
+            ->where('event_type_id', config('EVENT_TYPE_ID'))
+            ->with([
+                'routines' => function ($query) use ($subscription_id) {
+                    $query->where('subscription_id', $subscription_id);
+                },
+            ])
+            ->withCount([
+                'routines' => function ($query) use ($subscription_id) {
+                    $query->where('subscription_id', $subscription_id);
+                },
+
+            ])
+            ->get();
 
         $allinvoices = Invoice::whereHas('categories')->groupBy('doc_number')->where('subscription_id', $subscription_id)->get();
         $invoices = [];
@@ -430,7 +423,7 @@ class AdminController extends Controller
             $payment['sub_total'] = $this->getSubTotal($subscription_id, $doc_number);
             $payment['tps'] = $this->getTps($subscription_id, $doc_number);
             $payment['tvq'] = $this->getTvq($subscription_id, $doc_number);
-            $payment['tvh'] = $this->getTvh($subscription_id, $doc_number) ;
+            $payment['tvh'] = $this->getTvh($subscription_id, $doc_number);
             $payment['total'] = $this->getTotal($subscription_id, $doc_number);
 
             $grouped = [
@@ -439,14 +432,32 @@ class AdminController extends Controller
             ];
             \array_push($invoices, $grouped);
         }
-        
+
+
         foreach ($allCategories as $key => $category) {
             $entries = 0;
+            $factured = 0;
+            $credit = 0;
             $price = Price::where('category_id', $category->id)->where('year', $year)->first();
+
+            $categoryInvoices = CategoryInvoice::groupBy('category_id')->where('category_id', $category->id)->where('subscription_id', $subscription_id)->get();
+            $factured = $categoryInvoices->sum('factured');
+
             foreach ($category->routines as $routine) {
                 $entries += count($routine->dancers);
             }
+
             $allCategories[$key]['entries'] =  $entries;
+            $allCategories[$key]['factured'] =  $factured;
+            if ($entries < $factured) {
+                $credit = $entries - $factured;
+
+                // Get the credit data
+                /**
+                 * Get the Category and the Dancers there
+                 */
+            }
+            $allCategories[$key]['credit'] = $credit;
             $total = $entries *  $price->rebate_price;
             $allCategories[$key]['total'] = number_format(($total / 100), 2, '.', '');
             $allCategories[$key]['price'] = $price;
@@ -454,17 +465,38 @@ class AdminController extends Controller
 
         foreach ($categories as $key => $category) {
             $entries = 0;
+
             $price = Price::where('category_id', $category->id)->where('year', $year)->first();
-            foreach ($category->routines as $routine) {
-                if (!$routine->doc_number) {
+            $routines = $category->routines;
+            foreach ($routines as $routine) {
+                $dancers = DancerRoutine::where('routine_id', $routine->id)->where('doc_number', 0)->get();
+
+                if (count($dancers)) {
                     $entries += count($routine->dancers);
                 }
             }
-            $categories[$key]['entries'] =  $entries;
-            $total = $entries *  $price->rebate_price;
-            $categories[$key]['total'] = number_format(($total / 100), 2, '.', '');
-            $categories[$key]['price'] = $price;
+
+            if ($entries !== 0) {
+                $categories[$key]['entries'] =  $entries;
+                $total = $entries *  $price->rebate_price;
+                $categories[$key]['total'] = number_format(($total / 100), 2, '.', '');
+                $categories[$key]['price'] = $price;
+            } else {
+                unset($categories[$key]);
+            }
+
+            $newpayment = [];
+            $newpayment['sub_total'] = $this->getSubTotal($subscription_id, null);
+            $newpayment['tps'] = $this->getTps($subscription_id, null);
+            $newpayment['tvq'] = $this->getTvq($subscription_id, null);
+            $newpayment['tvh'] = $this->getTvh($subscription_id, null);
+            $newpayment['total'] = $this->getTotal($subscription_id, null);
         }
+
+        // dd($newpayment);
+        $categories = $categories->values();
+
+
         $paymentTypes = PaymentType::all();
         $feeTypes = FeeType::all();
         $authUrl = '';
@@ -473,8 +505,7 @@ class AdminController extends Controller
         session(['subscription_id' => $subscription_id]);
 
         $years = Price::distinct('year')->pluck('year');
-
-        return response()->json(compact('organizations', 'invoices', 'categories', 'paymentTypes', 'feeTypes', 'authUrl', 'years', 'allCategories'), 200);
+        return response()->json(compact('organizations', 'invoices', 'categories', 'paymentTypes', 'feeTypes', 'authUrl', 'years', 'allCategories', 'newpayment'), 200);
     }
 
     private function getTotal($subscription_id, $number)
@@ -509,12 +540,29 @@ class AdminController extends Controller
 
     public function getSubTotal($subscription_id, $number)
     {
-        $year = session()->get('YEAR') ? session()->get('YEAR'): now()->addYear()->year;
-
+        $year = session()->get('YEAR') ? session()->get('YEAR') : now()->addYear()->year;
         $subtotal = 0;
         $subscription = Subscription::find($subscription_id);
+
+
+        if ($number === null) {
+            $routines = $subscription->routines;
+            foreach ($routines as $routine) {
+                $price = Price::where('category_id', $routine->category->id)->where('year', $year)->first();
+                $dancers = DancerRoutine::where('routine_id', $routine->id)->where('doc_number', 0)->get();
+                if (count($dancers)) {
+                    $total_cost = (count($routine->dancers) * $price->rebate_price);
+                    $subtotal += $total_cost;
+                }
+            }
+            foreach ($subscription->fees as $fee) {
+                $total_cost = ($fee->feeType->price * $fee->entries);
+                $subtotal += $total_cost;
+            }
+            return number_format(($subtotal / 100), 2, '.', '');
+        }
+
         $routines = $subscription->routines->where('doc_number', $number);
-        // dd($routines, $subscription);
         foreach ($routines as $routine) {
             $price = Price::where('category_id', $routine->category->id)->where('year', $year)->first();
             if ($routine->doc_number) {
@@ -572,39 +620,39 @@ class AdminController extends Controller
         $organizations = Organization::orderBy('name')->whereHas('subscriptions', function ($query) use ($subscription_id) {
             $query->where('subscriptions.id', $subscription_id);
         })
-        ->with('organizationType')
-        ->with(
-            [
-            'subscriptions' => function ($query) use ($subscription_id) {
-                $query->where('subscriptions.id', $subscription_id)->withCount('routines');
-            },
-            'subscriptions.routines' => function ($query) use ($subscription_id) {
-                $query->where('routines.subscription_id', $subscription_id);
-            },
-            // 'subscriptions.event',
-            // 'subscriptions.routines.category',
-            // 'subscriptions.routines.level',
-            // 'subscriptions.routines.style',
-            // 'subscriptions.routines.dancers',
-            // 'subscriptions.status',
-            'subscriptions.payments.paymentType'
-        ]
-        )
-        ->first();
+            ->with('organizationType')
+            ->with(
+                [
+                    'subscriptions' => function ($query) use ($subscription_id) {
+                        $query->where('subscriptions.id', $subscription_id)->withCount('routines');
+                    },
+                    'subscriptions.routines' => function ($query) use ($subscription_id) {
+                        $query->where('routines.subscription_id', $subscription_id);
+                    },
+                    // 'subscriptions.event',
+                    // 'subscriptions.routines.category',
+                    // 'subscriptions.routines.level',
+                    // 'subscriptions.routines.style',
+                    // 'subscriptions.routines.dancers',
+                    // 'subscriptions.status',
+                    'subscriptions.payments.paymentType'
+                ]
+            )
+            ->first();
 
         $categories = Category::groupBy('id')->where('id', '!=', 7)->where('event_type_id', config('EVENT_TYPE_ID'))
-        ->with([
-            'routines' => function ($query) use ($subscription_id) {
-                $query->where('subscription_id', $subscription_id);
-            },
-        ])
-        ->withCount([
-            'routines' => function ($query) use ($subscription_id) {
-                $query->where('subscription_id', $subscription_id);
-            },
-            
-        ])
-        ->get();
+            ->with([
+                'routines' => function ($query) use ($subscription_id) {
+                    $query->where('subscription_id', $subscription_id);
+                },
+            ])
+            ->withCount([
+                'routines' => function ($query) use ($subscription_id) {
+                    $query->where('subscription_id', $subscription_id);
+                },
+
+            ])
+            ->get();
         $year = session()->get('YEAR');
         foreach ($categories as $i => $category) {
             $entries = 0;
@@ -651,7 +699,7 @@ class AdminController extends Controller
         $data['dancers'] = $organizations->dancers;
         $data['routines'] = $organizations->subscriptions->first()->routines;
         $data['categories'] = $categories;
-       
+
         $separator = '-';
         $title = $data['organization']['name'] . '_' . 'HTF ' . $data['event'] . '_' . date('d-m-Y', strtotime($data['export_time']));
 
@@ -665,9 +713,9 @@ class AdminController extends Controller
             }
             \array_push($dancers, $dancer);
         }
-        
+
         $data['dancers'] = $dancers;
-        return Excel::download(new ReportExport($data), $title. '.xlsx');
+        return Excel::download(new ReportExport($data), $title . '.xlsx');
     }
 
     /**
@@ -679,20 +727,20 @@ class AdminController extends Controller
     public function schedule($event)
     {
         $event = $this->getEventInfos($event);
-           
+
         $city = $event['city'];
         $id = $event['id'];
-            
+
         $data = ScheduleTitle::with([
-                // 'scheduleItems.routine.subscription.organization',
-                'scheduleItems.routine.dancers',
-                'scheduleItems.routine.category',
-                'scheduleItems.routine.classification',
-                'scheduleItems.routine.style',
-                'scheduleItems.routine.level',
-                'scheduleItems.organization',
-                // 'scheduleItems.routine.dancersCount',
-            ])
+            // 'scheduleItems.routine.subscription.organization',
+            'scheduleItems.routine.dancers',
+            'scheduleItems.routine.category',
+            'scheduleItems.routine.classification',
+            'scheduleItems.routine.style',
+            'scheduleItems.routine.level',
+            'scheduleItems.organization',
+            // 'scheduleItems.routine.dancersCount',
+        ])
             ->orderBy('order', 'asc')
             ->whereHas('scheduleItems')
             ->where('schedule_id', $id)
@@ -714,20 +762,20 @@ class AdminController extends Controller
             }
         }
         $dataArr = $data->toArray();
-           
+
         $noCategory = [
-                'id' => '',
-                'name' =>  __('admin.title.uncategorized'),
-                'schedule_items' => ScheduleItem::with([
-                    'routine.category',
-                    'organization',
-                    'routine.style',
-                    'routine.level',
-                    'routine.dancers',
-                    'routine.classification'
-                    // 'scheduleItems.routine.dancersCount',
-                ])->where(['schedule_title_id' => null, 'event_id' => $id])->get()
-            ];
+            'id' => '',
+            'name' =>  __('admin.title.uncategorized'),
+            'schedule_items' => ScheduleItem::with([
+                'routine.category',
+                'organization',
+                'routine.style',
+                'routine.level',
+                'routine.dancers',
+                'routine.classification'
+                // 'scheduleItems.routine.dancersCount',
+            ])->where(['schedule_title_id' => null, 'event_id' => $id])->get()
+        ];
         foreach ($noCategory['schedule_items'] as $j => $item) {
             $dancers_age = [];
             foreach ($item->routine->dancers as $dancer) {
@@ -743,32 +791,32 @@ class AdminController extends Controller
         }
 
         array_unshift($dataArr, $noCategory);
-            
+
         return response()->json($dataArr, 200);
     }
     public function scheduleOrderByPosition($event)
     {
         $event = $this->getEventInfos($event);
-           
+
         $city = $event['city'];
         $id = $event['id'];
-            
+
         $data = ScheduleTitle::with([
-                    'scheduleItems' => function ($query) {
-                        $query->orderBy(DB::raw('ISNULL(position), position'), 'ASC');
-                    },
-                    'scheduleItems.routine.dancers',
-                    'scheduleItems.routine.classification',
-                    'scheduleItems.organization',
-                    'scheduleItems.routine.category',
-                    'scheduleItems.routine.style',
-                    'scheduleItems.routine.level',
-                    // 'scheduleItems.routine.dancersCount',
-                ])
-                ->orderBy(DB::raw('ISNULL(position), position'), 'ASC')
-                ->whereHas('scheduleItems')
-                ->where('schedule_id', $id)
-                ->get();
+            'scheduleItems' => function ($query) {
+                $query->orderBy(DB::raw('ISNULL(position), position'), 'ASC');
+            },
+            'scheduleItems.routine.dancers',
+            'scheduleItems.routine.classification',
+            'scheduleItems.organization',
+            'scheduleItems.routine.category',
+            'scheduleItems.routine.style',
+            'scheduleItems.routine.level',
+            // 'scheduleItems.routine.dancersCount',
+        ])
+            ->orderBy(DB::raw('ISNULL(position), position'), 'ASC')
+            ->whereHas('scheduleItems')
+            ->where('schedule_id', $id)
+            ->get();
         foreach ($data as $k => $schedule) {
             $item_ids = [];
             foreach ($schedule->scheduleItems as $j => $item) {
@@ -782,26 +830,26 @@ class AdminController extends Controller
                 } else {
                     $dancerAverageAge = 0;
                 }
-    
+
                 $data[$k]['scheduleItems'][$j]['routine']['average'] = $dancerAverageAge;
             }
         }
         //ScheduleItem::whereNotIn('id', $item_ids)->delete();
         $dataArr = $data->toArray();
-              
+
         $noCategory = [
-                'id' => '',
-                'name' =>  __('admin.title.uncategorized'),
-                'schedule_items' => ScheduleItem::with([
-                    'routine.category',
-                    'organization',
-                    'routine.style',
-                    'routine.level',
-                    'routine.dancers',
-                    'routine.classification'
-                    // 'scheduleItems.routine.dancersCount',
-                ])->where(['schedule_title_id' => null, 'event_id' => $id])->get()
-            ];
+            'id' => '',
+            'name' =>  __('admin.title.uncategorized'),
+            'schedule_items' => ScheduleItem::with([
+                'routine.category',
+                'organization',
+                'routine.style',
+                'routine.level',
+                'routine.dancers',
+                'routine.classification'
+                // 'scheduleItems.routine.dancersCount',
+            ])->where(['schedule_title_id' => null, 'event_id' => $id])->get()
+        ];
 
         foreach ($noCategory['schedule_items'] as $j => $item) {
             $dancers_age = [];
@@ -818,21 +866,21 @@ class AdminController extends Controller
         }
 
         array_unshift($dataArr, $noCategory);
-            
+
         return response()->json($dataArr, 200);
     }
     public function scheduleGetItems($event)
     {
         $event = $this->getEventInfos($event);
-           
+
         $city = $event['city'];
         $id = $event['id'];
         $data = ScheduleItem::with(['scheduleTitle', 'routine', 'routine.category'])
             ->where('event_id', $id)
             ->orderBy(DB::raw('ISNULL(position), position'), 'ASC')
             ->get();
-           
-            
+
+
         return response()->json($data, 200);
     }
 
@@ -848,27 +896,27 @@ class AdminController extends Controller
     private function getEventInfos($eventSlug)
     {
         $events = [
-                'gatineau' => [
-                    'city' => 'Gatineau',
-                    'id' => 1
-                ],
-                'toronto' => [
-                    'city' => 'Toronto',
-                    'id' => 2
-                ],
-                'levis' => [
-                    'city' => 'Lévis',
-                    'id' => 3
-                ],
-                'flofest' => [
-                    'city' => 'FLOFEST',
-                    'id' => 4
-                ],
-                'saintehyacinthe' => [
-                    'city' => 'Saintehyacinthe',
-                    'id' => 5
-                ]
-            ];
+            'gatineau' => [
+                'city' => 'Gatineau',
+                'id' => 1
+            ],
+            'toronto' => [
+                'city' => 'Toronto',
+                'id' => 2
+            ],
+            'levis' => [
+                'city' => 'Lévis',
+                'id' => 3
+            ],
+            'flofest' => [
+                'city' => 'FLOFEST',
+                'id' => 4
+            ],
+            'saintehyacinthe' => [
+                'city' => 'Saintehyacinthe',
+                'id' => 5
+            ]
+        ];
         return $events[$eventSlug];
     }
 }

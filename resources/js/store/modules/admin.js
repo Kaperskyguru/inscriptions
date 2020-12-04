@@ -24,6 +24,9 @@ const getters = {
 };
 
 const actions = {
+    createCreditNote({ commit }, data) {
+        return Admin.creditNote(data).then(data => commit("index", data));
+    },
     index({ commit }) {
         return Admin.index().then(data => commit("index", data));
     },

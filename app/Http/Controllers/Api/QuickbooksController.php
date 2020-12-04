@@ -3,16 +3,17 @@
 namespace App\Http\Controllers\Api;
 
 use Session;
+use App\Price;
 use App\Category;
 use App\Organization;
 use Illuminate\Http\Request;
 use App\Services\QuickBookService;
 use App\Http\Controllers\Controller;
 use QuickBooksOnline\API\Facades\Line;
+
+
+
 use QuickBooksOnline\API\Facades\Invoice;
-
-
-
 use QuickBooksOnline\API\Facades\Customer;
 use QuickBooksOnline\API\Core\ServiceContext;
 use QuickBooksOnline\API\DataService\DataService;
@@ -24,7 +25,7 @@ class QuickbooksController extends Controller
     //
     public function index(Request $request)
     {
-       
+
         // $dataService = DataService::Configure(array(
         //     'auth_mode' => 'oauth2',
         //     'ClientID' => env('QB_CLIENT_ID'),
@@ -33,12 +34,12 @@ class QuickbooksController extends Controller
         //     'scope' => env('QB_OAUTH_SCOPE'),
         //     'baseUrl' => "development"
         // ));
-        
+
         // $OAuth2LoginHelper = $dataService->getOAuth2LoginHelper();
-        
+
         // // Get the Authorization URL from the SDK
         // $authUrl = $OAuth2LoginHelper->getAuthorizationCodeURL();
-       
+
 
         // return view('quickbooks', ['authUrl' => $authUrl]);
     }
@@ -54,49 +55,49 @@ class QuickbooksController extends Controller
         $organizations = Organization::orderBy('name')->whereHas('subscriptions', function ($query) use ($subscription_id) {
             $query->where('subscriptions.id', $subscription_id);
         })
-        ->with('organizationType')
-        ->with([
-            'dancers' => function ($query) {
-                $query->orderBy('first_name', 'ASC');
-            },
-        ])
-        ->with('user')
-        ->with(
-            [
-            'subscriptions' => function ($query) use ($subscription_id) {
-                $query->where('subscriptions.id', $subscription_id)->withCount('routines');
-            },
-            'subscriptions.routines.category',
-            'subscriptions.routines.level',
-            'subscriptions.routines.style',
-            'subscriptions.routines.dancers',
-            'subscriptions.status',
-            'subscriptions.payments.paymentType'
-        ]
-        )
-        ->first();
+            ->with('organizationType')
+            ->with([
+                'dancers' => function ($query) {
+                    $query->orderBy('first_name', 'ASC');
+                },
+            ])
+            ->with('user')
+            ->with(
+                [
+                    'subscriptions' => function ($query) use ($subscription_id) {
+                        $query->where('subscriptions.id', $subscription_id)->withCount('routines');
+                    },
+                    'subscriptions.routines.category',
+                    'subscriptions.routines.level',
+                    'subscriptions.routines.style',
+                    'subscriptions.routines.dancers',
+                    'subscriptions.status',
+                    'subscriptions.payments.paymentType'
+                ]
+            )
+            ->first();
 
         $categories = Category::groupBy('id')->where('id', '!=', 7)
-        ->where('event_type_id', config('EVENT_TYPE_ID'))
-        ->with([
-            'routines' => function ($query) use ($subscription_id) {
-                $query->where('subscription_id', $subscription_id);
-            },
-        ])
-        ->withCount([
-            'routines' => function ($query) use ($subscription_id) {
-                $query->where('subscription_id', $subscription_id);
-            },
-            
-        ])
-        ->get();
-        
+            ->where('event_type_id', config('EVENT_TYPE_ID'))
+            ->with([
+                'routines' => function ($query) use ($subscription_id) {
+                    $query->where('subscription_id', $subscription_id);
+                },
+            ])
+            ->withCount([
+                'routines' => function ($query) use ($subscription_id) {
+                    $query->where('subscription_id', $subscription_id);
+                },
+
+            ])
+            ->get();
+
         $parseUrl = $this->parseAuthRedirectUrl($_SERVER['QUERY_STRING']);
-        
+
         $accessToken = $OAuth2LoginHelper->exchangeAuthorizationCodeForToken($parseUrl['code'], $parseUrl['realmId']);
         $dataService->updateOAuth2Token($accessToken);
 
-        
+
         session(['QB_TOKEN' => $accessToken]);
 
         $dataService->updateOAuth2Token($accessToken);
@@ -133,18 +134,18 @@ class QuickbooksController extends Controller
 
             $itemRef = $this->getItemObj($dataService, $category->translate('en')->name);
             $LineObj = Line::create([
-                    "Amount" => number_format(($total / 100), 2, '.', ''),
-                    "DetailType" => "SalesItemLineDetail",
-                    "SalesItemLineDetail" => [
-                        "Qty" => $entries,
-                        "ItemRef" => [
-                            "value" => $itemRef->Id
-                        ],
-                        
-                        "UnitPrice" =>  $itemRef->UnitPrice,
-                        //"TaxCodeRef" => ["value" => "3"]
-                            
-                    ]
+                "Amount" => number_format(($total / 100), 2, '.', ''),
+                "DetailType" => "SalesItemLineDetail",
+                "SalesItemLineDetail" => [
+                    "Qty" => $entries,
+                    "ItemRef" => [
+                        "value" => $itemRef->Id
+                    ],
+
+                    "UnitPrice" =>  $itemRef->UnitPrice,
+                    //"TaxCodeRef" => ["value" => "3"]
+
+                ]
             ]);
             $lines[] = $LineObj;
             //$categories[$key]['entries'] =  $entries;
@@ -152,14 +153,14 @@ class QuickbooksController extends Controller
             // $categories[$key]['total'] =
         }
         $invoiceObj = Invoice::create([
-                "Line" => $lines,
-                "CustomerRef"=> [
-                    "value"=> $customerRef->Id
-                ],
-                "BillEmail" => [
-                    "Address" => $organizations->user->email
-                ]
-            ]);
+            "Line" => $lines,
+            "CustomerRef" => [
+                "value" => $customerRef->Id
+            ],
+            "BillEmail" => [
+                "Address" => $organizations->user->email
+            ]
+        ]);
         $resultingInvoiceObj = $dataService->Add($invoiceObj);
         $error = $dataService->getLastError();
         if ($error) {
@@ -206,28 +207,28 @@ class QuickbooksController extends Controller
         $splitName = explode(' ', $organizations->user->name, 2); // Restricts it to only 2 values, for names like Billy Bob Jones
         $customerData = [
             "BillAddr" => [
-            "Line1"=>  $organizations->address,
-            "City"=>  $organizations->city,
-            "Country"=>  "CA",
-            "CountrySubDivisionCode"=>  $organizations->state->code,
-            "PostalCode"=>  $organizations->zipcode
-        ],
-        "Notes" =>  "",
-        "Title"=>  "",
-        "GivenName"=>  $splitName[0],
-        "MiddleName"=>  '',
-        "FamilyName"=>  $splitName[1],
-        "Suffix"=>  "",
-        "FullyQualifiedName"=>  $organizations->name,
-        "CompanyName"=>  $organizations->name,
-        "DisplayName"=>  $organizations->name,
-        "PrimaryPhone"=>  [
-            "FreeFormNumber"=>  $organizations->phone
-        ],
-        "PrimaryEmailAddr"=>  [
-            "Address" => $organizations->user->email
-        ]
-       ];
+                "Line1" =>  $organizations->address,
+                "City" =>  $organizations->city,
+                "Country" =>  "CA",
+                "CountrySubDivisionCode" =>  $organizations->state->code,
+                "PostalCode" =>  $organizations->zipcode
+            ],
+            "Notes" =>  "",
+            "Title" =>  "",
+            "GivenName" =>  $splitName[0],
+            "MiddleName" =>  '',
+            "FamilyName" =>  $splitName[1],
+            "Suffix" =>  "",
+            "FullyQualifiedName" =>  $organizations->name,
+            "CompanyName" =>  $organizations->name,
+            "DisplayName" =>  $organizations->name,
+            "PrimaryPhone" =>  [
+                "FreeFormNumber" =>  $organizations->phone
+            ],
+            "PrimaryEmailAddr" =>  [
+                "Address" => $organizations->user->email
+            ]
+        ];
 
         // Create Customer
         $customerRequestObj = Customer::create($customerData);
@@ -254,7 +255,7 @@ class QuickbooksController extends Controller
             }
         }
     }
-   
+
     private function getDataService()
     {
         $dataService = DataService::Configure(array(
@@ -284,5 +285,10 @@ class QuickbooksController extends Controller
     public function getCreditNotes(Request $request)
     {
         return QuickBookService::getInstance()->get_daily_creditNotes();
+    }
+
+    public function createCreditNotes(Request $request)
+    {
+        return QuickBookService::getInstance()->create_creditmemo($request);
     }
 }
