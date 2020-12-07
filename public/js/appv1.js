@@ -6787,6 +6787,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -6897,10 +6901,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       data.invoices.customer = this.organization;
       data.invoices.event_name = this.event_name;
       data.status_id = this.status_id;
-      data.subscription_id = this.subscription_id;
-      this.createCreditNote(data); // store.dispatch("admin/createCreditNote", data);
+      data.subscription_id = this.subscription_id; // this.createCreditNote(data);
 
+      _store__WEBPACK_IMPORTED_MODULE_2__["store"].dispatch("admin/createCreditNote", data);
       this.saving = false;
+      this.$router.go(0);
     },
     changeCategoryPrice: function changeCategoryPrice(event) {
       _store__WEBPACK_IMPORTED_MODULE_2__["store"].dispatch("admin/subscription", {
@@ -75084,17 +75089,6 @@ var render = function() {
                                     )
                                   )
                                 ])
-                              ]),
-                              _vm._v(" "),
-                              _c("li", { staticClass: "table-item grid-2" }, [
-                                _c("span", { staticClass: "text-subhead" }, [
-                                  _vm._v(
-                                    "# " +
-                                      _vm._s(
-                                        _vm.$t("dashboard.table.title.qbo")
-                                      )
-                                  )
-                                ])
                               ])
                             ])
                           ]),
@@ -75185,25 +75179,6 @@ var render = function() {
                                             "table-text text-body-display"
                                         },
                                         [_vm._v(_vm._s(routine.dancers.length))]
-                                      )
-                                    ]
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "li",
-                                    { staticClass: "table-item grid-2" },
-                                    [
-                                      _c(
-                                        "span",
-                                        {
-                                          staticClass:
-                                            "table-text text-body-display"
-                                        },
-                                        [
-                                          _vm._v(
-                                            _vm._s(routine.doc_number || "")
-                                          )
-                                        ]
                                       ),
                                       _vm._v(" "),
                                       _c(
@@ -75523,9 +75498,10 @@ var render = function() {
                         _vm.calculatedCredit.length
                           ? _c("div", { staticClass: "export-actions" }, [
                               _c(
-                                "a",
+                                "button",
                                 {
                                   staticClass: "btn btn-primary",
+                                  attrs: { disabled: _vm.saving },
                                   on: {
                                     click: function($event) {
                                       $event.preventDefault()
@@ -75533,7 +75509,11 @@ var render = function() {
                                     }
                                   }
                                 },
-                                [_vm._v("Credit")]
+                                [
+                                  _vm._v(
+                                    "\n                Credit\n              "
+                                  )
+                                ]
                               )
                             ])
                           : _vm._e()

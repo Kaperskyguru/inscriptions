@@ -211,6 +211,7 @@ class QuickBookService
         $newInvoice->doc_number = $resultingInvoiceObj->DocNumber;
         $newInvoice->amount = $resultingInvoiceObj->TotalAmt;
         $newInvoice->subscription_id = $request->subscription_id;
+        // $newInvoice->entries = 
         $newInvoice->save();
 
 
@@ -221,6 +222,8 @@ class QuickBookService
                 'invoice_id' => $newInvoice->id,
                 'category_id' => $line['id'],
                 'factured' => $line['entries'],
+                'entries' => $line['entries'],
+                'routine_count' => $line['routines_count'],
                 'subscription_id' => $newInvoice->subscription_id
             ]);
         }

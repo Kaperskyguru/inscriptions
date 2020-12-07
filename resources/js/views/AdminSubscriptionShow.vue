@@ -196,11 +196,11 @@
                       $t("dashboard.table.title.totalSubscription")
                     }}</span>
                   </li>
-                  <li class="table-item grid-2">
-                    <span class="text-subhead"
+                  <!-- <li class="table-item grid-2"> -->
+                  <!-- <span class="text-subhead"
                       ># {{ $t("dashboard.table.title.qbo") }}</span
-                    >
-                  </li>
+                    > -->
+                  <!-- </li> -->
                 </ul>
               </div>
               <div class="table-body">
@@ -235,11 +235,11 @@
                     <span class="table-text text-body-display">{{
                       routine.dancers.length
                     }}</span>
-                  </li>
-                  <li class="table-item grid-2">
-                    <span class="table-text text-body-display">{{
+                    <!-- </li> -->
+                    <!-- <li class="table-item grid-2"> -->
+                    <!-- <span class="table-text text-body-display">{{
                       routine.doc_number || ""
-                    }}</span>
+                    }}</span> -->
                     <!-- </li> -->
                     <div class="table-menu" @click.prevent="openActions">
                       <icon icon="menu" class></icon>
@@ -366,9 +366,13 @@
                 </div>
               </div>
               <div class="export-actions" v-if="calculatedCredit.length">
-                <a @click.prevent="submitCreditNote" class="btn btn-primary"
-                  >Credit</a
+                <button
+                  @click.prevent="submitCreditNote"
+                  :disabled="saving"
+                  class="btn btn-primary"
                 >
+                  Credit
+                </button>
               </div>
             </section>
 
@@ -1760,9 +1764,10 @@ export default {
       data.invoices.event_name = this.event_name;
       data.status_id = this.status_id;
       data.subscription_id = this.subscription_id;
-      this.createCreditNote(data);
-      // store.dispatch("admin/createCreditNote", data);
+      // this.createCreditNote(data);
+      store.dispatch("admin/createCreditNote", data);
       this.saving = false;
+      this.$router.go(0);
     },
     changeCategoryPrice(event) {
       store

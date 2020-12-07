@@ -405,18 +405,19 @@ class AdminController extends Controller
         foreach ($allinvoices as $key => $invoice) {
             $payment = [];
             foreach ($invoice->categories as $key => $category) {
-                $entries = 0;
+                $categoryInvoice = CategoryInvoice::groupBy('category_id')->where('category_id', $category->id)->where('invoice_id', $invoice->id)->where('subscription_id', $subscription_id)->first();
+                $entries = $categoryInvoice->entries;
                 $routine_count = count($category->routines->where('subscription_id', $subscription_id));
                 $price = Price::where('category_id', $category->id)->where('year', $year)->first();
-                $routines = $category->routines->where('subscription_id', $subscription_id);
-                foreach ($routines as $routine) {
-                    $entries += count($routine->dancers);
-                }
+                // $routines = $category->routines->where('subscription_id', $subscription_id);
+                // foreach ($routines as $routine) {
+                //     $entries += count($routine->dancers);
+                // }
                 $invoice->categories[$key]['entries'] =  $entries;
                 $total = $entries *  $price->rebate_price;
                 $invoice->categories[$key]['total'] = number_format(($total / 100), 2, '.', '');
                 $invoice->categories[$key]['price'] = $price;
-                $invoice->categories[$key]['routines_count'] = $routine_count;
+                $invoice->categories[$key]['routines_count'] = $categoryInvoice->routine_count;
             }
             $cats = $invoice->categories;
             $doc_number = $invoice->doc_number;
