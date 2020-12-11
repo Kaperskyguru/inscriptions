@@ -829,6 +829,14 @@
           </section>
           <!-- END HERE -->
 
+          <credit-routine
+            :subscription="this.content['organizations'].subscriptions[0]"
+            :credits="this.content['credits']"
+            :feeTypes="this.content['feeTypes']"
+            :subscription_id="subscription_id"
+            :event="event_name"
+          />
+
           <section
             class="payments-container"
             :set="(subscription = content['organizations'].subscriptions[0])"
@@ -929,7 +937,13 @@
             </div>
             <ul class="invoice-list-total">
               <li class="invoice-item text-body-display">
-                <span class="invoice-data grid-4">Sous-total</span>
+                <span class="invoice-data grid-4">Sous-total Factured</span>
+                <span class="invoice-int grid-3"
+                  >{{ subscription.sub_total_payment }} $</span
+                >
+              </li>
+              <li class="invoice-item text-body-display">
+                <span class="invoice-data grid-4">Sous-total Credit</span>
                 <span class="invoice-int grid-3"
                   >{{ subscription.sub_total_payment }} $</span
                 >
@@ -1647,6 +1661,7 @@ import TotalTable from "../components/partials/TotalTable";
 
 import { i18n } from "../plugins/i18n.js";
 import axios from "axios";
+import CreditRoutine from "../components/CreditRoutine.vue";
 
 export default {
   data: function () {
@@ -1749,7 +1764,7 @@ export default {
       addToSchedule: "schedules/addToSchedule",
       getCategoriesByYear: "admin/categoriesByYear",
     }),
-    submitCreditNote() {
+    async submitCreditNote() {
       this.saving = true;
       let mappedCats = this.calculatedCredit;
 
@@ -1765,7 +1780,7 @@ export default {
       data.status_id = this.status_id;
       data.subscription_id = this.subscription_id;
       // this.createCreditNote(data);
-      store.dispatch("admin/createCreditNote", data);
+      await store.dispatch("admin/createCreditNote", data);
       this.saving = false;
       this.$router.go(0);
     },
@@ -2251,6 +2266,7 @@ export default {
     Feedback,
     AdminFee,
     TotalTable,
+    CreditRoutine,
   },
 
   created() {

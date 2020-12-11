@@ -8,6 +8,7 @@ use App\FeeType;
 use App\Invoice;
 use App\Payment;
 use App\Category;
+use App\CategoryCredit;
 use Carbon\Carbon;
 use App\PaymentType;
 use App\Organization;
@@ -15,6 +16,7 @@ use App\ScheduleItem;
 use App\Subscription;
 use App\ScheduleTitle;
 use App\CategoryInvoice;
+use App\Credit;
 use App\DancerRoutine;
 use Illuminate\Http\Request;
 use App\Exports\ReportExport;
@@ -407,12 +409,7 @@ class AdminController extends Controller
             foreach ($invoice->categories as $key => $category) {
                 $categoryInvoice = CategoryInvoice::groupBy('category_id')->where('category_id', $category->id)->where('invoice_id', $invoice->id)->where('subscription_id', $subscription_id)->first();
                 $entries = $categoryInvoice->entries;
-                $routine_count = count($category->routines->where('subscription_id', $subscription_id));
                 $price = Price::where('category_id', $category->id)->where('year', $year)->first();
-                // $routines = $category->routines->where('subscription_id', $subscription_id);
-                // foreach ($routines as $routine) {
-                //     $entries += count($routine->dancers);
-                // }
                 $invoice->categories[$key]['entries'] =  $entries;
                 $total = $entries *  $price->rebate_price;
                 $invoice->categories[$key]['total'] = number_format(($total / 100), 2, '.', '');
@@ -435,13 +432,48 @@ class AdminController extends Controller
         }
 
 
+        $allcredits = Credit::whereHas('categories')->groupBy('doc_number')->where('subscription_id', $subscription_id)->get();
+        $credits = [];
+        foreach ($allcredits as $key => $credit) {
+            $payment = [];
+            foreach ($credit->categories as $key => $category) {
+                $categoryCredit = CategoryCredit::groupBy('category_id')->where('category_id', $category->id)->where('credit_id', $credit->id)->first();
+                $entries = $categoryCredit->entries;
+                $price = Price::where('category_id', $category->id)->where('year', $year)->first();
+                $credit->categories[$key]['entries'] =  $entries;
+                $total = $entries *  $price->rebate_price;
+                $credit->categories[$key]['total'] = number_format(($total / 100), 2, '.', '');
+                $credit->categories[$key]['price'] = $price;
+                $credit->categories[$key]['routines_count'] = $categoryCredit->routines;
+            }
+            $cats = $credit->categories;
+            $doc_number = $credit->doc_number;
+            $sub_total = number_format(($total / 100), 2, '.', '');
+            $tps = number_format($sub_total  * env('TAX_TPS'), 2, '.', '');
+            $tvq = number_format($sub_total  * env('TAX_TVQ'), 2, '.', '');
+            $tvh = number_format($sub_total  * env('TAX_TVH'), 2, '.', '');
+            $payment['sub_total'] = $sub_total;
+            $payment['tps'] = $tps;
+            $payment['tvq'] = $tvq;
+            $payment['tvh'] = $tvh;
+            $payment['total'] = $this->getCreditTotal($subscription_id, $sub_total, $tvh, $tps, $tvq);
+
+            $grouped = [
+                'credit' => $credit,
+                'payment' => $payment
+            ];
+            \array_push($credits, $grouped);
+        }
+
+
+
         foreach ($allCategories as $key => $category) {
             $entries = 0;
             $factured = 0;
             $credit = 0;
             $price = Price::where('category_id', $category->id)->where('year', $year)->first();
 
-            $categoryInvoices = CategoryInvoice::groupBy('category_id')->where('category_id', $category->id)->where('subscription_id', $subscription_id)->get();
+            $categoryInvoices = CategoryInvoice::where('category_id', $category->id)->where('subscription_id', $subscription_id)->get();
             $factured = $categoryInvoices->sum('factured');
 
             foreach ($category->routines as $routine) {
@@ -506,7 +538,21 @@ class AdminController extends Controller
         session(['subscription_id' => $subscription_id]);
 
         $years = Price::distinct('year')->pluck('year');
-        return response()->json(compact('organizations', 'invoices', 'categories', 'paymentTypes', 'feeTypes', 'authUrl', 'years', 'allCategories', 'newpayment'), 200);
+        return response()->json(compact('organizations', 'credits', 'invoices', 'categories', 'paymentTypes', 'feeTypes', 'authUrl', 'years', 'allCategories', 'newpayment'), 200);
+    }
+
+    private function getCreditTotal($subscription_id, $sub_total, $tvh, $tps, $tvq)
+    {
+        $event = Subscription::find($subscription_id)->event;
+
+        // TODO Better way handle taxes
+        if ($event->state_id == 58) { // Ontario
+
+            $total = $sub_total +  $tvh;
+        } elseif ($event->state_id == 57) {
+            $total = $sub_total + $tps + $tvq;
+        }
+        return round($total, 2);
     }
 
     private function getTotal($subscription_id, $number)

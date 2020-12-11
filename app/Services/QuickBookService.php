@@ -2,23 +2,25 @@
 
 namespace App\Services;
 
+use App\CategoryCredit;
 use App\Event;
+use App\Credit;
 use App\Payment;
 use App\Organization;
 use App\Subscription;
-use App\CategoryInvoice;
 use App\DancerRoutine;
-use App\Invoice as InvoiceModel;
+use App\CategoryInvoice;
 use Illuminate\Http\Request;
+use App\Invoice as InvoiceModel;
 use Illuminate\Support\Facades\Http;
 use QuickBooksOnline\API\Facades\Item;
 use QuickBooksOnline\API\Facades\Line;
 use Illuminate\Support\Facades\Validator;
 use QuickBooksOnline\API\Facades\Invoice;
 use QuickBooksOnline\API\Facades\Customer;
-use QuickBooksOnline\API\DataService\DataService;
 use QuickBooksOnline\API\Facades\CreditMemo;
 use QuickBooksOnline\API\Facades\QuickBookClass;
+use QuickBooksOnline\API\DataService\DataService;
 
 class QuickBookService
 {
@@ -251,7 +253,6 @@ class QuickBookService
 
     public function create_creditmemo(Request $request)
     {
-        // dd(Subscription::find($request->subscription_id)->routines);
         // Run validation
         $v = Validator::make($request->all(), [
             'invoices' => 'required|array',
@@ -266,9 +267,6 @@ class QuickBookService
                 'errors' => $v->errors()
             ], 422);
         }
-
-        // dd($v->validated()['invoices']['data']);
-
 
 
         // Get ABS(credit)
@@ -292,44 +290,27 @@ class QuickBookService
         }
         // Store this new Invoice and the data some where and display
 
-        // dd($resultingInvoiceObj);
 
-        // $newInvoice = new InvoiceModel;
-        // $newInvoice->doc_number = $resultingInvoiceObj->DocNumber;
-        // $newInvoice->amount = $resultingInvoiceObj->TotalAmt;
-        // $newInvoice->subscription_id = $request->subscription_id;
-        // $newInvoice->save();
-
-
-        // $validatedData = $v->validated()['invoices'];
-
-        // foreach ($validatedData['data'] as $line) {
-        //     CategoryInvoice::create([
-        //         'invoice_id' => $newInvoice->id,
-        //         'category_id' => $line['id'],
-        //         'factured' => $line['entries'],
-        //         'subscription_id' => $newInvoice->subscription_id
-        //     ]);
-        // }
+        $credit = new Credit;
+        $credit->doc_number = $resultingCreditmemoObj->DocNumber;
+        $credit->amount = $resultingCreditmemoObj->TotalAmt;
+        $credit->subscription_id = $request->subscription_id;
+        $credit->save();
 
 
-        // $routines = Subscription::find($request->subscription_id)->routines;
-        // foreach ($routines as $routine) {
-        //     if (!$routine->doc_number) {
-        //         $routine->doc_number = $resultingInvoiceObj->DocNumber;
-        //         $routine->save();
-        //     }
-
-        //     $dancerRoutines = DancerRoutine::where('routine_id', $routine->id)->get();
-        //     foreach ($dancerRoutines as $dancerRoutine) {
-        //         $dancerRoutine->doc_number = $resultingInvoiceObj->DocNumber;
-        //         $dancerRoutine->save();
-        //     }
-        // }
+        $validatedData = $v->validated()['invoices'];
+        foreach ($validatedData['data'] as $line) {
+            $category_credit = new CategoryCredit();
+            $category_credit->credit_id = $credit->id;
+            $category_credit->category_id = $line['id'];
+            $category_credit->entries = \abs($line['credit']);
+            $category_credit->routines = $line['routines_count'];
+            $category_credit->save();
+        }
 
         $res['success'] = true;
         $res['message'] = __("messages.global.QBO_created");
-        $res['data'] = $resultingCreditmemoObj;
+        $res['data'] =  $resultingCreditmemoObj;
         return $res;
     }
 

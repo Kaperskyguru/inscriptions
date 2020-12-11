@@ -57,6 +57,11 @@ class Category extends Model implements TranslatableContract
         return $this->belongsToMany('App\Invoice', 'category_invoices', 'category_id', 'invoice_id');
     }
 
+    public function credits()
+    {
+        return $this->belongsToMany('App\Invoice', 'category_credits', 'category_id', 'credit_id');
+    }
+
     public function dancerRoutines()
     {
         return $this->hasManyThrough(
