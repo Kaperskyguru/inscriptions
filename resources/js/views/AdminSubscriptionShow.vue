@@ -939,11 +939,17 @@
               <li class="invoice-item text-body-display">
                 <span class="invoice-data grid-4">Sous-total Factured</span>
                 <span class="invoice-int grid-3"
-                  >{{ subscription.sub_total_payment }} $</span
+                  >{{ subscription.factured_sub_total }} $</span
                 >
               </li>
               <li class="invoice-item text-body-display">
                 <span class="invoice-data grid-4">Sous-total Credit</span>
+                <span class="invoice-int grid-3"
+                  >{{ subscription.credit_sub_total }} $</span
+                >
+              </li>
+              <li class="invoice-item text-body-display">
+                <span class="invoice-data grid-4">Sous-total</span>
                 <span class="invoice-int grid-3"
                   >{{ subscription.sub_total_payment }} $</span
                 >

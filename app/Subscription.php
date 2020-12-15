@@ -10,16 +10,16 @@ class Subscription extends Model
 {
     //
     protected $fillable = ['organization_id', 'event_id', 'status_id', 'consent_video', 'consent_rules'];
-    
+
     protected $attributes = [
         'status_id' => 1,
         'consent_video' => 0,
         'consent_rules' => 0,
     ];
 
-    protected $appends = ['total_dancer', 'sub_total', 'sub_total_payment', 'tps', 'tps_payment', 'tvq', 'tvq_payment', 'tvh', 'tvh_payment', 'total', 'total_payment', 'sum_payments', 'balance'];
+    protected $appends = ['total_dancer', 'credit_sub_total', 'factured_sub_total', 'sub_total', 'sub_total_payment', 'tps', 'tps_payment', 'tvq', 'tvq_payment', 'tvh', 'tvh_payment', 'total', 'total_payment', 'sum_payments', 'balance'];
 
-   
+
     public function event()
     {
         return $this->belongsTo('App\Event');
@@ -54,7 +54,7 @@ class Subscription extends Model
     }
     public function getSubTotalAttribute()
     {
-        $year = session()->get('YEAR') ? session()->get('YEAR'): now()->addYear()->year;
+        $year = session()->get('YEAR') ? session()->get('YEAR') : now()->addYear()->year;
 
         $subtotal = 0;
 
@@ -74,7 +74,7 @@ class Subscription extends Model
     public function getTpsAttribute()
     {
         $tps = $this->getSubTotalAttribute() * env('TAX_TPS');
-        
+
         return number_format(($tps), 2, '.', '');
     }
     public function getTvqAttribute()
@@ -121,28 +121,48 @@ class Subscription extends Model
 
     public function getSubTotalPaymentAttribute()
     {
-        $year = session()->get('YEAR') ? session()->get('YEAR'): now()->addYear()->year;
+        $year = session()->get('YEAR') ? session()->get('YEAR') : now()->addYear()->year;
 
         $subtotal = 0;
 
-        foreach ($this->routines as $routine) {
-            $price = Price::where('category_id', $routine->category->id)->where('year', $year)->first();
-            if ($routine->doc_number) {
-                $total_cost = (count($routine->dancers) * $price->rebate_price);
-                $subtotal += $total_cost;
-            }
-        }
-        foreach ($this->fees as $fee) {
-            $total_cost = ($fee->feeType->price * $fee->entries);
-            $subtotal += $total_cost;
-        }
-        return number_format(($subtotal / 100), 2, '.', '');
+        // foreach ($this->routines as $routine) {
+        //     $price = Price::where('category_id', $routine->category->id)->where('year', $year)->first();
+        //     if ($routine->doc_number) {
+        //         $total_cost = (count($routine->dancers) * $price->rebate_price);
+        //         $subtotal += $total_cost;
+        //     }
+        // }
+        // foreach ($this->fees as $fee) {
+        //     $total_cost = ($fee->feeType->price * $fee->entries);
+        //     $subtotal += $total_cost;
+        // }
+        $factured = $this->getFacturedSubTotalAttribute();
+        $credit = $this->getCreditSubTotalAttribute();
+        $subtotal = ($factured - $credit);
+
+        // dd($subtotal);
+        return number_format(($subtotal), 2, '.', '');
+    }
+
+    // Get Fatured Sub total
+    public function getFacturedSubTotalAttribute()
+    {
+        $allinvoices = Invoice::whereHas('categories')->groupBy('doc_number')->where('subscription_id', $this->id)->get();
+        return $allinvoices->sum('amount');
+    }
+
+
+    //Get Credit Sub total
+    public function getCreditSubTotalAttribute()
+    {
+        $allcredits = Credit::whereHas('categories')->where('subscription_id', $this->id)->get();
+        return $allcredits->sum('amount');
     }
 
     public function getTpsPaymentAttribute()
     {
         $tps = $this->getSubTotalPaymentAttribute() * env('TAX_TPS');
-        
+
         return number_format(($tps), 2, '.', '');
     }
     public function getTvqPaymentAttribute()

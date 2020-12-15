@@ -7067,6 +7067,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -78483,7 +78489,7 @@ var render = function() {
                           _vm._v(" "),
                           _c("span", { staticClass: "invoice-int grid-3" }, [
                             _vm._v(
-                              _vm._s(_vm.subscription.sub_total_payment) + " $"
+                              _vm._s(_vm.subscription.factured_sub_total) + " $"
                             )
                           ])
                         ]
@@ -78495,6 +78501,22 @@ var render = function() {
                         [
                           _c("span", { staticClass: "invoice-data grid-4" }, [
                             _vm._v("Sous-total Credit")
+                          ]),
+                          _vm._v(" "),
+                          _c("span", { staticClass: "invoice-int grid-3" }, [
+                            _vm._v(
+                              _vm._s(_vm.subscription.credit_sub_total) + " $"
+                            )
+                          ])
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "li",
+                        { staticClass: "invoice-item text-body-display" },
+                        [
+                          _c("span", { staticClass: "invoice-data grid-4" }, [
+                            _vm._v("Sous-total")
                           ]),
                           _vm._v(" "),
                           _c("span", { staticClass: "invoice-int grid-3" }, [

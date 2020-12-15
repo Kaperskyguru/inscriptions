@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
 use Session;
 use App\Price;
 use App\Category;
 use App\Organization;
 use Illuminate\Http\Request;
-use App\Services\QuickBookService;
+// use App\Services\QuickBookService;
 use App\Http\Controllers\Controller;
-use QuickBooksOnline\API\Facades\Line;
+// use QuickBooksOnline\API\Facades\Line;
 
 
 
@@ -45,6 +45,7 @@ class QuickbooksController extends Controller
     }
     public function callback(Request $request)
     {
+        dd($request);
         $dataService = $this->getDataService();
         $OAuth2LoginHelper = $dataService->getOAuth2LoginHelper();
 
@@ -94,6 +95,7 @@ class QuickbooksController extends Controller
 
         $parseUrl = $this->parseAuthRedirectUrl($_SERVER['QUERY_STRING']);
 
+        dd($parseUrl);
         $accessToken = $OAuth2LoginHelper->exchangeAuthorizationCodeForToken($parseUrl['code'], $parseUrl['realmId']);
         $dataService->updateOAuth2Token($accessToken);
 
@@ -173,7 +175,8 @@ class QuickbooksController extends Controller
         // // echo "Created invoice Id={$invoiceId}. Reconstructed response body below:\n";
         // // $result = json_encode($resultingInvoiceObj, JSON_PRETTY_PRINT);
         // // print_r($result . "\n\n\n");
-        // echo 'Facture Généré';
+        echo 'Facture Généré';
+        return;
     }
     private function getTaxRate($dataService)
     {
@@ -258,6 +261,7 @@ class QuickbooksController extends Controller
 
     private function getDataService()
     {
+
         $dataService = DataService::Configure(array(
             'auth_mode' => 'oauth2',
             'ClientID' => env('QB_CLIENT_ID'),
@@ -275,20 +279,5 @@ class QuickbooksController extends Controller
             'code' => $qsArray['code'],
             'realmId' => $qsArray['realmId']
         );
-    }
-
-    public function getPayments(Request $request)
-    {
-        return QuickBookService::getInstance()->get_daily_payments();
-    }
-
-    public function getCreditNotes(Request $request)
-    {
-        return QuickBookService::getInstance()->get_daily_creditNotes();
-    }
-
-    public function createCreditNotes(Request $request)
-    {
-        return QuickBookService::getInstance()->create_creditmemo($request);
     }
 }

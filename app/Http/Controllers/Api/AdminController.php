@@ -337,7 +337,6 @@ class AdminController extends Controller
     {
         $year = $request->query('year') == 'undefined' ? now()->addYear()->year : $request->query('year');
         session()->put('YEAR', $year);
-        // Subscription::sub_total_year == $year;
         $organizations = Organization::orderBy('name')->whereHas('subscriptions', function ($query) use ($subscription_id) {
             $query->where('subscriptions.id', $subscription_id);
         })
@@ -364,14 +363,8 @@ class AdminController extends Controller
             )
             ->first();
 
-        // dd($subscription_id);
-
         $categories = Category::groupBy('id')->where('id', '!=', 7)
             ->where('event_type_id', config('EVENT_TYPE_ID'))
-            // ->whereHas('routines', function ($query) use ($subscription_id) {
-            //     $query->whereNull('doc_number')->where('subscription_id', $subscription_id);
-            // })
-            // ->hasManyThrough()
             ->with([
                 'routines' => function ($query) use ($subscription_id) {
                     $query->where('subscription_id', $subscription_id);
@@ -379,7 +372,7 @@ class AdminController extends Controller
             ])
             ->withCount([
                 'routines' => function ($query) use ($subscription_id) {
-                    $query->where('subscription_id', $subscription_id); //->whereNull('doc_number');
+                    $query->where('subscription_id', $subscription_id);
                 },
 
             ])
@@ -484,11 +477,6 @@ class AdminController extends Controller
             $allCategories[$key]['factured'] =  $factured;
             if ($entries < $factured) {
                 $credit = $entries - $factured;
-
-                // Get the credit data
-                /**
-                 * Get the Category and the Dancers there
-                 */
             }
             $allCategories[$key]['credit'] = $credit;
             $total = $entries *  $price->rebate_price;
@@ -518,6 +506,13 @@ class AdminController extends Controller
                 unset($categories[$key]);
             }
 
+            $categoryInvoices = CategoryInvoice::where('category_id', $category->id)->where('subscription_id', $subscription_id)->get();
+            $factured = $categoryInvoices->sum('factured');
+            if ($entries < $factured) {
+                unset($categories[$key]);
+                continue;
+            }
+
             $newpayment = [];
             $newpayment['sub_total'] = $this->getSubTotal($subscription_id, null);
             $newpayment['tps'] = $this->getTps($subscription_id, null);
@@ -526,7 +521,6 @@ class AdminController extends Controller
             $newpayment['total'] = $this->getTotal($subscription_id, null);
         }
 
-        // dd($newpayment);
         $categories = $categories->values();
 
 

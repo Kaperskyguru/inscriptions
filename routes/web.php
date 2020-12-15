@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -26,4 +28,3 @@ Route::get('/services/storage-link', 'ServicesController@storageLink');
 
 Route::get('/get-last-modification', 'SpaController@getLastModification');
 Route::get('/{any?}', 'SpaController@index')->where('any', '^(?!storage\/)[\/\w\.-]*');
-

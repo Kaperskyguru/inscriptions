@@ -12,6 +12,7 @@ use App\DancerRoutine;
 use App\CategoryInvoice;
 use Illuminate\Http\Request;
 use App\Invoice as InvoiceModel;
+use App\Token;
 use Illuminate\Support\Facades\Http;
 use QuickBooksOnline\API\Facades\Item;
 use QuickBooksOnline\API\Facades\Line;
@@ -110,6 +111,7 @@ class QuickBookService
         $validatedData = $v->validated();
 
 
+
         if ($customer = $this->findCustomerByName($validatedData['invoices']['customer']['name'])) {
             return $customer;
         }
@@ -120,38 +122,51 @@ class QuickBookService
 
     private function getDataService()
     {
-        // dd(array(
-        //     'auth_mode' => 'oauth2',
-        //     'ClientID' => env('QB_CLIENT_ID'),
-        //     'ClientSecret' =>  env('QB_CLIENT_SECRET'),
-        //     'RedirectURI' => env('QB_OAUTH_REDIRECT_URI'),
-        //     'scope' => env('QB_OAUTH_SCOPE'),
-        //     'baseUrl' => env('QB_ENV'),
-        //     'QBORealmID' => env('QB_REALMID'),
-        //     'refreshTokenKey' => env('QB_REFRESH_TOKEN')
-        // ));
 
-        $dataService = DataService::Configure(array(
-            'auth_mode' => 'oauth2',
-            'ClientID' => env('QB_CLIENT_ID'),
-            'ClientSecret' =>  env('QB_CLIENT_SECRET'),
-            'RedirectURI' => env('QB_OAUTH_REDIRECT_URI'),
-            'scope' => env('QB_OAUTH_SCOPE'),
-            'baseUrl' => env('QB_ENV'),
-            'QBORealmID' => env('QB_REALMID'),
-            'refreshTokenKey' => env('QB_REFRESH_TOKEN')
-        ));
-
+        // If Refresh token in DB
+        $token = Token::findOrCreate(1);
+        if ($token && $token->refresh_token) {
+            $dataService = DataService::Configure(array(
+                'auth_mode' => 'oauth2',
+                'ClientID' => env('QB_CLIENT_ID'),
+                'ClientSecret' =>  env('QB_CLIENT_SECRET'),
+                'RedirectURI' => env('QB_OAUTH_REDIRECT_URI'),
+                'scope' => env('QB_OAUTH_SCOPE'),
+                'baseUrl' => env('QB_ENV'),
+                'QBORealmID' => env('QB_REALMID'),
+                'refreshTokenKey' => $token->refresh_token
+            ));
+        }
+        //Else
+        else {
+            $dataService = DataService::Configure(array(
+                'auth_mode' => 'oauth2',
+                'ClientID' => env('QB_CLIENT_ID'),
+                'ClientSecret' =>  env('QB_CLIENT_SECRET'),
+                'RedirectURI' => env('QB_OAUTH_REDIRECT_URI'),
+                'scope' => env('QB_OAUTH_SCOPE'),
+                'baseUrl' => env('QB_ENV'),
+                'QBORealmID' => env('QB_REALMID'),
+                'refreshTokenKey' => env('QB_REFRESH_TOKEN')
+            ));
+        }
 
         $OAuth2LoginHelper = $dataService->getOAuth2LoginHelper();
         $refreshedAccessTokenObj = $OAuth2LoginHelper->refreshToken();
-        // session(['QB_REFRESH_TOKEN' => $refreshedAccessTokenObj->getRefreshToken()]);
-        // dd($refreshedAccessTokenObj->getRefreshToken());
+
+        $token->refresh_token = $refreshedAccessTokenObj->getRefreshToken();
+        $token->access_token = $refreshedAccessTokenObj->getAccessToken();
+        $token->refresh_token_expires = $refreshedAccessTokenObj->getRefreshTokenExpiresAt();
+        $token->access_token_expires = $refreshedAccessTokenObj->getAccessTokenExpiresAt();
+        $token->save();
+
         $dataService->throwExceptionOnError(true);
         $error = $OAuth2LoginHelper->getLastError();
+
         if ($error) {
+            // dd($error);
         } else {
-            //Refresh Token is called successfully
+            // Refresh Token is called successfully
             $dataService->updateOAuth2Token($refreshedAccessTokenObj);
         }
         return $dataService;
@@ -162,6 +177,7 @@ class QuickBookService
         $customerArray = $this->getDataService()->Query("select * from Customer where DisplayName='" . $name . "'");
         $error = $this->getDataService()->getLastError();
 
+        // dd($error);
         $res = [];
         if ($error) {
             $res['status'] = false;
