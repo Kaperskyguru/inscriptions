@@ -13,6 +13,7 @@ use App\CategoryInvoice;
 use Illuminate\Http\Request;
 use App\Invoice as InvoiceModel;
 use App\Token;
+use Exception;
 use Illuminate\Support\Facades\Http;
 use QuickBooksOnline\API\Facades\Item;
 use QuickBooksOnline\API\Facades\Line;
@@ -152,8 +153,13 @@ class QuickBookService
         }
 
         $OAuth2LoginHelper = $dataService->getOAuth2LoginHelper();
-        $refreshedAccessTokenObj = $OAuth2LoginHelper->refreshToken();
-
+        try {
+            $refreshedAccessTokenObj = $OAuth2LoginHelper->refreshToken();
+        } catch (Exception $err) {
+            $refreshedAccessTokenObj = $OAuth2LoginHelper->refreshAccessTokenWithRefreshToken(env('QB_REFRESH_TOKEN'));
+        }
+        $dataService->throwExceptionOnError(true);
+        $error = $OAuth2LoginHelper->getLastError();
         $token->refresh_token = $refreshedAccessTokenObj->getRefreshToken();
         $token->access_token = $refreshedAccessTokenObj->getAccessToken();
         $token->refresh_token_expires = $refreshedAccessTokenObj->getRefreshTokenExpiresAt();
@@ -164,7 +170,6 @@ class QuickBookService
         $error = $OAuth2LoginHelper->getLastError();
 
         if ($error) {
-            // dd($error);
         } else {
             // Refresh Token is called successfully
             $dataService->updateOAuth2Token($refreshedAccessTokenObj);
@@ -209,7 +214,7 @@ class QuickBookService
             ], 422);
         }
 
-        // dd($v->validated()['invoices']['data']);
+        // dd();
 
         $invoiceObj = $this->generateInvoiceData($request, $v);
         $resultingInvoiceObj = $this->getDataService()->Add($invoiceObj);
@@ -225,11 +230,15 @@ class QuickBookService
 
         // dd($resultingInvoiceObj);
 
+        $total = array_reduce($v->validated()['invoices']['data'], function ($sum, $line) {
+            return $sum += $line['total'];
+        });
+
         $newInvoice = new InvoiceModel;
         $newInvoice->doc_number = $resultingInvoiceObj->DocNumber;
         $newInvoice->amount = $resultingInvoiceObj->TotalAmt;
         $newInvoice->subscription_id = $request->subscription_id;
-        // $newInvoice->entries = 
+        $newInvoice->total = $total;
         $newInvoice->save();
 
 
@@ -306,11 +315,15 @@ class QuickBookService
         }
         // Store this new Invoice and the data some where and display
 
+        $total = array_reduce($v->validated()['invoices']['data'], function ($sum, $line) {
+            return $sum += ($line['formatted_rebate_price'] * \abs($line['credit']));
+        });
 
         $credit = new Credit;
         $credit->doc_number = $resultingCreditmemoObj->DocNumber;
         $credit->amount = $resultingCreditmemoObj->TotalAmt;
         $credit->subscription_id = $request->subscription_id;
+        $credit->total = $total;
         $credit->save();
 
 

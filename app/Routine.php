@@ -41,6 +41,15 @@ class Routine extends Model
     {
         return $this->belongsToMany('App\Dancer')->orderBy('last_name', 'ASC');
     }
+
+    public function newdancers()
+    {
+        return $this->belongsToMany('App\Dancer')
+            ->using('App\DancerRoutine')
+            ->withPivot([
+                'doc_number'
+            ]);
+    }
     // additional helper relation for the count
     // public function dancersCount()
     // {

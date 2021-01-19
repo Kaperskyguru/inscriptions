@@ -148,7 +148,7 @@ class Subscription extends Model
     public function getFacturedSubTotalAttribute()
     {
         $allinvoices = Invoice::whereHas('categories')->groupBy('doc_number')->where('subscription_id', $this->id)->get();
-        return $allinvoices->sum('amount');
+        return $allinvoices->sum('total');
     }
 
 
@@ -156,7 +156,7 @@ class Subscription extends Model
     public function getCreditSubTotalAttribute()
     {
         $allcredits = Credit::whereHas('categories')->where('subscription_id', $this->id)->get();
-        return $allcredits->sum('amount');
+        return $allcredits->sum('total');
     }
 
     public function getTpsPaymentAttribute()

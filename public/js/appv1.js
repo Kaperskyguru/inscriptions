@@ -70685,16 +70685,6 @@ var render = function() {
                                 _c("span", { staticClass: "text-subhead" }, [
                                   _vm._v(
                                     _vm._s(
-                                      _vm.$t("dashboard.table.title.routine")
-                                    )
-                                  )
-                                ])
-                              ]),
-                              _vm._v(" "),
-                              _c("li", { staticClass: "table-item grid-2" }, [
-                                _c("span", { staticClass: "text-subhead" }, [
-                                  _vm._v(
-                                    _vm._s(
                                       _vm.$t(
                                         "dashboard.table.title.totalSubscription"
                                       )
@@ -70749,25 +70739,6 @@ var render = function() {
                                             "table-text text-body-display"
                                         },
                                         [_vm._v(_vm._s(category.name))]
-                                      )
-                                    ]
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "li",
-                                    { staticClass: "table-item grid-2" },
-                                    [
-                                      _c(
-                                        "span",
-                                        {
-                                          staticClass:
-                                            "table-text text-body-display"
-                                        },
-                                        [
-                                          _vm._v(
-                                            _vm._s(category.routines_count)
-                                          )
-                                        ]
                                       )
                                     ]
                                   ),
