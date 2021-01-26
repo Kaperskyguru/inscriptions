@@ -437,11 +437,11 @@
                       $t("dashboard.table.title.category")
                     }}</span>
                   </li>
-                  <li class="table-item grid-2">
+                  <!-- <li class="table-item grid-2">
                     <span class="text-subhead">{{
                       $t("dashboard.table.title.routine")
                     }}</span>
-                  </li>
+                  </li> -->
                   <li class="table-item grid-2">
                     <span class="text-subhead">{{
                       $t("dashboard.table.title.totalSubscription")
@@ -470,11 +470,11 @@
                       category.name
                     }}</span>
                   </li>
-                  <li class="table-item grid-2">
+                  <!-- <li class="table-item grid-2">
                     <span class="table-text text-body-display">{{
                       category.routines_count
                     }}</span>
-                  </li>
+                  </li> -->
                   <li class="table-item grid-2">
                     <span class="table-text text-body-display">{{
                       category.entries
@@ -706,11 +706,11 @@
                               $t("dashboard.table.title.category")
                             }}</span>
                           </li>
-                          <li class="table-item grid-2">
+                          <!-- <li class="table-item grid-2">
                             <span class="text-subhead">{{
                               $t("dashboard.table.title.routine")
                             }}</span>
-                          </li>
+                          </li> -->
                           <li class="table-item grid-2">
                             <span class="text-subhead">{{
                               $t("dashboard.table.title.totalSubscription")
@@ -739,11 +739,11 @@
                               category.name
                             }}</span>
                           </li>
-                          <li class="table-item grid-2">
+                          <!-- <li class="table-item grid-2">
                             <span class="table-text text-body-display">{{
                               category.routines_count
                             }}</span>
-                          </li>
+                          </li> -->
                           <li class="table-item grid-2">
                             <span class="table-text text-body-display">{{
                               category.entries

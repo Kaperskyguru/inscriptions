@@ -148,7 +148,7 @@ class Subscription extends Model
     public function getFacturedSubTotalAttribute()
     {
         $allinvoices = Invoice::whereHas('categories')->groupBy('doc_number')->where('subscription_id', $this->id)->get();
-        return $allinvoices->sum('total');
+        return number_format($allinvoices->sum('total'), 2, '.', '');
     }
 
 
@@ -156,7 +156,7 @@ class Subscription extends Model
     public function getCreditSubTotalAttribute()
     {
         $allcredits = Credit::whereHas('categories')->where('subscription_id', $this->id)->get();
-        return $allcredits->sum('total');
+        return number_format($allcredits->sum('total'), 2, '.', '');
     }
 
     public function getTpsPaymentAttribute()
@@ -185,6 +185,6 @@ class Subscription extends Model
         } elseif ($this->event->state_id == 57) {
             $total = $this->getSubTotalPaymentAttribute() + $this->getTpsPaymentAttribute() + $this->getTvqPaymentAttribute();
         }
-        return round($total, 2);
+        return number_format(round($total, 2), 2, '.', '');
     }
 }

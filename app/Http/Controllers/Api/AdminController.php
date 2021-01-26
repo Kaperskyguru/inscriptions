@@ -529,7 +529,7 @@ class AdminController extends Controller
             }
 
 
-            if ($oldentries < $factured) {
+            if ($oldentries < $factured || $oldentries == $factured) {
                 unset($categories[$key]);
                 continue;
             }
