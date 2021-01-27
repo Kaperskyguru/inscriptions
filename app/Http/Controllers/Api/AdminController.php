@@ -403,14 +403,16 @@ class AdminController extends Controller
             $payment = [];
             foreach ($invoice->categories as $key => $category) {
                 $categoryInvoice = CategoryInvoice::groupBy('category_id')->where('category_id', $category->id)->where('invoice_id', $invoice->id)->where('subscription_id', $subscription_id)->first();
-                $entries = $categoryInvoice->entries;
-                $price = Price::where('category_id', $category->id)->where('year', $year)->first();
-                $invoice->categories[$key]['entries'] =  $entries;
-                $total = $entries *  $price->rebate_price;
+                if ($categoryInvoice) {
+                    $entries = $categoryInvoice->entries;
+                    $price = Price::where('category_id', $category->id)->where('year', $year)->first();
+                    $invoice->categories[$key]['entries'] =  $entries;
+                    $total = $entries *  $price->rebate_price;
+                    $subtotal += $total;
+                    $invoice->categories[$key]['routines_count'] = $categoryInvoice->routine_count;
+                }
                 $invoice->categories[$key]['total'] = number_format(($total / 100), 2, '.', '');
                 $invoice->categories[$key]['price'] = $price;
-                $invoice->categories[$key]['routines_count'] = $categoryInvoice->routine_count;
-                $subtotal += $total;
             }
 
             $doc_number = $invoice->doc_number;

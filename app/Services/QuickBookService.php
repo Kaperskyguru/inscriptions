@@ -42,20 +42,20 @@ class QuickBookService
 
     private function create_customer(array $validatedData)
     {
-        $names = explode(' ', $validatedData['user']['name']);
+        $names = explode(' ', strtoupper($validatedData['user']['name']));
 
         $address = [];
-        $address['City'] = $validatedData['city'];
-        $address['Line1'] = $validatedData['address'];
+        $address['City'] = strtoupper($validatedData['city']);
+        $address['Line1'] = strtoupper($validatedData['address']);
         $address['PostalCode'] = $validatedData['zipcode'];
 
-        $data['FullyQualifiedName'] = $validatedData['user']['name'];
+        $data['FullyQualifiedName'] = strtoupper($validatedData['user']['name']);
         $data['FamilyName'] = $names[1];
         $data['GivenName'] = $names[0];
-        $data['DisplayName'] = $validatedData['name'];
-        $data['PrimaryEmailAddr']['Address'] = $validatedData['user']['email'];
+        $data['DisplayName'] = strtoupper($validatedData['name']);
+        $data['PrimaryEmailAddr']['Address'] = strtoupper($validatedData['user']['email']);
         $data['PrimaryPhone']['FreeFormNumber'] = $validatedData['phone'];
-        $data['CompanyName'] = $validatedData['name'];
+        $data['CompanyName'] = strtoupper($validatedData['name']);
         $data['BillAddr'] = $address;
 
         // Create Customer
@@ -78,8 +78,10 @@ class QuickBookService
     private function create_class($name)
     {
         $data = [];
-        $data['name'] = $name;
+        $data['name'] = 'tester'; //$name;
+        // dd($data);
         $classObj = QuickBookClass::create($data);
+
         $classResObj = $this->getDataService()->Add($classObj);
         $error = $this->getDataService()->getLastError();
         if ($error) {
@@ -110,8 +112,6 @@ class QuickBookService
         }
 
         $validatedData = $v->validated();
-
-
 
         if ($customer = $this->findCustomerByName($validatedData['invoices']['customer']['name'])) {
             return $customer;
@@ -156,6 +156,7 @@ class QuickBookService
         try {
             $refreshedAccessTokenObj = $OAuth2LoginHelper->refreshToken();
         } catch (Exception $err) {
+            // dd($err, env('QB_REFRESH_TOKEN'));
             $refreshedAccessTokenObj = $OAuth2LoginHelper->refreshAccessTokenWithRefreshToken(env('QB_REFRESH_TOKEN'));
         }
         $dataService->throwExceptionOnError(true);
@@ -388,6 +389,7 @@ class QuickBookService
     {
         $classRes = $this->findClass(null, $name);
         if (is_null($classRes)) {
+            // dd($name);
             $classRes = $this->create_class($name);
         }
         return $classRes;
@@ -501,7 +503,7 @@ class QuickBookService
                 $lineItem = Line::create([
                     'DetailType' => 'SalesItemLineDetail',
                     'Amount' => $line['total'],
-                    'Description' => $line['name'] . " ( Routine: $routine )",
+                    'Description' => $line['name'],
                     'SalesItemLineDetail' => [
                         'Qty' => $line['entries'],
                         'UnitPrice' => $line['formatted_rebate_price'],
@@ -520,12 +522,12 @@ class QuickBookService
 
             // Add Custom Field
             $customField = [
-                [
-                    "DefinitionId" => "1",
-                    "StringValue" =>  $events[$validatedData['event_name']],
-                    "Type" => "StringType",
-                    "Name" => "EventName"
-                ],
+                // [
+                //     "DefinitionId" => "1",
+                //     "StringValue" =>  $events[$validatedData['event_name']],
+                //     "Type" => "StringType",
+                //     "Name" => "EventName"
+                // ],
                 [
                     "DefinitionId" => "2",
                     "StringValue" =>  $request->subscription_id,
@@ -534,6 +536,14 @@ class QuickBookService
                 ]
             ];
             $data["CustomField"] = $customField;
+
+            //CreateOrRead Class
+            $class = [];
+            $classObj = $this->findOrCreateClass($events[$validatedData['event_name']]);
+            $class['name'] = $classObj->Name;
+            $class['value'] =  $classObj->Id;
+
+            $data['ClassRef'] = $class;
 
             $invoiceObj = Invoice::create($data);
 
