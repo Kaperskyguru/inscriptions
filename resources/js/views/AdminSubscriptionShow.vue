@@ -364,6 +364,30 @@
                     :category="category"
                   />
                 </div>
+                <ul class="invoice-list-total">
+                  <li class="invoice-item text-body-display">
+                    <span class="invoice-data grid-4">Total Entries</span>
+                    <span class="invoice-int grid-3"
+                      >{{ this.content["newpayment"].sub_total }} $</span
+                    >
+                  </li>
+                  <li
+                    class="invoice-item text-body-display"
+                    v-if="subscription.event.state_id == 57"
+                  >
+                    <span class="invoice-data grid-4">Total Payments</span>
+                    <span class="invoice-int grid-3"
+                      >{{ this.content["newpayment"].tps }} $</span
+                    >
+                  </li>
+
+                  <li class="invoice-item invoice-total text-body-display">
+                    <span class="invoice-data grid-4">Balance</span>
+                    <span class="invoice-int grid-3"
+                      >{{ this.content["newpayment"].total }} $</span
+                    >
+                  </li>
+                </ul>
               </div>
               <div class="export-actions" v-if="calculatedCredit.length">
                 <button

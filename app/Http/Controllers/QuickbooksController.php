@@ -45,7 +45,7 @@ class QuickbooksController extends Controller
     }
     public function callback(Request $request)
     {
-        dd($request);
+
         $dataService = $this->getDataService();
         $OAuth2LoginHelper = $dataService->getOAuth2LoginHelper();
 
@@ -95,7 +95,7 @@ class QuickbooksController extends Controller
 
         $parseUrl = $this->parseAuthRedirectUrl($_SERVER['QUERY_STRING']);
 
-        dd($parseUrl);
+        // dd($parseUrl);
         $accessToken = $OAuth2LoginHelper->exchangeAuthorizationCodeForToken($parseUrl['code'], $parseUrl['realmId']);
         $dataService->updateOAuth2Token($accessToken);
 

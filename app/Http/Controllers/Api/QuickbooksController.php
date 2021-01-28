@@ -279,6 +279,7 @@ class QuickbooksController extends Controller
 
     public function getPayments(Request $request)
     {
+        // dd($request);
         return QuickBookService::getInstance()->get_daily_payments();
     }
 

@@ -7073,6 +7073,30 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -76947,7 +76971,94 @@ var render = function() {
                                   })
                                 }),
                                 1
-                              )
+                              ),
+                              _vm._v(" "),
+                              _c("ul", { staticClass: "invoice-list-total" }, [
+                                _c(
+                                  "li",
+                                  {
+                                    staticClass:
+                                      "invoice-item text-body-display"
+                                  },
+                                  [
+                                    _c(
+                                      "span",
+                                      { staticClass: "invoice-data grid-4" },
+                                      [_vm._v("Total Entries")]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "span",
+                                      { staticClass: "invoice-int grid-3" },
+                                      [
+                                        _vm._v(
+                                          _vm._s(
+                                            this.content["newpayment"].sub_total
+                                          ) + " $"
+                                        )
+                                      ]
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _vm.subscription.event.state_id == 57
+                                  ? _c(
+                                      "li",
+                                      {
+                                        staticClass:
+                                          "invoice-item text-body-display"
+                                      },
+                                      [
+                                        _c(
+                                          "span",
+                                          {
+                                            staticClass: "invoice-data grid-4"
+                                          },
+                                          [_vm._v("Total Payments")]
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "span",
+                                          { staticClass: "invoice-int grid-3" },
+                                          [
+                                            _vm._v(
+                                              _vm._s(
+                                                this.content["newpayment"].tps
+                                              ) + " $"
+                                            )
+                                          ]
+                                        )
+                                      ]
+                                    )
+                                  : _vm._e(),
+                                _vm._v(" "),
+                                _c(
+                                  "li",
+                                  {
+                                    staticClass:
+                                      "invoice-item invoice-total text-body-display"
+                                  },
+                                  [
+                                    _c(
+                                      "span",
+                                      { staticClass: "invoice-data grid-4" },
+                                      [_vm._v("Balance")]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "span",
+                                      { staticClass: "invoice-int grid-3" },
+                                      [
+                                        _vm._v(
+                                          _vm._s(
+                                            this.content["newpayment"].total
+                                          ) + " $"
+                                        )
+                                      ]
+                                    )
+                                  ]
+                                )
+                              ])
                             ])
                           : _vm._e(),
                         _vm._v(" "),

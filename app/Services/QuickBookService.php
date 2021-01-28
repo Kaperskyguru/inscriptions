@@ -42,20 +42,20 @@ class QuickBookService
 
     private function create_customer(array $validatedData)
     {
-        $names = explode(' ', strtoupper($validatedData['user']['name']));
+        $names = explode(' ', $validatedData['user']['name']);
 
         $address = [];
-        $address['City'] = strtoupper($validatedData['city']);
-        $address['Line1'] = strtoupper($validatedData['address']);
+        $address['City'] = $validatedData['city'];
+        $address['Line1'] = $validatedData['address'];
         $address['PostalCode'] = $validatedData['zipcode'];
 
-        $data['FullyQualifiedName'] = strtoupper($validatedData['user']['name']);
+        $data['FullyQualifiedName'] = $validatedData['user']['name'];
         $data['FamilyName'] = $names[1];
         $data['GivenName'] = $names[0];
-        $data['DisplayName'] = strtoupper($validatedData['name']);
-        $data['PrimaryEmailAddr']['Address'] = strtoupper($validatedData['user']['email']);
+        $data['DisplayName'] = $validatedData['name'];
+        $data['PrimaryEmailAddr']['Address'] = $validatedData['user']['email'];
         $data['PrimaryPhone']['FreeFormNumber'] = $validatedData['phone'];
-        $data['CompanyName'] = strtoupper($validatedData['name']);
+        $data['CompanyName'] = $validatedData['name'];
         $data['BillAddr'] = $address;
 
         // Create Customer
@@ -78,10 +78,8 @@ class QuickBookService
     private function create_class($name)
     {
         $data = [];
-        $data['name'] = 'tester'; //$name;
-        // dd($data);
+        $data['name'] = $name;
         $classObj = QuickBookClass::create($data);
-
         $classResObj = $this->getDataService()->Add($classObj);
         $error = $this->getDataService()->getLastError();
         if ($error) {
@@ -112,6 +110,8 @@ class QuickBookService
         }
 
         $validatedData = $v->validated();
+
+
 
         if ($customer = $this->findCustomerByName($validatedData['invoices']['customer']['name'])) {
             return $customer;
@@ -156,7 +156,6 @@ class QuickBookService
         try {
             $refreshedAccessTokenObj = $OAuth2LoginHelper->refreshToken();
         } catch (Exception $err) {
-            // dd($err, env('QB_REFRESH_TOKEN'));
             $refreshedAccessTokenObj = $OAuth2LoginHelper->refreshAccessTokenWithRefreshToken(env('QB_REFRESH_TOKEN'));
         }
         $dataService->throwExceptionOnError(true);
@@ -389,7 +388,6 @@ class QuickBookService
     {
         $classRes = $this->findClass(null, $name);
         if (is_null($classRes)) {
-            // dd($name);
             $classRes = $this->create_class($name);
         }
         return $classRes;
@@ -503,7 +501,7 @@ class QuickBookService
                 $lineItem = Line::create([
                     'DetailType' => 'SalesItemLineDetail',
                     'Amount' => $line['total'],
-                    'Description' => $line['name'],
+                    'Description' => $line['name'] . " ( Routine: $routine )",
                     'SalesItemLineDetail' => [
                         'Qty' => $line['entries'],
                         'UnitPrice' => $line['formatted_rebate_price'],
@@ -522,12 +520,12 @@ class QuickBookService
 
             // Add Custom Field
             $customField = [
-                // [
-                //     "DefinitionId" => "1",
-                //     "StringValue" =>  $events[$validatedData['event_name']],
-                //     "Type" => "StringType",
-                //     "Name" => "EventName"
-                // ],
+                [
+                    "DefinitionId" => "1",
+                    "StringValue" =>  $events[$validatedData['event_name']],
+                    "Type" => "StringType",
+                    "Name" => "EventName"
+                ],
                 [
                     "DefinitionId" => "2",
                     "StringValue" =>  $request->subscription_id,
@@ -536,14 +534,6 @@ class QuickBookService
                 ]
             ];
             $data["CustomField"] = $customField;
-
-            //CreateOrRead Class
-            $class = [];
-            $classObj = $this->findOrCreateClass($events[$validatedData['event_name']]);
-            $class['name'] = $classObj->Name;
-            $class['value'] =  $classObj->Id;
-
-            $data['ClassRef'] = $class;
 
             $invoiceObj = Invoice::create($data);
 
@@ -562,7 +552,9 @@ class QuickBookService
     {
         $paymentArray = $this->getDataService()->Query("select * from Payment WHERE TxnDate >='" . now()->toDateString() . "'");
         $error = $this->getDataService()->getLastError();
+        // dd($error, $paymentArray);
         if ($error || is_null($paymentArray)) {
+
             return null;
         } else {
             if (is_array($paymentArray) && sizeof($paymentArray) > 0) {
@@ -592,7 +584,15 @@ class QuickBookService
     private function storePayments($payments)
     {
         foreach ($payments as $payment) {
-            if (isset($payment->Line) && isset($payment->Line->LinkedTxn) && $payment->Line->LinkedTxn->TxnType == "Invoice") {
+            if (isset($payment->Line) && is_array($payment->Line)) {
+                foreach ($payment->Line as $line) {
+                    if (isset($line->LinkedTxn) && $line->LinkedTxn->TxnType == "Invoice") {
+                        $this->createOrUpdatePayment($payment, 'invoice', $line);
+                    } else {
+                        $this->createOrUpdatePayment($payment, 'creditnote', $line);
+                    }
+                }
+            } else if (isset($payment->Line->LinkedTxn) && $payment->Line->LinkedTxn->TxnType == "Invoice") {
                 $this->createOrUpdatePayment($payment, 'invoice');
             } else {
                 $this->createOrUpdatePayment($payment, 'creditnote');
@@ -656,36 +656,45 @@ class QuickBookService
         return null;
     }
 
-    private function createOrUpdatePayment($payment, $type)
+    private function createOrUpdatePayment($payment, $type, $line = null)
     {
         $note = '';
         $subscription_id = null;
 
         if ($type == 'invoice') {
-            $subscription_id = $this->findSubscriptionIDFromInvoice($payment->Line->LinkedTxn->TxnId);
+            if (!is_null($line)) {
+                $subscription_id = $this->findSubscriptionIDFromInvoice($line->LinkedTxn->TxnId);
+            } else {
+                $subscription_id = $this->findSubscriptionIDFromInvoice($payment->Line->LinkedTxn->TxnId);
+            }
             // set note here
             $note = 'PAYMENT QBO ' . $payment->DocNumber;
         } else {
-            $customer = $this->findCustomer($payment->CustomerRef);
-            $event = $this->findClass($payment->ClassRef);
-            if ($customer && $event) {
-                $subscription_id = $this->findSubscriptionIDFromEventAndOrganization($this->findIDEventByName($event->Name), $this->findOrganizationIDByName($customer->CompanyName));
+            if (isset($payment->ClassRef)) {
+                $customer = $this->findCustomer($payment->CustomerRef);
+                $event = $this->findClass($payment->ClassRef);
+                if ($customer && $event) {
+                    $subscription_id = $this->findSubscriptionIDFromEventAndOrganization($this->findIDEventByName($event->Name), $this->findOrganizationIDByName($customer->CompanyName));
+                }
+                // Set Note here
+                $note = 'CREDIT QBO ' . $payment->DocNumber;
             }
-            // Set Note here
-            $note = 'CREDIT QBO ' . $payment->DocNumber;
         }
 
         if (!is_null($subscription_id)) {
             $oldPayment = Payment::where('subscription_id', $subscription_id)->first();
 
             if (!$oldPayment) {
-                $newpayment = new Payment;
-                $newpayment->payment_type_id = 3; // Transfer
-                $newpayment->subscription_id = $subscription_id;
-                $newpayment->receive_on = $payment->TxnDate;
-                $newpayment->amount = $payment->TotalAmt;
-                $newpayment->note = $note;
-                $newpayment->save();
+                if (Subscription::find($subscription_id)) {
+                    $newpayment = new Payment;
+                    $newpayment->payment_type_id = 3; // Transfer
+                    $newpayment->subscription_id = $subscription_id;
+                    $newpayment->receive_on = $payment->TxnDate;
+                    $newpayment->amount = $payment->TotalAmt;
+                    $newpayment->note = $note;
+                    $newpayment->save();
+                }
+                return;
             } else {
                 $oldPayment->payment_type_id = 3; // Transfer
                 $oldPayment->subscription_id = $subscription_id;
